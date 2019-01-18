@@ -1,0 +1,150 @@
+import 'package:http/http.dart' show Client;
+import 'dart:convert';
+import 'package:gti_sesa_saude/models/paciente.model.dart';
+import 'package:gti_sesa_saude/models/unidade.model.dart';
+import 'package:gti_sesa_saude/models/especialidade.model.dart';
+import 'package:gti_sesa_saude/models/consulta.model.dart';
+import 'package:gti_sesa_saude/models/mensagem.model.dart';
+
+class SaudeApi {
+  Client client = Client();
+
+  Future<PacienteModel> fetchPaciente(String documento, String dataNascimento) async {
+    documento = documento.replaceAll('.', '').replaceAll('-', '');
+    //dataNascimento = dataNascimento.replaceAll('/', '-');
+    dataNascimento = dataNascimento.substring(6,10) +"-" + dataNascimento.substring(3,5) + "-"+ dataNascimento.substring(0,2);
+
+    
+    String tipoDocumento = documento.length == 11 ? "cpf" : "cartaoSus";
+    
+    Map data = { tipoDocumento : documento, "dataNascimento" : dataNascimento };
+
+    print("entered");
+    final response = await client.post(
+        "http://172.16.1.33:3010/saude/getPaciente",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return PacienteModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+  Future<UnidadeModel> fetchUnidades() async {
+    final response = await client
+        .get("http://172.16.1.33:3010/saude/getUnidades", headers: {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    });
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return UnidadeModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+  Future<EspecialidadeModel> fetchEspecialidades(
+      String unidadeId, String dataInicio, String dataFim) async {
+    Map data = {
+      "unidadeId": unidadeId,
+      "dataInicio": dataInicio,
+      "dataFim": dataFim
+    };
+    
+    final response = await client.post(
+        "http://172.16.1.33:3010/saude/getEspecialidades",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return EspecialidadeModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+Future<ConsultaModel> fetchConsultas(
+      String consultaId, String unidadeId, String especialidadeId, String dataInicio, String dataFim) async {
+    Map data = {
+      "consultaId": consultaId,
+      "unidadeId": unidadeId,
+      "especialidadeId": especialidadeId,
+      "dataInicio": dataInicio,
+      "dataFim": dataFim
+    };
+    
+    final response = await client.post(
+        "http://172.16.1.33:3010/saude/getConsultas",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return ConsultaModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+  Future<ConsultaModel> fetchConsulta(
+      String pacienteId, String especialidadeId) async {
+    Map data = {
+      "pacienteId": pacienteId,
+      "especialidadeId": especialidadeId      
+    };
+    
+    final response = await client.post(
+        "http://172.16.1.33:3010/saude/getConsultas",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return ConsultaModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+  Future<MensagemModel> pushConsulta(
+      String pacienteId, String consultaId) async {
+    Map data = {
+      "pacienteId": pacienteId,      
+      "consultaId": consultaId      
+    };
+    
+    final response = await client.post(
+        "http://172.16.1.33:3010/saude/postConsulta",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      return MensagemModel.fromJson(json.decode(response.body));      
+    } else {
+      throw Exception('Erro');
+    }
+  }
+
+
+}
