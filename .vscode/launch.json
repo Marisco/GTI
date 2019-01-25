@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "App",
-            "program": "../${workspaceFolder}/Saude.App/gti_sesa_saude/lib/main.dart",
+            "program": "${workspaceFolder}/Saude.App/gti_sesa_saude/lib/main.dart",
             "request": "launch",
             "type": "dart"
         }

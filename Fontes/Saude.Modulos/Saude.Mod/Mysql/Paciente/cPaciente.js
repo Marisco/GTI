@@ -15,17 +15,18 @@ function obterPaciente(db, body, callback) {
     return db.client.query(qry, callback)
 }
 
-function inserirPaciente(db, values, callback) {
+function inserirPaciente(db, body, callback) {
     var qry = sqlPaciente.sqlInserir
     db.client.query(qry, function (err, statement) {
         if (err) {
             return console.error('Prepare error:', err);
         }
-        statement.exec(values, function (err, affectedRows) {
+        statement.exec(body, function (err, affectedRows) {
             if (err) {
                 return console.error('Exec error:', err);
             }
             console.log('Linhas Inseridas:', affectedRows);
+            obterPaciente(db, body)
         });
     }, callback);
 }

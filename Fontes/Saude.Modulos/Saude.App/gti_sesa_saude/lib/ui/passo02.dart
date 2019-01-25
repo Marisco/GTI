@@ -44,7 +44,7 @@ class _UnidadeState extends State<Unidade> {
   }
 
   void _getUnidades() async {
-    UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades(); // Error Here
+    UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades();
     var unidade = unidadeModel.getUnidades();
 
     setState(() {

@@ -16,6 +16,11 @@ app.post('/saude/getPaciente', function(req, res) {
   srvController.obterPaciente(req, res)  
 
 })
+app.post('/saude/postPaciente', function(req, res) {
+  
+  srvController.inserirPaciente(req, res)  
+
+})
 app.get('/saude/getUnidades', function(req, res) {
   
   srvController.obterUnidades(req, res)  
@@ -41,4 +46,10 @@ app.post('/saude/postConsulta', function(req, res) {
 app.get('/saude/teste', function(req, res) {   
   moment().locale('pt-br')
   res.send('Prefeitura da Serra: Módulo Saude.Api  - Porta: ' + port + ' - ' + moment().format('LL'))
+})
+
+app.get('/saude/getBairros', function(req, res) {
+  
+  srvController.obterBairros(req, res)  
+
 })

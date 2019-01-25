@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class FormataDocumento extends TextInputFormatter {
+class FormatarCPF extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -24,7 +24,7 @@ class FormataDocumento extends TextInputFormatter {
     if (newTextLength >= 11) {
       newText.write(newValue.text.substring(9, usedSubstringIndex = 10));
       if (newValue.selection.end >= 10) selectionIndex++;
-    }
+    }    
     if (newTextLength >= usedSubstringIndex)
       newText.write(newValue.text.substring(usedSubstringIndex));
     return new TextEditingValue(

@@ -17,7 +17,7 @@ class dbContext {
             if (err) {
                 return console.error('Connect error', err);
             }
-
+            
             console.log('Conectado com souzaninja1_gti_sesa_desenv.')
         })
 

@@ -16,22 +16,22 @@ class SlideRightRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
-      position: new Tween<Offset>(
-        begin: const Offset(1.0, 0.0),
-        end: Offset.zero,
-
-      ).animate(CurvedAnimation(
-        parent: animation,
-                  curve: Interval(
-                    0.00,
-                    1.00,
-                    curve: Curves.ease                    
-                  ),
-
-      ) ) ,
-      child: FadeTransition(opacity: animation, child: child)
-    );
+        position: new Tween<Offset>(
+          begin: const Offset(1.0, 0.0),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Interval(0.00, 1.00, curve: Curves.ease),
+        )),
+        child: FadeTransition(opacity: animation, child: child));
   }
-  
 }
 
+class AppTextStyle {
+  static TextStyle display1(BuildContext context) {
+    return Theme.of(context)
+        .textTheme
+        .display1
+        .copyWith(fontFamily: 'Humanist', color: Colors.white70, fontSize: 25);
+  }
+}

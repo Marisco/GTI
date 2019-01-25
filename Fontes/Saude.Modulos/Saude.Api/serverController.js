@@ -20,6 +20,17 @@ var obterUnidades = function (req, res) {
     })
 };
 
+
+var obterBairros = function (req, res) {
+    var models = objModels.ObjBairro;
+    models.obterBairros(objModels.dbMysql, (e, data) => {
+        if (e) {
+            res.status(400).send("Não foi possível localizar o registro:" + e);
+        }
+        res.send({ bairros: data })
+    })
+};
+
 var obterEspecialidades = function (req, res) {
     var models = objModels.ObjEspecialidade;
     models.obterEspecialidades(objModels.dbMysql, req.body, (e, data) => {
@@ -49,12 +60,25 @@ var agendarConsulta = function (req, res) {
     })
 };
 
+var inserirPaciente = function (req, res) {
+    var models = objModels.ObjPaciente;
+    models.inserirPaciente(objModels.dbMysql, req.body, (e, data) => {
+        if (e) {
+            res.status(400).send("Não foi agendar a consulta:" + e);
+        }
+        res.json({ mensagens: [{tipoMensagem: "Sucesso", mensagem:  "Operação realizada com sucesso."}]})
+    })
+};
+
+
 module.exports = {
     obterPaciente,
     obterUnidades,
     obterEspecialidades,
     obterConsultas,
-    agendarConsulta
+    agendarConsulta,
+    inserirPaciente,
+    obterBairros
 }
 
 

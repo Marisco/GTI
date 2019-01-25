@@ -23,7 +23,8 @@ class GtiSesaSaude extends StatelessWidget {
       },
       theme: ThemeData(
           primarySwatch: Colors.blue,
-          backgroundColor: Color.fromRGBO(41, 84, 142, 1)),
+          backgroundColor: Color.fromRGBO(41, 84, 142, 1)          
+          ),
       home: new Passo01(),
     );
   }

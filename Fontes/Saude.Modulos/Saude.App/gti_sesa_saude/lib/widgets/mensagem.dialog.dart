@@ -27,7 +27,7 @@ class MensagemDialog extends StatelessWidget {
     return state == DialogState.DISMISSED
         ? Container()
         : Padding(
-            padding: const EdgeInsets.only(top: 100.0),
+            padding: const EdgeInsets.only(top: 40.0),
             child: AlertDialog(
               title: new Text(
                 this.textoTitle,
@@ -53,8 +53,6 @@ class MensagemDialog extends StatelessWidget {
                 ),
               ),
               content: Container(
-                //width: 250,
-                height: 200.0,
                 child: state == DialogState.LOADING
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -62,9 +60,7 @@ class MensagemDialog extends StatelessWidget {
                           CircularProgressIndicator(
                               valueColor: new AlwaysStoppedAnimation<Color>(
                                   Colors.white)),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
+                           Text(
                               this.textoState,
                               style: new TextStyle(
                                 color: Colors.white,
@@ -82,11 +78,11 @@ class MensagemDialog extends StatelessWidget {
                                 ],
                               ),
                             ),
-                          )
+                          
                         ],
                       )
                     : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
+                        padding: const EdgeInsets.only(top: 0),
                         child: Center(
                           child: Text(
                             this.textoMensagem,
