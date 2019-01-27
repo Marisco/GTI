@@ -19,6 +19,7 @@ class Passo02 extends StatelessWidget {
 class Unidade extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+
   Unidade({@required this.paciente, @required this.pacienteId});
   @override
   _UnidadeState createState() =>
@@ -46,14 +47,13 @@ class _UnidadeState extends State<Unidade> {
   void _getUnidades() async {
     UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades();
     var unidade = unidadeModel.getUnidades();
-
     setState(() {
       _unidades = unidade;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return new Scaffold(
       appBar: new AppBar(
           title: new Text("Passo 2"),

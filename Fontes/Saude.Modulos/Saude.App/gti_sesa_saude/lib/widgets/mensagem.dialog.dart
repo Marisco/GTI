@@ -169,8 +169,7 @@ class MensagemDialog extends StatelessWidget {
                                               new SlideRightRoute(
                                                   builder: (_) => Passo02(
                                                       paciente: this.paciente,
-                                                      pacienteId:
-                                                          this.pacienteId)));
+                                                      pacienteId: this.pacienteId)));
                                         })
                                   ])))
                     ]

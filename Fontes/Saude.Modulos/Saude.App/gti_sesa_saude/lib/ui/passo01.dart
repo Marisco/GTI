@@ -4,10 +4,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/cadPaciente.dart';
+import 'package:gti_sesa_saude/models/paciente.model.dart';
 import 'package:gti_sesa_saude/blocs/paciente.bloc.dart';
-import 'package:gti_sesa_saude/src/formatarCPF.dart';
-import 'package:gti_sesa_saude/src/formatarCNS.dart';
-import 'package:gti_sesa_saude/src/formatarData.dart';
+import 'package:gti_sesa_saude/src/formatacao.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 
 class Passo01 extends StatelessWidget {
@@ -51,7 +50,7 @@ class _PacienteState extends State<Paciente> {
     super.initState();
     initializeDateFormatting("pr_BR", null).then((_) {
       _tpDocumentoChange(0);
-      // BackButtonInterceptor.add(myInterceptor);
+      //BackButtonInterceptor.add(myInterceptor);
     });
   }
 
@@ -85,25 +84,23 @@ class _PacienteState extends State<Paciente> {
 
   void _getPaciente() async {
     setState(() => _dialogState = DialogState.LOADING);
-    await pacienteBloc
-        .fetchPaciente(this._documento.text, this._dataNascimento.text)
-        .then((pacienteModel) {
-      setState(() {
-        _paciente = [pacienteModel.getPaciente()];
-        if (_paciente.isNotEmpty && _paciente[0] != null) {
-          _dialogState = DialogState.COMPLETED;
-          paciente = _paciente[0].nome;
-          pacienteId = _paciente[0].numero.toString();
-        } else {
-          _dialogState = DialogState.DISMISSED;
-          Navigator.push(
-              context,
-              new SlideRightRoute(
-                  builder: (_) => CadPaciente(
-                      documento: this._documento.text,
-                      dataNascimento: this._dataNascimento.text)));
-        }
-      });
+    PacienteModel pacienteModel = await pacienteBloc.fetchPaciente(
+        this._documento.text, this._dataNascimento.text);
+    setState(() {
+      _paciente = [pacienteModel.getPaciente()];
+      if (_paciente.isNotEmpty && _paciente[0] != null) {
+        _dialogState = DialogState.COMPLETED;
+        paciente = _paciente[0].nome;
+        pacienteId = _paciente[0].numero.toString();
+      } else {
+        _dialogState = DialogState.DISMISSED;
+        Navigator.push(
+            context,
+            new SlideRightRoute(
+                builder: (_) => CadPaciente(
+                    documento: this._documento.text,
+                    dataNascimento: this._dataNascimento.text)));
+      }
     });
   }
 
@@ -125,7 +122,7 @@ class _PacienteState extends State<Paciente> {
                 ),
               ),
               child: ListView(
-                  padding: new EdgeInsets.only(top: 200.0),
+                  padding: new EdgeInsets.only(top: 150.0),
                   children: <Widget>[
                     Align(
                       //heightFactor: MediaQuery.of(context).size.height *0.0024,//MediaQuery.of(context).size.height,

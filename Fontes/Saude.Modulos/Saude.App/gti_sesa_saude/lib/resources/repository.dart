@@ -5,9 +5,12 @@ import 'package:gti_sesa_saude/models/especialidade.model.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
 import 'package:gti_sesa_saude/models/bairro.model.dart';
+import 'package:gti_sesa_saude/models/insert.model.dart';
+
 
 class Repository {
-  final saudeApi = SaudeApi();
+  final saudeApi = SaudeApi();  
+  
   Future<PacienteModel> fetchPaciente(
           String documento, String dataNascimento) =>
       saudeApi.fetchPaciente(documento, dataNascimento);
@@ -29,9 +32,12 @@ class Repository {
   Future<MensagemModel> pushConsulta(String pacienteId, String consultaId) =>
       saudeApi.pushConsulta(pacienteId, consultaId);
 
-  Future<PacienteModel> pushPaciente(String nome, String cpf, String cartaoSus,
+  Future<InsertModel> pushPaciente(String nome, String cpf, String cartaoSus,
           String dataNascimento, String sexo, String telefone, String bairro) =>
       saudeApi.pushPaciente(
           nome, cpf, cartaoSus, dataNascimento, sexo, telefone, bairro);
+  
   Future<BairroModel> fetchBairros() => saudeApi.fetchBairros();
+  
+  
 }
