@@ -40,7 +40,7 @@ app.post('/saude/getConsultas', function(req, res) {
 app.post('/saude/postConsulta', function(req, res) {
   
   srvController.agendarConsulta(req, res)  
-
+S
 })
 
 app.get('/saude/teste', function(req, res) {   

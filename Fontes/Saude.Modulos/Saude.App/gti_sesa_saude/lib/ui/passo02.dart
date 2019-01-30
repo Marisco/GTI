@@ -3,6 +3,8 @@ import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
 import 'package:gti_sesa_saude/models/unidade.model.dart';
 import 'package:gti_sesa_saude/ui/passo03.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
 class Passo02 extends StatelessWidget {
   final String paciente;
@@ -19,6 +21,7 @@ class Passo02 extends StatelessWidget {
 class Unidade extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+
   Unidade({@required this.paciente, @required this.pacienteId});
   @override
   _UnidadeState createState() =>
@@ -46,7 +49,6 @@ class _UnidadeState extends State<Unidade> {
   void _getUnidades() async {
     UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades();
     var unidade = unidadeModel.getUnidades();
-
     setState(() {
       _unidades = unidade;
     });
@@ -54,24 +56,33 @@ class _UnidadeState extends State<Unidade> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text("Passo 2"),
-          backgroundColor: Colors.purple,
-          actions: <Widget>[
-            new Image.asset(
-              "img/logo_icon.png",
-              width: 50,
-            )
-          ]),
-      body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: new AssetImage("img/passo02.jpg"),
-            fit: BoxFit.fitWidth,
-          ),
-        ),
-        child: Row(
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+            child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("img/passo02.jpg"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(children: <Widget>[
+                      Row(children: <Widget>[                        
+                        Cabecalho(
+                          state: DialogState.DISMISSED,
+                            textoMensagem:
+                                this
+                                  .paciente
+                                  .substring(0, this.paciente.indexOf(" ")) +
+                              ',escolha a unidade de saúde mais próxima ou a unidade de sua preferência',
+                            ),
+                      ]),
+                      Row(
           children: <Widget>[
             Expanded(
               child: Container(),
@@ -203,7 +214,6 @@ class _UnidadeState extends State<Unidade> {
             )
           ],
         ),
-      ),
-    );
+                    ])))));
   }
 }

@@ -95,16 +95,7 @@ class _ConsultaState extends State<Consulta> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text("Passo 4"),
-          backgroundColor: Colors.pink,
-          actions: <Widget>[
-            new Image.asset(
-              "img/logo_icon.png",
-              width: 50,
-            )
-          ]),
+    return new Scaffold(      
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(

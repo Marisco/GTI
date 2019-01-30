@@ -125,16 +125,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text("Passo 5"),
-          backgroundColor: Colors.green,
-          actions: <Widget>[
-            new Image.asset(
-              "img/logo_icon.png",
-              width: 50,
-            )
-          ]),
+    return new Scaffold(     
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(

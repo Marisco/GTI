@@ -27,8 +27,9 @@ class MensagemDialog extends StatelessWidget {
     return state == DialogState.DISMISSED
         ? Container()
         : Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: AlertDialog(
+            padding: const EdgeInsets.only(top: 0.0),
+            child: AlertDialog(              
+              contentPadding: EdgeInsets.all(0),
               title: new Text(
                 this.textoTitle,
                 style: new TextStyle(
@@ -53,6 +54,8 @@ class MensagemDialog extends StatelessWidget {
                 ),
               ),
               content: Container(
+                //width: MediaQuery.of(context).size.width * 1.5 ,
+                //height: MediaQuery.of(context).size.height,
                 child: state == DialogState.LOADING
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -169,8 +172,7 @@ class MensagemDialog extends StatelessWidget {
                                               new SlideRightRoute(
                                                   builder: (_) => Passo02(
                                                       paciente: this.paciente,
-                                                      pacienteId:
-                                                          this.pacienteId)));
+                                                      pacienteId: this.pacienteId)));
                                         })
                                   ])))
                     ]

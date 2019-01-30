@@ -5,11 +5,8 @@ const sqlListar =
     "  FROM paciente                                                           " 
 
  const sqlInserir = 
-" INSERT INTO paciente (                                                       " +
-"        nome        , cpf            , telefone  , celular, cartao_sus,       " +
-"        bairro      , data_nascimento, sexo      , rg     , rg_uf,            " +
-"        estado_civil, endereco       , observacao, anonimo                    " +    
-" VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?)                   " 
+" INSERT INTO paciente (nome, cpf, telefone, cartao_sus, bairro , data_nascimento, sexo)    " +    
+"               VALUES (? , ? , ? , ? , ? , ? , ?)                                          " 
 
 module.exports = {
     sqlListar,

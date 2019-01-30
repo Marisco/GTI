@@ -63,16 +63,7 @@ class _EspecialidadeState extends State<Especialidade> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text("Passo 3"),
-          backgroundColor: Colors.cyan,
-          actions: <Widget>[
-            new Image.asset(
-              "img/logo_icon.png",
-              width: 50,
-            )
-          ]),
+    return new Scaffold(     
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(
