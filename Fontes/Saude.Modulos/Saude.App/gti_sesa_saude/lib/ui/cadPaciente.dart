@@ -125,7 +125,6 @@ class _CadPacienteState extends State<_CadPaciente> {
         this._telefone.text,
         _selBairro);
     _paciente = pacienteModel.getInsertId();
-
     setState(() {
       _dialogState = DialogState.COMPLETED;
       if (_paciente.isNotEmpty) {
@@ -170,8 +169,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                 'Não o encotramos  em nossa base de dados. Preencha o formulário abaixo.',
                             state: _dialogState),
                       ]),
-                      Row(                          
-                        children: [
+                      Row(children: [
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
                           width: MediaQuery.of(context).size.width * .88,
@@ -187,7 +185,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                   height: _height > 0
                                       ? _height
                                       : MediaQuery.of(context).size.height *
-                                          0.55,                                          
+                                          0.55,
                                   child: ListView(children: <Widget>[
                                     Align(
                                       child: Stack(
@@ -212,7 +210,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: <Widget>[
-                                                      Row(children: <Widget>[                                                        
+                                                      Row(children: <Widget>[
                                                         Text(
                                                           'Sexo:',
                                                           style: TextStyle(
@@ -534,42 +532,50 @@ class _CadPacienteState extends State<_CadPaciente> {
                                           ),
                                           Visibility(
                                             visible: _dialogState !=
-                                                DialogState.DISMISSED,                                                                                            
-                                            child: Container(    
-                                              width: MediaQuery.of(context).size.width,                                          
-                                                child: Column(                                                  
+                                                DialogState.DISMISSED,
+                                            child: Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: <Widget>[                                                      
-                                                  MensagemDialog(                                                      
-                                                      state: _dialogState,
-                                                      paciente:
-                                                          this.paciente == null
-                                                              ? ""
-                                                              : this.paciente,
-                                                      pacienteId:
-                                                          this.pacienteId ==
+                                                    children: <Widget>[
+                                                      MensagemDialog(
+                                                          state: _dialogState,
+                                                          paciente:
+                                                              this.paciente ==
+                                                                      null
+                                                                  ? ""
+                                                                  : this
+                                                                      .paciente,
+                                                          pacienteId:
+                                                              this.pacienteId ==
+                                                                      null
+                                                                  ? ""
+                                                                  : this
+                                                                      .pacienteId,
+                                                          textoTitle: this
+                                                                      .pacienteId ==
                                                                   null
-                                                              ? ""
-                                                              : this.pacienteId,
-                                                      textoTitle: this
-                                                                  .pacienteId ==
-                                                              null
-                                                          ? " Aguarde..."
-                                                          : " Olá " +
-                                                              this.paciente +
-                                                              "!",
-                                                      textoMensagem:
-                                                          "Cadastro realizado com sucesso.\nVocê irá se conectar ao Sistema de Saúde da Prefeitura de Serra-ES.\n Aceita o termo e a política de privacidade ?",
-                                                      textoBtnOK: "Sim",
-                                                      textoBtnCancel: "Não",
-                                                      textoState:
-                                                          "Registrando usuário no sistema...\n" +
-                                                              // " Nome:\n " + this._nome.text +
-                                                              " Cpf: " +
-                                                              this._cpf.text)
-                                                ])),
+                                                              ? " Aguarde..."
+                                                              : " Olá " +
+                                                                  this
+                                                                      .paciente +
+                                                                  "!",
+                                                          textoMensagem:
+                                                              "Cadastro realizado com sucesso.\nVocê irá se conectar ao Sistema de Saúde da Prefeitura de Serra-ES.\n Aceita o termo e a política de privacidade ?",
+                                                          textoBtnOK: "Sim",
+                                                          textoBtnCancel: "Não",
+                                                          textoState:
+                                                              "Registrando usuário no sistema...\n" +
+                                                                  // " Nome:\n " + this._nome.text +
+                                                                  " Cpf: " +
+                                                                  this
+                                                                      ._cpf
+                                                                      .text)
+                                                    ])),
                                           )
                                         ],
                                       ),

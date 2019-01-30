@@ -225,14 +225,13 @@ class _PacienteState extends State<Paciente> {
                                                                           top:
                                                                               0),
                                                                   decoration: new BoxDecoration(
-                                                                      color: Color
-                                                                        .fromRGBO(
-                                                                            41,
-                                                                            84,
-                                                                            142,
-                                                                            1)
-                                                                    .withOpacity(
-                                                                        0.25),
+                                                                      color: Color.fromRGBO(
+                                                                              41,
+                                                                              84,
+                                                                              142,
+                                                                              1)
+                                                                          .withOpacity(
+                                                                              0.25),
                                                                       shape: BoxShape
                                                                           .rectangle,
                                                                       borderRadius:
@@ -273,14 +272,13 @@ class _PacienteState extends State<Paciente> {
                                                           Container(
                                                               height: 75,
                                                               decoration: new BoxDecoration(
-                                                                  color: Color
-                                                                        .fromRGBO(
-                                                                            41,
-                                                                            84,
-                                                                            142,
-                                                                            1)
-                                                                    .withOpacity(
-                                                                        0.25),
+                                                                  color: Color.fromRGBO(
+                                                                          41,
+                                                                          84,
+                                                                          142,
+                                                                          1)
+                                                                      .withOpacity(
+                                                                          0.25),
                                                                   shape: BoxShape
                                                                       .rectangle,
                                                                   borderRadius:
@@ -288,8 +286,8 @@ class _PacienteState extends State<Paciente> {
                                                                           Radius.circular(
                                                                               25))),
                                                               child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
+                                                                  padding:
+                                                                      EdgeInsets.only(
                                                                           left:
                                                                               20),
                                                                   child:

@@ -37,7 +37,7 @@ class SaudeApi {
     if (response.statusCode == 200) {
       return PacienteModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Erro');
+      throw Exception('Erro'); 
     }
   }
 
