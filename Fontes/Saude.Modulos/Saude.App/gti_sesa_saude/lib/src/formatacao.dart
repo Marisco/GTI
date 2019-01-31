@@ -106,16 +106,13 @@ class FormatarTelefone extends TextInputFormatter {
       if (newValue.selection.end >= 1) selectionIndex++;
     }
     if (newTextLength >= 3) {
-      newText.write(newValue.text.substring(1, usedSubstringIndex = 2) + ')');
-      if (newValue.selection.end >= 2) selectionIndex++;
+      newText.write(newValue.text.substring(1, usedSubstringIndex = 2) + ') ');
+      if (newValue.selection.end >= 2) selectionIndex = selectionIndex+2;
     }
-    if (newTextLength >= 4) {
-      newText.write(newValue.text.substring(2, usedSubstringIndex = 4) + ' ');
-      if (newValue.selection.end >= 3) selectionIndex++;
-    }    
-    if (newTextLength >= 9) {
-      newText.write(newValue.text.substring(5, usedSubstringIndex = 4) + '-');
-      if (newValue.selection.end >= 9) selectionIndex++;
+    
+    if (newTextLength >= 8) {
+      newText.write(newValue.text.substring(2, usedSubstringIndex = 7) + '-');
+      if (newValue.selection.end >= 7) selectionIndex++;
     }  
       if (newTextLength >= usedSubstringIndex)
         newText.write(newValue.text.substring(usedSubstringIndex));

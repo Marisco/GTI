@@ -78,157 +78,137 @@ class _UnidadeState extends State<Unidade> {
                           textoMensagem: this
                                   .paciente
                                   .substring(0, this.paciente.indexOf(" ")) +
-                              ',escolha a unidade de saúde mais próxima ou a unidade de sua preferência',
+                              ', escolha a unidade de saúde mais próxima ou a unidade de sua preferência',
                         ),
                       ]),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(),
-                          ),
-                          Expanded(
-                              flex: 6,
-                              child: new Theme(
-                                data: Theme.of(context).copyWith(
-                                    canvasColor:
-                                        Colors.purple.withOpacity(0.7)),
-                                child: Container(
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                      Text(
-                                        this.paciente.substring(
-                                                0, this.paciente.indexOf(" ")) +
-                                            ',\nescolha a unidade de saúde mais próxima ou a unidade de sua preferência',
-                                        style: TextStyle(
-                                          fontFamily: 'Humanist',
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                        ),
-                                        textAlign: TextAlign.justify,
-                                      ),
-                                      Expanded(
-                                          flex: 0,
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: DropdownButton(
-                                                isDense: false,
-                                                hint: new Text(
-                                                  'Escolha uma opção:',
-                                                  style: new TextStyle(
-                                                    color: Colors.white,
-                                                    fontFamily: 'Humanist',
-                                                    fontSize: 28,
-                                                    shadows: <Shadow>[
-                                                      Shadow(
-                                                          offset:
-                                                              Offset(1.0, 1.0),
-                                                          blurRadius: 3.0,
-                                                          color: Colors.black
-                                                              .withOpacity(
-                                                                  0.7)),
-                                                      Shadow(
-                                                          offset:
-                                                              Offset(1.0, 1.0),
-                                                          blurRadius: 8.0,
-                                                          color: Colors.black
-                                                              .withOpacity(
-                                                                  0.7)),
-                                                    ],
-                                                  ),
-                                                ),
-                                                value: _selUnidade,
-                                                items: _unidades.map((unidade) {
-                                                  return new DropdownMenuItem(
-                                                    value: unidade.numero,
-                                                    child: new Text(
-                                                      unidade.nome,
-                                                      style: new TextStyle(
-                                                        color: Colors.white,
-                                                        fontFamily: 'Humanist',
-                                                        fontSize: 25,
-                                                        shadows: <Shadow>[
-                                                          Shadow(
-                                                              offset: Offset(
-                                                                  1.0, 1.0),
-                                                              blurRadius: 3.0,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                          Shadow(
-                                                              offset: Offset(
-                                                                  1.0, 1.0),
-                                                              blurRadius: 8.0,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (newVal) {
-                                                  setState(() {
-                                                    _selUnidade = newVal;
-                                                  });
-                                                },
+                      Row(children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                    child: new Theme(
+                                  data: Theme.of(context).copyWith(
+                                      accentColor:
+                                          Color.fromRGBO(125, 108, 187, 0.75),
+                                      canvasColor:
+                                          Color.fromRGBO(125, 108, 187, 0.75)),
+                                  child: Container(
+                                      margin: EdgeInsets.all(40),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            DropdownButton(
+                                              isDense: false,
+                                              hint: new Text(
+                                                'Escolha uma opção:',
                                                 style: new TextStyle(
-                                                  //color: Colors.black,
-                                                  fontSize: 20,
+                                                  color: Colors.white,
+                                                  fontFamily: 'Humanist',
+                                                  fontSize: 28,
+                                                  shadows: <Shadow>[
+                                                    Shadow(
+                                                        offset:
+                                                            Offset(1.0, 1.0),
+                                                        blurRadius: 3.0,
+                                                        color: Colors.black
+                                                            .withOpacity(0.7)),
+                                                    Shadow(
+                                                        offset:
+                                                            Offset(1.0, 1.0),
+                                                        blurRadius: 8.0,
+                                                        color: Colors.black
+                                                            .withOpacity(0.7)),
+                                                  ],
                                                 ),
-                                                isExpanded: true,
-                                                elevation: 24,
-                                              ))),
-                                      Text(
-                                        '',
-                                        style: TextStyle(
-                                          fontFamily: 'Humanist',
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      RaisedButton.icon(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              new SlideRightRoute(
-                                                  builder: (_) => Passo03(
-                                                      paciente: this.paciente,
-                                                      pacienteId:
-                                                          this.pacienteId,
-                                                      unidadeId:
-                                                          this._selUnidade)));
-                                        },
-                                        elevation: 5.0,
-                                        shape: new RoundedRectangleBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(30.0),
-                                        ),
-                                        //color: const Color.fromARGB(255, 175, 207, 45),
-                                        color: Colors.purple.withOpacity(
-                                            0.7), //Color.fromRGBO(41, 84, 142, 1),
-                                        icon: Icon(Icons.play_arrow,
-                                            color: Colors.white70),
-                                        label: Text(
-                                          "",
-                                          style: TextStyle(
-                                              fontFamily: 'Humanist',
-                                              fontSize: 30,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ])),
-                              )),
-                          Expanded(
-                            child: Container(),
-                          )
-                        ],
-                      ),
+                                              ),
+                                              value: _selUnidade,
+                                              items: _unidades.map((unidade) {
+                                                return new DropdownMenuItem(
+                                                  value: unidade.numero,
+                                                  child: new Text(
+                                                    unidade.nome,
+                                                    style: new TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily: 'Humanist',
+                                                      fontSize: 25,
+                                                      shadows: <Shadow>[
+                                                        Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.0),
+                                                            blurRadius: 3.0,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7)),
+                                                        Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.0),
+                                                            blurRadius: 8.0,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newVal) {
+                                                setState(() {
+                                                  _selUnidade = newVal;
+                                                });
+                                              },
+                                              style: new TextStyle(
+                                                //color: Colors.black,
+                                                fontSize: 20,
+                                              ),
+                                              isExpanded: true,
+                                              elevation: 24,
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(40),
+                                                child: RaisedButton.icon(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        new SlideRightRoute(
+                                                            builder: (_) => Passo03(
+                                                                paciente: this
+                                                                    .paciente,
+                                                                pacienteId: this
+                                                                    .pacienteId,
+                                                                unidadeId: this
+                                                                    ._selUnidade)));
+                                                  },
+                                                  elevation: 5.0,
+                                                  shape:
+                                                      new RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        new BorderRadius
+                                                            .circular(30.0),
+                                                  ),
+                                                  //color: const Color.fromARGB(255, 175, 207, 45),
+                                                  color: Color.fromRGBO(
+                                                      125,
+                                                      108,
+                                                      187,
+                                                      0.75), //Color.fromRGBO(41, 84, 142, 1),
+                                                  icon: Icon(Icons.play_arrow,
+                                                      color: Colors.white70),
+                                                  label: Text(
+                                                    "",
+                                                    style: TextStyle(
+                                                        fontFamily: 'Humanist',
+                                                        fontSize: 30,
+                                                        color: Colors.white),
+                                                  ),
+                                                )),
+                                          ])),
+                                ))
+                              ],
+                            )),
+                      ])
                     ])))));
   }
 }

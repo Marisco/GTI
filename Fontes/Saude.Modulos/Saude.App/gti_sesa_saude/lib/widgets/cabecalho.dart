@@ -13,7 +13,7 @@ class Cabecalho extends StatelessWidget {
     return Row(children: [
       Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(top: 160, left: 10, right: 10, bottom: 15),
+          padding: EdgeInsets.only(top: 130, left: 10, right: 10, bottom: 15),
           child: Visibility(
             visible: state == DialogState.DISMISSED,
             child: Text(this.textoMensagem,

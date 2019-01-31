@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/blocs/insert.bloc.dart';
 import 'package:gti_sesa_saude/models/insert.model.dart';
 import 'package:gti_sesa_saude/blocs/bairro.bloc.dart';
@@ -9,6 +10,8 @@ import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/src/formatacao.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
+import 'package:gti_sesa_saude/ui/passo01.dart';
+import 'package:gti_sesa_saude/ui/passo02.dart';
 
 class CadPaciente extends StatelessWidget {
   final String documento;
@@ -83,7 +86,7 @@ class _CadPacienteState extends State<_CadPaciente> {
     _cpf.dispose();
     _cartaoSus.dispose();
     _dataNascimento.dispose();
-    BackButtonInterceptor.removeAll();
+    //BackButtonInterceptor.removeAll();
     super.dispose();
   }
 
@@ -172,20 +175,68 @@ class _CadPacienteState extends State<_CadPaciente> {
                       Row(children: [
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
-                          width: MediaQuery.of(context).size.width * .88,
-                          decoration: new BoxDecoration(
-                              color: Colors.blue.withOpacity(0.3),
+                          width: MediaQuery.of(context).size.width * .90,
+                          decoration: BoxDecoration(                              
                               shape: BoxShape.rectangle,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(25))),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Visibility(
+                                visible: _dialogState != DialogState.DISMISSED,
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          MensagemDialog(
+                                              state: _dialogState,
+                                              paciente: this.paciente == null
+                                                  ? ""
+                                                  : this.paciente,
+                                              pacienteId: this.pacienteId ==
+                                                      null
+                                                  ? ""
+                                                  : this.pacienteId,
+                                              textoTitle: this.pacienteId ==
+                                                      null
+                                                  ? " Aguarde..."
+                                                  : " Olá " +
+                                                      this.paciente +
+                                                      "!",
+                                              textoMensagem:
+                                                  "Cadastro realizado com sucesso.\nVocê irá se conectar ao Sistema de Saúde da Prefeitura de Serra-ES.\n Aceita o termo e a política de privacidade ?",
+                                              textoBtnOK: "Sim",
+                                              textoBtnCancel: "Não",
+                                              textoState:
+                                                  "Registrando usuário no sistema...\n" +
+                                                      // " Nome:\n " + this._nome.text +
+                                                      " Cpf: " +
+                                                      this._cpf.text,
+                                              slideRightRouteBtnOK:
+                                                  SlideRightRoute(
+                                                      builder: (_) => Passo02(
+                                                          paciente:
+                                                              this.paciente,
+                                                          pacienteId:
+                                                              this.pacienteId)),
+                                              slideRightRouteBtnCancel:
+                                                  SlideRightRoute(
+                                                      builder: (_) =>
+                                                          Passo01()),
+                                              color: this.pacienteId == null
+                                                  ? Colors.transparent
+                                                  : Color.fromRGBO(
+                                                      41, 84, 142, 0.5))
+                                        ])),
+                              ),
                               SizedBox(
                                   height: _height > 0
                                       ? _height
                                       : MediaQuery.of(context).size.height *
-                                          0.55,
+                                          0.7,
                                   child: ListView(children: <Widget>[
                                     Align(
                                       child: Stack(
@@ -201,10 +252,6 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                // decoration: new BoxDecoration(
-                                                //   color: Colors.blue.withOpacity(0.3),
-                                                //   shape: BoxShape.rectangle,
-                                                // ),
                                                 child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -227,7 +274,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                               _tpSexoChange,
                                                           activeColor:
                                                               Color.fromRGBO(41,
-                                                                  84, 142, 1),
+                                                                  84, 142, 9),
                                                         ),
                                                         Text(
                                                           'Masculino',
@@ -245,7 +292,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                               _tpSexoChange,
                                                           activeColor:
                                                               Color.fromRGBO(41,
-                                                                  84, 142, 1),
+                                                                  84, 142, 9),
                                                         ),
                                                         Text(
                                                           'Feminino',
@@ -261,10 +308,18 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                           data: Theme.of(
                                                                   context)
                                                               .copyWith(
-                                                                  canvasColor: Colors
-                                                                      .blue[900]
-                                                                      .withOpacity(
-                                                                          0.7)),
+                                                                  accentColor: Color
+                                                                      .fromRGBO(
+                                                                          41,
+                                                                          84,
+                                                                          142,
+                                                                          75),
+                                                                  canvasColor: Color
+                                                                      .fromRGBO(
+                                                                          41,
+                                                                          84,
+                                                                          142,
+                                                                          75)),
                                                           child: DropdownButton(
                                                             isDense: false,
                                                             iconSize: 36,
@@ -506,7 +561,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                           onSubmitted: (v) {
                                                             _postPaciente();
                                                           },
-                                                          maxLength: 18,
+                                                          maxLength: 15,
                                                           decoration:
                                                               InputDecoration(
                                                                   counterText:
@@ -530,53 +585,6 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                           ]),
                                                     ])),
                                           ),
-                                          Visibility(
-                                            visible: _dialogState !=
-                                                DialogState.DISMISSED,
-                                            child: Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      MensagemDialog(
-                                                          state: _dialogState,
-                                                          paciente:
-                                                              this.paciente ==
-                                                                      null
-                                                                  ? ""
-                                                                  : this
-                                                                      .paciente,
-                                                          pacienteId:
-                                                              this.pacienteId ==
-                                                                      null
-                                                                  ? ""
-                                                                  : this
-                                                                      .pacienteId,
-                                                          textoTitle: this
-                                                                      .pacienteId ==
-                                                                  null
-                                                              ? " Aguarde..."
-                                                              : " Olá " +
-                                                                  this
-                                                                      .paciente +
-                                                                  "!",
-                                                          textoMensagem:
-                                                              "Cadastro realizado com sucesso.\nVocê irá se conectar ao Sistema de Saúde da Prefeitura de Serra-ES.\n Aceita o termo e a política de privacidade ?",
-                                                          textoBtnOK: "Sim",
-                                                          textoBtnCancel: "Não",
-                                                          textoState:
-                                                              "Registrando usuário no sistema...\n" +
-                                                                  // " Nome:\n " + this._nome.text +
-                                                                  " Cpf: " +
-                                                                  this
-                                                                      ._cpf
-                                                                      .text)
-                                                    ])),
-                                          )
                                         ],
                                       ),
                                     )

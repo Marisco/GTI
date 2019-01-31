@@ -5,6 +5,8 @@ import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/ui/passo05.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
 class Passo04 extends StatelessWidget {
   final String paciente;
@@ -57,7 +59,7 @@ class _ConsultaState extends State<Consulta> {
       @required this.pacienteId,
       @required this.unidadeId,
       @required this.especialidadeId});
-  List<RadioModel> dadosConsulta = new List<RadioModel>();
+  List<RadioModel> dadosConsulta = List<RadioModel>();
 
   @override
   void initState() {
@@ -77,12 +79,12 @@ class _ConsultaState extends State<Consulta> {
         "0",
         this.unidadeId,
         this.especialidadeId,
-        DateTime.now().add(new Duration(days: 1)).toString(),
-        DateTime.now().add(new Duration(days: 3)).toString());
+        DateTime.now().add(Duration(days: 1)).toString(),
+        DateTime.now().add(Duration(days: 3)).toString());
     var consulta = consultaModel.getConsultas();
     setState(() {
       _consultas = consulta;
-      _consultas.forEach((consulta) => dadosConsulta.add(new RadioModel(
+      _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
           false,
           consulta.numero,
           consulta.consultorio,
@@ -95,157 +97,184 @@ class _ConsultaState extends State<Consulta> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(      
-      body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: new AssetImage("img/passo04.jpg"),
-            fit: BoxFit.fitWidth,
-          ),
-        ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Container(),
-            ),
-            Expanded(
-              flex: 6,
-              child: Container(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                    Text(
-                      'Escolha dentre os horários diponíveis:',
-                      style: TextStyle(
-                        fontFamily: 'Humanist',
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Expanded(
-                        flex: 0,
-                        child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: SizedBox(
-                              height: 200.0,
-                              child: new Theme(
-                                  data: Theme.of(context)
-                                      .copyWith(canvasColor: Colors.black),
-                                  child: new ListView.builder(
-                                    itemCount: dadosConsulta.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return new InkWell(
-                                        //highlightColor: Colors.red,
-                                        splashColor:
-                                            Colors.pink.withOpacity(0.7),
-                                        onTap: () {
-                                          setState(() {
-                                            _selConsulta =
-                                                dadosConsulta[index].numero;
-                                            dadosConsulta.forEach((element) =>
-                                                element.isSelected = false);
-                                            dadosConsulta[index].isSelected =
-                                                true;
-                                          });
-                                        },
-                                        child:
-                                            new RadioItem(dadosConsulta[index]),
-                                      );
-                                    },
-                                  )),
-                            ))),
-                    Text(
-                      '',
-                      style: TextStyle(
-                        fontFamily: 'Humanist',
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    RaisedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            new SlideRightRoute(
-                                builder: (_) => Passo05(
-                                    paciente: this.paciente,
-                                    pacienteId: this.pacienteId,
-                                    unidadeId: this.unidadeId,
-                                    especialidadeId: this.especialidadeId,
-                                    consultaId: this._selConsulta)));
-                      },
-                      elevation: 5.0,
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
-                      ),
-                      //color: const Color.fromARGB(255, 175, 207, 45),
-                      color: Colors.pink, //Color.fromRGBO(41, 84, 142, 1),
-                      icon: Icon(Icons.play_arrow, color: Colors.white70),
-                      label: Text(
-                        "",
-                        style: TextStyle(
-                            fontFamily: 'Humanist',
-                            fontSize: 30,
-                            color: Colors.white),
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+            child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("img/passo04.jpg"),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ])),
-            ),
-            Expanded(
-              child: Container(),
-            )
-          ],
-        ),
-      ),
-    );
+                    child: Column(children: <Widget>[
+                      Row(children: <Widget>[
+                        Cabecalho(
+                          state: DialogState.DISMISSED,
+                          textoMensagem:
+                              'Escolha dentre os horários diponíveis:',
+                        ),
+                      ]),
+                      Row(children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                    child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                      accentColor: Color.fromRGBO(189,
+                                                                112, 162, 0.75),
+                                      canvasColor:
+                                          Color.fromRGBO(189, 112, 162, 0.75)),
+                                  child: Container(
+                                      margin: EdgeInsets.all(20),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.4,
+                                              child: Theme(
+                                                  data: Theme.of(context)
+                                                      .copyWith(
+                                                        accentColor: Color.fromRGBO(189,
+                                                                112, 162, 0.75),
+                                                          canvasColor:
+                                                              Colors.black),
+                                                  child: ListView.builder(                                                    
+                                                    itemCount:
+                                                        dadosConsulta.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return InkWell(
+                                                        splashColor:
+                                                            Color.fromRGBO(189,
+                                                                112, 162, 0.75),
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _selConsulta =
+                                                                dadosConsulta[
+                                                                        index]
+                                                                    .numero;
+                                                            dadosConsulta.forEach(
+                                                                (element) =>
+                                                                    element.isSelected =
+                                                                        false);
+                                                            dadosConsulta[index]
+                                                                    .isSelected =
+                                                                true;
+                                                          });
+                                                        },
+                                                        child: RadioItem(
+                                                            dadosConsulta[
+                                                                index]),
+                                                      );
+                                                    },
+                                                  )),
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(20),
+                                                child: RaisedButton.icon(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        SlideRightRoute(
+                                                            builder: (_) => Passo05(
+                                                                paciente: this
+                                                                    .paciente,
+                                                                pacienteId: this
+                                                                    .pacienteId,
+                                                                unidadeId: this
+                                                                    .unidadeId,
+                                                                especialidadeId:
+                                                                    this
+                                                                        .especialidadeId,
+                                                                consultaId: this
+                                                                    ._selConsulta)));
+                                                  },
+                                                  elevation: 5.0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.0),
+                                                  ),
+                                                  color: Color.fromRGBO(
+                                                      189,
+                                                      112,
+                                                      162,
+                                                      0.75), //Color.fromRGBO(41, 84, 142, 1),
+                                                  icon: Icon(Icons.play_arrow,
+                                                      color: Colors.white70),
+                                                  label: Text(
+                                                    "",
+                                                    style: TextStyle(
+                                                        fontFamily: 'Humanist',
+                                                        fontSize: 30,
+                                                        color: Colors.white),
+                                                  ),
+                                                )),
+                                          ])),
+                                ))
+                              ],
+                            )),
+                      ])
+                    ])))));
   }
 }
 
 class RadioItem extends StatelessWidget {
   final RadioModel _item;
-  final diaMesAno = new DateFormat("d 'de' MMMM 'de' yyyy");
-  final diaSemana = new DateFormat("EEEE");
-  final hora = new DateFormat("Hm");
+  final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy");
+  final diaSemana = DateFormat("EEEE");
+  final hora = DateFormat("Hm");
   RadioItem(this._item);
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       color: Colors.transparent,
-      margin: new EdgeInsets.all(5.0),
-      child: new Row(
+      margin: EdgeInsets.all(5.0),
+      child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          new Container(
-            height: 80.0,
-            width: 80.0,
-            margin: new EdgeInsets.only(left: 5.0),
-            child: new Center(
-              child: new Text(hora.format(DateTime.parse(_item.dataInicio)),
-                  style: new TextStyle(
+          Container(
+            height: 100.0,
+            width: 100.0,
+            margin: EdgeInsets.only(left: 0.0),
+            child: Center(
+              child: Text(hora.format(DateTime.parse(_item.dataInicio)),
+                  style: TextStyle(
                       fontFamily: 'Humanist',
                       color: _item.isSelected ? Colors.white : Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0)),
             ),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: _item.isSelected
-                  ? Colors.pink.withOpacity(0.7)
+                  ? Color.fromRGBO(189, 112, 162, 0.75)
                   : Colors.transparent,
-              border: new Border.all(
+              border: Border.all(
                   width: 2.0,
                   color: _item.isSelected
-                      ? Colors.pink.withOpacity(0.7)
-                      : Colors.pink.withOpacity(0.7)),
-              borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
+                      ? Color.fromRGBO(189, 112, 162, 0.75)
+                      : Color.fromRGBO(189, 112, 162, 0.75)),
+              borderRadius: BorderRadius.all(Radius.circular(2.0)),
             ),
           ),
-          new Expanded(
+          Expanded(
             child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Text(
+                padding: EdgeInsets.all(10),
+                child: Text(
                   diaSemana
                           .format(DateTime.parse(_item.dataInicio))
                           .toString()
@@ -256,11 +285,11 @@ class RadioItem extends StatelessWidget {
                       "\nSala: " +
                       _item.consultorio +
                       "." +
-                      //"\nDr(a): " + _item.medico +"." +
+                      "\nDr(a): " + _item.medico +"." +
                       "\nEsp.: " +
                       _item.especialidade +
                       ".",
-                  style: new TextStyle(
+                  style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Humanist',
                     fontSize: 16,
