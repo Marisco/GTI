@@ -77,7 +77,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
   @override
   void initState() {
     super.initState();
-    initializeDateFormatting("pr_BR", null).then((_) {
+    initializeDateFormatting("pt_BR", null).then((_) {
       this._getConsultas();
     });
   }
@@ -119,8 +119,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //resizeToAvoidBottomPadding: false,
+    return Scaffold(        
         body: SingleChildScrollView(
             child: GestureDetector(
                 onTap: () {
@@ -145,7 +144,8 @@ class _ConfirmacaoState extends State<Confirmacao> {
                       Row(children: [
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
-                          width: MediaQuery.of(context).size.width * .88,
+                          height: MediaQuery.of(context).size.height * (_dialogState != DialogState.DISMISSED? 0.7 :0.5),
+                          width: MediaQuery.of(context).size.width * .87,
                           decoration: BoxDecoration(
                               color: Color.fromRGBO(146, 174, 112, 0.75),
                               shape: BoxShape.rectangle,
@@ -256,7 +256,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                           Padding(
                                                               padding:
                                                                   EdgeInsets
-                                                                      .all(40),
+                                                                      .all(20),
                                                               child:
                                                                   RaisedButton
                                                                       .icon(
@@ -345,7 +345,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                             slideRightRouteBtnOK:
                                                                 SlideRightRoute(
                                                                     builder: (_) =>
-                                                                        Passo01()),
+                                                                        Passo01(dialogState: DialogState.DISMISSED)),
                                                           )
                                                         ])),
                                               )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
 import 'package:gti_sesa_saude/models/unidade.model.dart';
+import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo03.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
@@ -31,6 +32,7 @@ class Unidade extends StatefulWidget {
 class _UnidadeState extends State<Unidade> {
   final String paciente;
   final String pacienteId;
+  DialogState _dialogState = DialogState.DISMISSED;
   var _unidades = [];
   String _selUnidade;
   _UnidadeState({@required this.paciente, @required this.pacienteId});
@@ -47,10 +49,15 @@ class _UnidadeState extends State<Unidade> {
   }
 
   void _getUnidades() async {
+    setState(() => _dialogState = DialogState.LOADING);
     UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades();
     var unidade = unidadeModel.getUnidades();
-    setState(() {
-      _unidades = unidade;
+
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        _dialogState = DialogState.COMPLETED;
+        _unidades = unidade;
+      });
     });
   }
 
@@ -62,6 +69,13 @@ class _UnidadeState extends State<Unidade> {
             child: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
+                },
+                onHorizontalDragStart: (_) {
+                  Navigator.push(
+                      context,
+                      SlideRightRouteR(
+                          builder: (_) =>
+                              Passo01(dialogState: DialogState.DISMISSED)));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -88,7 +102,7 @@ class _UnidadeState extends State<Unidade> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(
-                                    child: new Theme(
+                                    child: Theme(
                                   data: Theme.of(context).copyWith(
                                       accentColor:
                                           Color.fromRGBO(125, 108, 187, 0.75),
@@ -100,100 +114,127 @@ class _UnidadeState extends State<Unidade> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
-                                            DropdownButton(
-                                              isDense: false,
-                                              hint: new Text(
-                                                'Escolha uma opção:',
-                                                style: new TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: 'Humanist',
-                                                  fontSize: 28,
-                                                  shadows: <Shadow>[
-                                                    Shadow(
-                                                        offset:
-                                                            Offset(1.0, 1.0),
-                                                        blurRadius: 3.0,
-                                                        color: Colors.black
-                                                            .withOpacity(0.7)),
-                                                    Shadow(
-                                                        offset:
-                                                            Offset(1.0, 1.0),
-                                                        blurRadius: 8.0,
-                                                        color: Colors.black
-                                                            .withOpacity(0.7)),
-                                                  ],
-                                                ),
-                                              ),
-                                              value: _selUnidade,
-                                              items: _unidades.map((unidade) {
-                                                return new DropdownMenuItem(
-                                                  value: unidade.numero,
-                                                  child: new Text(
-                                                    unidade.nome,
-                                                    style: new TextStyle(
-                                                      color: Colors.white,
-                                                      fontFamily: 'Humanist',
-                                                      fontSize: 25,
-                                                      shadows: <Shadow>[
-                                                        Shadow(
-                                                            offset: Offset(
-                                                                1.0, 1.0),
-                                                            blurRadius: 3.0,
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.7)),
-                                                        Shadow(
-                                                            offset: Offset(
-                                                                1.0, 1.0),
-                                                            blurRadius: 8.0,
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.7)),
-                                                      ],
+                                            _dialogState != DialogState.LOADING
+                                                ? DropdownButton(
+                                                    iconSize: 48,
+                                                    isDense: false,
+                                                    hint: Text(
+                                                      'Escolha uma opção:',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontFamily: 'Humanist',
+                                                        fontSize: 28,
+                                                        shadows: <Shadow>[
+                                                          Shadow(
+                                                              offset: Offset(
+                                                                  1.0, 1.0),
+                                                              blurRadius: 3.0,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                          Shadow(
+                                                              offset: Offset(
+                                                                  1.0, 1.0),
+                                                              blurRadius: 8.0,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newVal) {
-                                                setState(() {
-                                                  _selUnidade = newVal;
-                                                });
-                                              },
-                                              style: new TextStyle(
-                                                //color: Colors.black,
-                                                fontSize: 20,
-                                              ),
-                                              isExpanded: true,
-                                              elevation: 24,
-                                            ),
+                                                    value: _selUnidade,
+                                                    items: _unidades
+                                                        .map((unidade) {
+                                                      return DropdownMenuItem(
+                                                        value: unidade.numero,
+                                                        child: Text(
+                                                          unidade.nome,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                'Humanist',
+                                                            fontSize: 25,
+                                                            shadows: <Shadow>[
+                                                              Shadow(
+                                                                  offset:
+                                                                      Offset(
+                                                                          1.0,
+                                                                          1.0),
+                                                                  blurRadius:
+                                                                      3.0,
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.7)),
+                                                              Shadow(
+                                                                  offset:
+                                                                      Offset(
+                                                                          1.0,
+                                                                          1.0),
+                                                                  blurRadius:
+                                                                      8.0,
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.7)),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (newVal) {
+                                                      setState(() {
+                                                        _selUnidade = newVal;
+                                                      });
+                                                    },
+                                                    style: TextStyle(
+                                                      //color: Colors.black,
+                                                      fontSize: 20,
+                                                    ),
+                                                    isExpanded: true,
+                                                    elevation: 24,
+                                                  )
+                                                : CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                                Color>(
+                                                            Colors.white)),
                                             Padding(
                                                 padding: EdgeInsets.all(40),
                                                 child: RaisedButton.icon(
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        new SlideRightRoute(
-                                                            builder: (_) => Passo03(
-                                                                paciente: this
-                                                                    .paciente,
-                                                                pacienteId: this
-                                                                    .pacienteId,
-                                                                unidadeId: this
-                                                                    ._selUnidade)));
-                                                  },
+                                                  onPressed: _dialogState ==
+                                                          DialogState.LOADING
+                                                      ? null
+                                                      : () {
+                                                          Navigator.push(
+                                                              context,
+                                                              SlideRightRoute(
+                                                                  builder: (_) => Passo03(
+                                                                      paciente: this
+                                                                          .paciente,
+                                                                      pacienteId:
+                                                                          this
+                                                                              .pacienteId,
+                                                                      unidadeId:
+                                                                          this._selUnidade)));
+                                                        },
                                                   elevation: 5.0,
-                                                  shape:
-                                                      new RoundedRectangleBorder(
+                                                  shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        new BorderRadius
-                                                            .circular(30.0),
+                                                        BorderRadius.circular(
+                                                            30.0),
                                                   ),
-                                                  //color: const Color.fromARGB(255, 175, 207, 45),
-                                                  color: Color.fromRGBO(
-                                                      125,
-                                                      108,
-                                                      187,
-                                                      0.75), //Color.fromRGBO(41, 84, 142, 1),
+                                                  color: _dialogState ==
+                                                          DialogState.LOADING
+                                                      ? Colors.grey
+                                                          .withOpacity(0.75)
+                                                      : Color.fromRGBO(
+                                                          125,
+                                                          108,
+                                                          187,
+                                                          0.75), //Color.fromRGBO(41, 84, 142, 1),
                                                   icon: Icon(Icons.play_arrow,
                                                       color: Colors.white70),
                                                   label: Text(
@@ -203,7 +244,7 @@ class _UnidadeState extends State<Unidade> {
                                                         fontSize: 30,
                                                         color: Colors.white),
                                                   ),
-                                                )),
+                                                ))
                                           ])),
                                 ))
                               ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
+//import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/cadPaciente.dart';
 import 'package:gti_sesa_saude/models/paciente.model.dart';
@@ -12,61 +12,58 @@ import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/ui/passo02.dart';
 
 class Passo01 extends StatelessWidget {
+  final DialogState dialogState;
+  Passo01({@required this.dialogState});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GTI-SESA',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
         backgroundColor: Color.fromARGB(1, 41, 84, 142),
         hintColor: Colors.white,
       ),
-      home: Paciente(
-        title: "GTI-SESA",
-      ),
+      home: Paciente( dialogState: this.dialogState)
     );
   }
 }
 
 class Paciente extends StatefulWidget {
-  Paciente({Key key, this.title}) : super(key: key);
-  final String title;
+  final DialogState dialogState;
+  Paciente({@required this.dialogState});  
+  
   @override
-  _PacienteState createState() => _PacienteState();
+  _PacienteState createState() => _PacienteState(dialogState: this.dialogState);
 }
 
 class _PacienteState extends State<Paciente> {
+  final DialogState dialogState;
   final _documento = TextEditingController();
-  int _tpDocumento = 1;
-  String _dsDocumento = "";
-  final _dataNascimento = TextEditingController();
+  final _dataNascimento = TextEditingController();  
+  final focus = FocusNode();
+  int _tpDocumento = 1;  
   var paciente;
   var pacienteId;
-  var _paciente = [];
-  DialogState _dialogState = DialogState.DISMISSED;
+  var _paciente = [];    
   DateTime selectedDate = DateTime.now();
-  final focus = FocusNode();
+  String _dsDocumento;    
+  DialogState _dialogState;
+  _PacienteState({@required this.dialogState});    
 
   @override
   void initState() {
     super.initState();
-    initializeDateFormatting("pr_BR", null).then((_) {
+    initializeDateFormatting("pt_BR", null).then((_) {
       _tpDocumentoChange(0);
-      //BackButtonInterceptor.add(myInterceptor);
+      _dialogState =  this.dialogState == null ? DialogState.DISMISSED : this.dialogState;      
     });
   }
 
   @override
   void dispose() {
     _documento.dispose();
-    _dataNascimento.dispose();
-    //BackButtonInterceptor.removeAll();
+    _dataNascimento.dispose();    
     super.dispose();
-  }
-
-  bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!"); // Do some stuff.
-    return true;
   }
 
   void _tpDocumentoChange(int value) {
@@ -87,7 +84,7 @@ class _PacienteState extends State<Paciente> {
   void _getPaciente() async {
     setState(() => _dialogState = DialogState.LOADING);
     PacienteModel pacienteModel = await pacienteBloc.fetchPaciente(
-        this._documento.text, this._dataNascimento.text);
+        this._documento.text, this._dataNascimento.text); 
     setState(() {
       _paciente = [pacienteModel.getPaciente()];
       if (_paciente.isNotEmpty && _paciente[0] != null) {
@@ -98,7 +95,7 @@ class _PacienteState extends State<Paciente> {
         _dialogState = DialogState.DISMISSED;
         Navigator.push(
             context,
-            new SlideRightRoute(
+             SlideRightRoute(
                 builder: (_) => CadPaciente(
                     documento: this._documento.text,
                     dataNascimento: this._dataNascimento.text)));
@@ -109,7 +106,6 @@ class _PacienteState extends State<Paciente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(
             child: GestureDetector(
                 onTap: () {
@@ -124,249 +120,233 @@ class _PacienteState extends State<Paciente> {
                       ),
                     ),
                     child: Column(children: <Widget>[
-                      Row(children: <Widget>[
-                        Cabecalho(
-                            textoMensagem:
-                                'Olá! Seja bem vindo ao sistema de saúde do Município da Serra.',
-                            state: _dialogState),
-                      ]),
+                      Cabecalho(
+                          textoMensagem:
+                              'Olá! Seja bem vindo ao sistema de saúde do Município da Serra.',
+                          state: _dialogState),
                       Row(children: <Widget>[
                         Container(
                           width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(top: 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Visibility(
-                                visible: _dialogState == DialogState.DISMISSED,
-                                child: SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.6,
-                                    child: Container(
-                                        margin:
-                                            EdgeInsets.only(left: 5, right: 5),
-                                        padding: EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Row(children: <Widget>[
-                                                Text(
-                                                  'Documento:',
-                                                  style: new TextStyle(
-                                                      fontFamily: 'Humanist',
-                                                      color: Colors.white,
-                                                      fontSize: 25),
-                                                ),
-                                                Radio(
-                                                  value: 0,
-                                                  groupValue: _tpDocumento,
-                                                  onChanged: _tpDocumentoChange,
-                                                  activeColor: Color.fromRGBO(
-                                                      41, 84, 142, 1),
-                                                ),
-                                                Text(
-                                                  'Cpf',
-                                                  style: new TextStyle(
-                                                      fontFamily: 'Humanist',
-                                                      color: Colors.white,
-                                                      fontSize: 25),
-                                                ),
-                                                Radio(
-                                                  value: 1,
-                                                  groupValue: _tpDocumento,
-                                                  onChanged: _tpDocumentoChange,
-                                                  activeColor: Color.fromRGBO(
-                                                      41, 84, 142, 1),
-                                                ),
-                                                Text(
-                                                  'Cartão Sus',
-                                                  style: new TextStyle(
-                                                      fontFamily: 'Humanist',
-                                                      color: Colors.white,
-                                                      fontSize: 25),
-                                                ),
-                                              ]),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 15, top: 0),
-                                                  child: Container(
-                                                      height: 70,
-                                                      padding: EdgeInsets.only(
-                                                          top: 0),
-                                                      decoration: new BoxDecoration(
-                                                          color: Color.fromRGBO(41, 84, 142, 1)
-                                                              .withOpacity(
-                                                                  0.25),
-                                                          shape: BoxShape
-                                                              .rectangle,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      25))),
-                                                      child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 20),
-                                                          child: TextField(
-                                                              controller:
-                                                                  _documento,
-                                                              textInputAction:
-                                                                  TextInputAction.next,
-                                                              onSubmitted: (v) {
-                                                                FocusScope.of(
-                                                                        context)
-                                                                    .requestFocus(
-                                                                        focus);
-                                                              },
-                                                              maxLength: 18,
-                                                              decoration: new InputDecoration(
-                                                                counterText: '',
-                                                                labelText:
-                                                                    "Digite o nº do " +
-                                                                        _dsDocumento,
-                                                                labelStyle: new TextStyle(
-                                                                    fontFamily:
-                                                                        'Humanist',
-                                                                    color: Colors
-                                                                        .white70,
-                                                                    fontSize:
-                                                                        30,
-                                                                    letterSpacing:
-                                                                        1.5),
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                              style: new TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
-                                                              keyboardType: TextInputType.number,
-                                                              inputFormatters: <TextInputFormatter>[
-                                                                WhitelistingTextInputFormatter
-                                                                    .digitsOnly,
-                                                                _tpDocumento ==
-                                                                        0
-                                                                    ? FormatarCPF()
-                                                                    : FormatarCNS()
-                                                              ])))),
-                                              Container(
-                                                  height: 70,
-                                                  decoration: new BoxDecoration(
-                                                      color: Color.fromRGBO(
-                                                              41, 84, 142, 1)
-                                                          .withOpacity(0.25),
-                                                      shape: BoxShape.rectangle,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(25))),
-                                                  child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 20),
-                                                      child: TextField(
-                                                          controller:
-                                                              _dataNascimento,
-                                                          focusNode: focus,
-                                                          onSubmitted: (v) {
-                                                            _getPaciente();
-                                                          },
-                                                          maxLength: 10,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            counterText: '',
-                                                            labelText:
-                                                                "Data de nascimento:",
-                                                            labelStyle:
-                                                                TextStyle(
-                                                              fontFamily:
-                                                                  'Humanist',
-                                                              color: Colors
-                                                                  .white70,
-                                                              fontSize: 30,
-                                                              letterSpacing:
-                                                                  1.5,
+                              _dialogState == DialogState.DISMISSED
+                                  ? Container(
+                                      margin:
+                                          EdgeInsets.only(left: 20, right: 20),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(children: <Widget>[
+                                              Text(
+                                                'Documento:',
+                                                style: TextStyle(
+                                                    fontFamily: 'Humanist',
+                                                    color: Colors.white,
+                                                    fontSize: 25),
+                                              ),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Radio(
+                                                    value: 0,
+                                                    groupValue: _tpDocumento,
+                                                    onChanged:
+                                                        _tpDocumentoChange,
+                                                    activeColor: Color.fromRGBO(
+                                                        41, 84, 142, 1),
+                                                  )),
+                                              Text(
+                                                'Cpf',
+                                                style: TextStyle(
+                                                    fontFamily: 'Humanist',
+                                                    color: Colors.white,
+                                                    fontSize: 25),
+                                              ),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Radio(
+                                                    value: 1,
+                                                    groupValue: _tpDocumento,
+                                                    onChanged:
+                                                        _tpDocumentoChange,
+                                                    activeColor: Color.fromRGBO(
+                                                        41, 84, 142, 1),
+                                                  )),
+                                              Text(
+                                                'Cartão Sus',
+                                                style: TextStyle(
+                                                    fontFamily: 'Humanist',
+                                                    color: Colors.white,
+                                                    fontSize: 25),
+                                              ),
+                                            ]),
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 10, top: 0),
+                                                child: Container(
+                                                    height: 75,
+                                                    decoration: BoxDecoration(
+                                                        color: Color.fromRGBO(41, 84, 142, 1)
+                                                            .withOpacity(0.25),
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                        borderRadius: BorderRadius.all(Radius.circular(
+                                                            25))),
+                                                    child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left: 20),
+                                                        child: TextField(
+                                                            controller:
+                                                                _documento,
+                                                            textInputAction: TextInputAction
+                                                                .next,
+                                                            onSubmitted: (_) {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      focus);
+                                                            },
+                                                            maxLength: 18,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              counterText: '',
+                                                              labelText:
+                                                                  "Digite o nº do " +
+                                                                      _dsDocumento,
+                                                              labelStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Humanist',
+                                                                  color: Colors
+                                                                      .white70,
+                                                                  fontSize: 30,
+                                                                  letterSpacing:
+                                                                      1.5),
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
                                                             ),
-                                                            border: InputBorder
-                                                                .none,
+                                                            style: TextStyle(
+                                                                fontFamily: 'Humanist',
+                                                                color: Colors.white,
+                                                                fontSize: 20),
+                                                            keyboardType: TextInputType.number,
+                                                            inputFormatters: <TextInputFormatter>[
+                                                              WhitelistingTextInputFormatter
+                                                                  .digitsOnly,
+                                                              _tpDocumento == 0
+                                                                  ? FormatarCPF()
+                                                                  : FormatarCNS()
+                                                            ])))),
+                                            Container(
+                                                height: 75,
+                                                margin: EdgeInsets.only(
+                                                    bottom:
+                                                        MediaQuery.of(context).size.height *
+                                                            0.04),
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromRGBO(41, 84, 142, 1)
+                                                        .withOpacity(0.25),
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.all(
+                                                        Radius.circular(25))),
+                                                child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                      left: 20,
+                                                    ),
+                                                    child: TextField(
+                                                        controller:
+                                                            _dataNascimento,
+                                                        focusNode: focus,
+                                                        textInputAction :TextInputAction.search,
+                                                        onSubmitted: (_) {
+                                                          _getPaciente();
+                                                        },
+                                                        maxLength: 10,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          counterText: '',
+                                                          labelText:
+                                                              "Data de nascimento:",
+                                                          labelStyle: TextStyle(
+                                                            fontFamily:
+                                                                'Humanist',
+                                                            color:
+                                                                Colors.white70,
+                                                            fontSize: 30,
+                                                            letterSpacing: 1.5,
                                                           ),
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Humanist',
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                          keyboardType:
-                                                              TextInputType.number,
-                                                          inputFormatters: <TextInputFormatter>[
-                                                            WhitelistingTextInputFormatter
-                                                                .digitsOnly,
-                                                            FormatarData()
-                                                          ]))),
-                                              Padding(
-                                                  padding: EdgeInsets.all(40),
-                                                  child: RaisedButton.icon(
-                                                    onPressed: () {
-                                                      _getPaciente();
-                                                    },
-                                                    elevation: 5.0,
-                                                    shape:
-                                                        new RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          new BorderRadius
-                                                              .circular(15.0),
-                                                    ),
-                                                    //color: const Color.fromARGB(255, 175, 207, 45),
-                                                    color: Color.fromRGBO(
-                                                            41, 84, 142, 1)
-                                                        .withOpacity(0.75),
-                                                    icon: Icon(Icons.play_arrow,
-                                                        color: Colors.white70),
-                                                    label: Text(
-                                                      "",
-                                                      style: TextStyle(
-                                                          fontSize: 30,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ))
-                                            ]))),
-                              ),
-                              Visibility(
-                                  visible:
-                                      _dialogState != DialogState.DISMISSED,
-                                  child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.6,
-                                      child: MensagemDialog(
-                                        state: _dialogState,
-                                        paciente: this.paciente == null
-                                            ? ""
-                                            : this.paciente,
-                                        pacienteId: this.pacienteId == null
-                                            ? ""
-                                            : this.pacienteId,
-                                        textoTitle: this.pacienteId == null
-                                            ? " Aguarde..."
-                                            : " Olá " + this.paciente + "!",
-                                        textoMensagem:
-                                            "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não for esta pessoa!",
-                                        textoBtnOK: "Sim",
-                                        textoBtnCancel: "Não",
-                                        textoState:
-                                            (this._documento.text.length == 14
-                                                    ? "Localizando Cpf"
-                                                    : "Localizando Catão SUS") +
-                                                ":\n " +
-                                                this._documento.text +
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
+                                                        style: TextStyle(
+                                                            fontFamily: 'Humanist',
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                        keyboardType: TextInputType.number,
+                                                        inputFormatters: <TextInputFormatter>[
+                                                          WhitelistingTextInputFormatter
+                                                              .digitsOnly,
+                                                          FormatarData()
+                                                        ]))),
+                                            RaisedButton.icon(                                              
+                                              onPressed: () {
+                                                _getPaciente();
+                                              },
+                                              elevation: 5.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15.0),
+                                              ),
+                                              color:
+                                                  Color.fromRGBO(41, 84, 142, 1)
+                                                      .withOpacity(0.75),
+                                              icon: Icon(Icons.play_arrow,
+                                                  size: 36,
+                                                  color: Colors.white70),
+                                              label: Text(
                                                 "",
-                                        slideRightRouteBtnOK: SlideRightRoute(
-                                            builder: (_) => Passo02(
-                                                paciente: this.paciente,
-                                                pacienteId: this.pacienteId)),
-                                        slideRightRouteBtnCancel:
-                                            SlideRightRoute(
-                                                builder: (_) => Passo01()),
-                                        color: this.paciente == null
-                                            ? Colors.transparent
-                                            : Color.fromRGBO(41, 84, 142, 0.5),
-                                      ))),
+                                                style: TextStyle(
+                                                    fontSize: 30,
+                                                    color: Colors.white),
+                                              ),
+                                            )
+                                          ]),
+                                    )
+                                  : MensagemDialog(
+                                      state: _dialogState,
+                                      paciente: this.paciente == null
+                                          ? ""
+                                          : this.paciente,
+                                      pacienteId: this.pacienteId == null
+                                          ? ""
+                                          : this.pacienteId,
+                                      textoTitle: this.pacienteId == null
+                                          ? " Aguarde..."
+                                          : " Olá " + this.paciente + "!",
+                                      textoMensagem:
+                                          "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!",
+                                      textoBtnOK: "Sim",
+                                      textoBtnCancel: "Não",
+                                      textoState:
+                                          (this._documento.text.length == 14
+                                                  ? "Localizando Cpf"
+                                                  : "Localizando Catão SUS") +
+                                              ":\n " +
+                                              this._documento.text +
+                                              "",
+                                      slideRightRouteBtnOK: SlideRightRoute(
+                                          builder: (_) => Passo02(
+                                              paciente: this.paciente,
+                                              pacienteId: this.pacienteId)),
+                                      slideRightRouteBtnCancel: SlideRightRoute(
+                                          builder: (_) => Passo01( dialogState: DialogState.DISMISSED)),
+                                      color: this.paciente == null
+                                          ? Colors.transparent
+                                          : Color.fromRGBO(41, 84, 142, 0.5),
+                                    ),
                             ],
                           ),
                         )

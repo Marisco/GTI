@@ -16,7 +16,7 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
   @override
   void initState() {
     super.initState();
-    initializeDateFormatting("pr_BR", null).then((_) {
+    initializeDateFormatting("pt_BR", null).then((_) {
       //BackButtonInterceptor.add(myInterceptor);
     });
   } 

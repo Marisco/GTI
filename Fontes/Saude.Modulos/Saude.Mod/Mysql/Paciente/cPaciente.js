@@ -17,7 +17,7 @@ function obterPaciente(db, body, callback) {
 
 function inserirPaciente(db, body, callback) {
     var qry = sqlPaciente.sqlInserir
-    return db.client.query(qry, [body.nome, body.cpf, body.telefone, body.cartaoSus, body.bairro, body.data_nascimento, body.sexo], callback);
+    return db.client.query(qry, [body.nome, body.cpf, body.telefone, body.cartaoSus, body.bairro, body.dataNascimento, body.sexo], callback);
 }
 
 module.exports = {

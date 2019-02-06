@@ -25,7 +25,7 @@ class GtiSesaSaude extends StatelessWidget {
           primarySwatch: Colors.blue,
           backgroundColor: Color.fromRGBO(41, 84, 142, 1)          
           ),
-      home: new Passo01(),
+      home: new Passo01( dialogState: null),
     );
   }
 }

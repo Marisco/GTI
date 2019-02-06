@@ -10,10 +10,14 @@ class Cabecalho extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    var margemTop = MediaQuery.of(context).size.height * (state == DialogState.DISMISSED ? 0.25: 0.20);
+    var margemLeft = MediaQuery.of(context).size.width *  0.05;
+    var margemRight = MediaQuery.of(context).size.width * 0.05;
+    var margemBottom = 0.0;
     return Row(children: [
       Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(top: 160, left: 10, right: 10, bottom: 15),
+          padding: EdgeInsets.only(top: margemTop, left: margemLeft, right: margemRight, bottom: margemBottom),
           child: Visibility(
             visible: state == DialogState.DISMISSED,
             child: Text(this.textoMensagem,
@@ -22,7 +26,7 @@ class Cabecalho extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 30,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.center,
             ),
           )),
     ]);

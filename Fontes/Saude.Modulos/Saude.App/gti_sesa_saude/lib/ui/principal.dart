@@ -11,7 +11,7 @@ class Principal extends StatefulWidget {
   final String title;
 
   @override
-  _PrincipalState createState() => new _PrincipalState();
+  _PrincipalState createState() => _PrincipalState();
 }
 
 class _PrincipalState extends State<Principal> {
@@ -21,13 +21,13 @@ class _PrincipalState extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: new AppBar(
-          title: new Text(_title),
+      appBar: AppBar(
+          title: Text(_title),
           backgroundColor: _appBarColor,
           actions: <Widget>[
-            new Image.asset(
+            Image.asset(
               "img/logo_icon.png",
               width: 50,
             )
@@ -38,7 +38,7 @@ class _PrincipalState extends State<Principal> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
-            child: Center(child: Passo01()),
+            child: Center(child: Passo01(dialogState: null)),
           ),
           Container(
             child: Center(child: Passo02(paciente:"", pacienteId: "")),
@@ -55,33 +55,33 @@ class _PrincipalState extends State<Principal> {
         ],
         controller: _pageController,
         onPageChanged: onPageChanged,
-        physics:new NeverScrollableScrollPhysics()
+        physics:NeverScrollableScrollPhysics()
         
       ),
       // bottomNavigationBar: BottomNavigationBar(
       //   items: [
       //     BottomNavigationBarItem(
-      //       icon: new Image.asset("img/ic_passo01.png", width: 48),
+      //       icon: Image.asset("img/ic_passo01.png", width: 48),
       //       title: Text("Passo"),
       //       backgroundColor: Colors.blue
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: new Image.asset("img/ic_passo02.png", width: 48),
+      //       icon: Image.asset("img/ic_passo02.png", width: 48),
       //       title: Text("Passo"),
       //       backgroundColor: Colors.purple
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: new Image.asset("img/ic_passo03.png", width: 48),
+      //       icon: Image.asset("img/ic_passo03.png", width: 48),
       //       title: Text("Passo"),
       //       backgroundColor: Colors.cyan
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: new Image.asset("img/ic_passo04.png", width: 48),
+      //       icon: Image.asset("img/ic_passo04.png", width: 48),
       //       title: Text("Passo"),
       //       backgroundColor: Colors.pink
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: new Image.asset("img/ic_passo05.png", width: 48),
+      //       icon: Image.asset("img/ic_passo05.png", width: 48),
       //       title: Text("Passo"),
       //       backgroundColor: Colors.transparent
       //     ),
