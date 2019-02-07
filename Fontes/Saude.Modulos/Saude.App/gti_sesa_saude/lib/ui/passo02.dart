@@ -50,7 +50,13 @@ class _UnidadeState extends State<Unidade> {
 
   void _getUnidades() async {
     setState(() => _dialogState = DialogState.LOADING);
-    UnidadeModel unidadeModel = await unidadeBloc.fetchUnidades();
+    UnidadeModel unidadeModel =
+        await unidadeBloc.fetchUnidades().catchError((e) {
+      Navigator.push(
+          context,
+          SlideRightRouteR(
+              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    });
     var unidade = unidadeModel.getUnidades();
 
     Future.delayed(Duration(milliseconds: 1000), () {

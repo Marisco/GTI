@@ -14,11 +14,12 @@ class SaudeApi {
   Future<PacienteModel> fetchPaciente(
       String documento, String dataNascimento) async {
     documento = documento.replaceAll('.', '').replaceAll('-', '');
+    dataNascimento = dataNascimento != "" ?
     dataNascimento = dataNascimento.substring(6, 10) +
         "-" +
         dataNascimento.substring(3, 5) +
         "-" +
-        dataNascimento.substring(0, 2);
+        dataNascimento.substring(0, 2) : "";
 
     String tipoDocumento = documento.length == 11 ? "cpf" : "cartaoSus";
 
@@ -37,7 +38,8 @@ class SaudeApi {
     if (response.statusCode == 200) {
       return PacienteModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Erro'); 
+      MensagemModel teste = MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(teste.getMensagem()[0].mensagem.toString());        
     }
   }
 

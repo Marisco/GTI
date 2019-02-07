@@ -115,7 +115,7 @@ class MensagemDialog extends StatelessWidget {
                           ),
                         ),
                 ),
-                actions: state == DialogState.COMPLETED
+                actions: state == DialogState.COMPLETED ||(state == DialogState.ERROR)
                     ? <Widget>[
                         FlatButton(
                             child: Text(
@@ -173,4 +173,5 @@ enum DialogState {
   LOADING,
   COMPLETED,
   DISMISSED,
+  ERROR  
 }

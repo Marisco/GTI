@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/blocs/especialidade.bloc.dart';
 import 'package:gti_sesa_saude/models/especialidade.model.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo02.dart';
 import 'package:gti_sesa_saude/ui/passo04.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
@@ -70,7 +71,12 @@ class _EspecialidadeState extends State<Especialidade> {
         await especialidadeBloc.fetchEspecialidades(
             this.unidadeId,
             DateTime.now().toString(),
-            DateTime.now().add(Duration(days: 2)).toString());
+            DateTime.now().add(Duration(days: 2)).toString()).catchError((e) {
+      Navigator.push(
+          context,
+          SlideRightRouteR(
+              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    });
     var especialidade = especialidadeModel.getEspecialidades();
 
     Future.delayed(Duration(milliseconds: 1000), () {

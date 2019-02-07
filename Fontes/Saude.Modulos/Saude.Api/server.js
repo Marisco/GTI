@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 var router = express.Router();
 const srvController = require('./serverController')
-moment = require('moment')
+const moment = require('moment')
 moment.locale('pt-br')
 console.log('Prefeitura da Serra: Módulo Saude.Api  -Porta: ' + port)
 

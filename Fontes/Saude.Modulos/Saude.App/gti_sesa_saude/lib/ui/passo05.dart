@@ -94,7 +94,12 @@ class _ConfirmacaoState extends State<Confirmacao> {
         this.unidadeId,
         this.especialidadeId,
         DateTime.now().add(Duration(days: 1)).toString(),
-        DateTime.now().add(Duration(days: 3)).toString());
+        DateTime.now().add(Duration(days: 3)).toString()).catchError((e) {
+      Navigator.push(
+          context,
+          SlideRightRouteR(
+              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    });
     var consulta = consultaModel.getConsultas()[0];
     setState(() {
       _dialogState = DialogState.COMPLETED;
@@ -346,6 +351,12 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                                 SlideRightRoute(
                                                                     builder: (_) =>
                                                                         Passo01(dialogState: DialogState.DISMISSED)),
+                                                          color:Color
+                                                                    .fromRGBO(
+                                                                        146,
+                                                                        174,
+                                                                        112,
+                                                                        0.75),
                                                           )
                                                         ])),
                                               )

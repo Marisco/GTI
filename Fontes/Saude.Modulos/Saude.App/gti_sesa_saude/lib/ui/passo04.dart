@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
+import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo03.dart';
 import 'package:gti_sesa_saude/ui/passo05.dart';
 import 'package:intl/intl.dart';
@@ -78,12 +79,19 @@ class _ConsultaState extends State<Consulta> {
 
   void _getConsultas() async {
     setState(() => _dialogState = DialogState.LOADING);
-    ConsultaModel consultaModel = await consultaBloc.fetchConsultas(
-        "0",
-        this.unidadeId,
-        this.especialidadeId,
-        DateTime.now().add(Duration(days: 1)).toString(),
-        DateTime.now().add(Duration(days: 3)).toString());
+    ConsultaModel consultaModel = await consultaBloc
+        .fetchConsultas(
+            "0",
+            this.unidadeId,
+            this.especialidadeId,
+            DateTime.now().add(Duration(days: 1)).toString(),
+            DateTime.now().add(Duration(days: 3)).toString())
+        .catchError((e) {
+      Navigator.push(
+          context,
+          SlideRightRouteR(
+              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    });
     var consulta = consultaModel.getConsultas();
     Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {

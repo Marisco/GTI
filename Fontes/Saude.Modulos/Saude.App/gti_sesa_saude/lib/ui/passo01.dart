@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
-//import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/cadPaciente.dart';
 import 'package:gti_sesa_saude/models/paciente.model.dart';
@@ -17,21 +16,20 @@ class Passo01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GTI-SESA',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        backgroundColor: Color.fromARGB(1, 41, 84, 142),
-        hintColor: Colors.white,
-      ),
-      home: Paciente( dialogState: this.dialogState)
-    );
+        title: 'GTI-SESA',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          backgroundColor: Color.fromARGB(1, 41, 84, 142),
+          hintColor: Colors.white,
+        ),
+        home: Paciente(dialogState: this.dialogState));
   }
 }
 
 class Paciente extends StatefulWidget {
   final DialogState dialogState;
-  Paciente({@required this.dialogState});  
-  
+  Paciente({@required this.dialogState});
+
   @override
   _PacienteState createState() => _PacienteState(dialogState: this.dialogState);
 }
@@ -39,30 +37,32 @@ class Paciente extends StatefulWidget {
 class _PacienteState extends State<Paciente> {
   final DialogState dialogState;
   final _documento = TextEditingController();
-  final _dataNascimento = TextEditingController();  
+  final _dataNascimento = TextEditingController();
   final focus = FocusNode();
-  int _tpDocumento = 1;  
+  int _tpDocumento = 1;
   var paciente;
   var pacienteId;
-  var _paciente = [];    
+  var _paciente = [];
   DateTime selectedDate = DateTime.now();
-  String _dsDocumento;    
+  String _dsDocumento;
+  String _dsErro = "";
   DialogState _dialogState;
-  _PacienteState({@required this.dialogState});    
+  _PacienteState({@required this.dialogState});
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting("pt_BR", null).then((_) {
       _tpDocumentoChange(0);
-      _dialogState =  this.dialogState == null ? DialogState.DISMISSED : this.dialogState;      
+      _dialogState =
+          this.dialogState == null ? DialogState.DISMISSED : this.dialogState;
     });
   }
 
   @override
   void dispose() {
     _documento.dispose();
-    _dataNascimento.dispose();    
+    _dataNascimento.dispose();
     super.dispose();
   }
 
@@ -83,8 +83,15 @@ class _PacienteState extends State<Paciente> {
 
   void _getPaciente() async {
     setState(() => _dialogState = DialogState.LOADING);
-    PacienteModel pacienteModel = await pacienteBloc.fetchPaciente(
-        this._documento.text, this._dataNascimento.text); 
+    PacienteModel pacienteModel = await pacienteBloc
+        .fetchPaciente(this._documento.text, this._dataNascimento.text)
+        .catchError((e) {      
+      setState(() { 
+        _dialogState = DialogState.ERROR;
+        _dsErro = e.message;
+      });
+    });
+
     setState(() {
       _paciente = [pacienteModel.getPaciente()];
       if (_paciente.isNotEmpty && _paciente[0] != null) {
@@ -95,7 +102,7 @@ class _PacienteState extends State<Paciente> {
         _dialogState = DialogState.DISMISSED;
         Navigator.push(
             context,
-             SlideRightRoute(
+            SlideRightRoute(
                 builder: (_) => CadPaciente(
                     documento: this._documento.text,
                     dataNascimento: this._dataNascimento.text)));
@@ -188,29 +195,32 @@ class _PacienteState extends State<Paciente> {
                                                 child: Container(
                                                     height: 75,
                                                     decoration: BoxDecoration(
-                                                        color: Color.fromRGBO(41, 84, 142, 1)
+                                                        color: Color.fromRGBO(
+                                                                41, 84, 142, 1)
                                                             .withOpacity(0.25),
                                                         shape:
                                                             BoxShape.rectangle,
-                                                        borderRadius: BorderRadius.all(Radius.circular(
-                                                            25))),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    25))),
                                                     child: Padding(
                                                         padding: EdgeInsets.only(
                                                             left: 20),
                                                         child: TextField(
                                                             controller:
                                                                 _documento,
-                                                            textInputAction: TextInputAction
-                                                                .next,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .next,
                                                             onSubmitted: (_) {
                                                               FocusScope.of(
                                                                       context)
                                                                   .requestFocus(
                                                                       focus);
                                                             },
-                                                            maxLength: 18,
-                                                            decoration:
-                                                                InputDecoration(
+                                                            maxLength: _tpDocumento == 0 ? 14 : 18,
+                                                            decoration: InputDecoration(
                                                               counterText: '',
                                                               labelText:
                                                                   "Digite o nº do " +
@@ -227,10 +237,7 @@ class _PacienteState extends State<Paciente> {
                                                                   InputBorder
                                                                       .none,
                                                             ),
-                                                            style: TextStyle(
-                                                                fontFamily: 'Humanist',
-                                                                color: Colors.white,
-                                                                fontSize: 20),
+                                                            style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
                                                             keyboardType: TextInputType.number,
                                                             inputFormatters: <TextInputFormatter>[
                                                               WhitelistingTextInputFormatter
@@ -242,11 +249,13 @@ class _PacienteState extends State<Paciente> {
                                             Container(
                                                 height: 75,
                                                 margin: EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context).size.height *
-                                                            0.04),
+                                                    bottom: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.04),
                                                 decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(41, 84, 142, 1)
+                                                    color: Color.fromRGBO(
+                                                            41, 84, 142, 1)
                                                         .withOpacity(0.25),
                                                     shape: BoxShape.rectangle,
                                                     borderRadius: BorderRadius.all(
@@ -255,17 +264,17 @@ class _PacienteState extends State<Paciente> {
                                                     padding: EdgeInsets.only(
                                                       left: 20,
                                                     ),
-                                                    child: TextField(
+                                                    child: TextField(                                                                                                            
                                                         controller:
                                                             _dataNascimento,
                                                         focusNode: focus,
-                                                        textInputAction :TextInputAction.search,
+                                                        textInputAction:
+                                                            TextInputAction.search,
                                                         onSubmitted: (_) {
                                                           _getPaciente();
                                                         },
                                                         maxLength: 10,
-                                                        decoration:
-                                                            InputDecoration(
+                                                        decoration: InputDecoration(
                                                           counterText: '',
                                                           labelText:
                                                               "Data de nascimento:",
@@ -280,25 +289,21 @@ class _PacienteState extends State<Paciente> {
                                                           border:
                                                               InputBorder.none,
                                                         ),
-                                                        style: TextStyle(
-                                                            fontFamily: 'Humanist',
-                                                            color: Colors.white,
-                                                            fontSize: 20),
+                                                        style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
                                                         keyboardType: TextInputType.number,
                                                         inputFormatters: <TextInputFormatter>[
                                                           WhitelistingTextInputFormatter
                                                               .digitsOnly,
                                                           FormatarData()
                                                         ]))),
-                                            RaisedButton.icon(                                              
+                                            RaisedButton.icon(
                                               onPressed: () {
                                                 _getPaciente();
                                               },
                                               elevation: 5.0,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        15.0),
+                                                    BorderRadius.circular(15.0),
                                               ),
                                               color:
                                                   Color.fromRGBO(41, 84, 142, 1)
@@ -315,38 +320,64 @@ class _PacienteState extends State<Paciente> {
                                             )
                                           ]),
                                     )
-                                  : MensagemDialog(
-                                      state: _dialogState,
-                                      paciente: this.paciente == null
-                                          ? ""
-                                          : this.paciente,
-                                      pacienteId: this.pacienteId == null
-                                          ? ""
-                                          : this.pacienteId,
-                                      textoTitle: this.pacienteId == null
-                                          ? " Aguarde..."
-                                          : " Olá " + this.paciente + "!",
-                                      textoMensagem:
-                                          "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!",
-                                      textoBtnOK: "Sim",
-                                      textoBtnCancel: "Não",
-                                      textoState:
-                                          (this._documento.text.length == 14
+                                  : _dialogState == DialogState.ERROR
+                                      ? MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: "",
+                                          pacienteId: "",
+                                          textoTitle: "Desculpe!",
+                                          textoMensagem: _dsErro +
+                                              "\nPor favor, tente novamente.",
+                                          textoBtnOK: "",
+                                          textoBtnCancel: "Voltar",
+                                          textoState: "",
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Passo01(
+                                                      dialogState: DialogState
+                                                          .DISMISSED)),
+                                          color:
+                                              Color.fromRGBO(41, 84, 142, 0.5),
+                                        )
+                                      : MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: this.paciente == null
+                                              ? ""
+                                              : this.paciente,
+                                          pacienteId: this.pacienteId == null
+                                              ? ""
+                                              : this.pacienteId,
+                                          textoTitle: this.pacienteId == null
+                                              ? " Aguarde..."
+                                              : " Olá " + this.paciente + "!",
+                                          textoMensagem:
+                                              "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!",
+                                          textoBtnOK: "Sim",
+                                          textoBtnCancel: "Não",
+                                          textoState: (this
+                                                          ._documento
+                                                          .text
+                                                          .length ==
+                                                      14
                                                   ? "Localizando Cpf"
                                                   : "Localizando Catão SUS") +
                                               ":\n " +
                                               this._documento.text +
                                               "",
-                                      slideRightRouteBtnOK: SlideRightRoute(
-                                          builder: (_) => Passo02(
-                                              paciente: this.paciente,
-                                              pacienteId: this.pacienteId)),
-                                      slideRightRouteBtnCancel: SlideRightRoute(
-                                          builder: (_) => Passo01( dialogState: DialogState.DISMISSED)),
-                                      color: this.paciente == null
-                                          ? Colors.transparent
-                                          : Color.fromRGBO(41, 84, 142, 0.5),
-                                    ),
+                                          slideRightRouteBtnOK: SlideRightRoute(
+                                              builder: (_) => Passo02(
+                                                  paciente: this.paciente,
+                                                  pacienteId: this.pacienteId)),
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Passo01(
+                                                      dialogState: DialogState
+                                                          .DISMISSED)),
+                                          color: this.paciente == null
+                                              ? Colors.transparent
+                                              : Color.fromRGBO(
+                                                  41, 84, 142, 0.5),
+                                        ),
                             ],
                           ),
                         )
