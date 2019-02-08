@@ -14,38 +14,42 @@ class SaudeApi {
   Future<PacienteModel> fetchPaciente(
       String documento, String dataNascimento) async {
     documento = documento.replaceAll('.', '').replaceAll('-', '');
-    dataNascimento = dataNascimento != "" ?
-    dataNascimento = dataNascimento.substring(6, 10) +
-        "-" +
-        dataNascimento.substring(3, 5) +
-        "-" +
-        dataNascimento.substring(0, 2) : "";
+    dataNascimento = dataNascimento != ""
+        ? dataNascimento = dataNascimento.substring(6, 10) +
+            "-" +
+            dataNascimento.substring(3, 5) +
+            "-" +
+            dataNascimento.substring(0, 2)
+        : "";
 
     String tipoDocumento = documento.length == 11 ? "cpf" : "cartaoSus";
 
     Map data = {tipoDocumento: documento, "dataNascimento": dataNascimento};
 
-    print("entered");
-    final response = await client.post(
-        "http://172.16.64.12:3010/saude/getPaciente",
-        headers: {
-          "Accept": "application/json",
-          "content-type": "application/json"
-        },
-        body: json.encode(data),
-        encoding: Encoding.getByName("utf-8"));
-    print(response.body.toString());
-    if (response.statusCode == 200) {
-      return PacienteModel.fromJson(json.decode(response.body));
-    } else {
-      MensagemModel teste = MensagemModel.fromJson(json.decode(response.body));
-      throw Exception(teste.getMensagem()[0].mensagem.toString());        
-    }
+    
+      final response = await client
+          .post("http://172.16.64.17:3010/saude/getPaciente",
+              headers: {
+                "Accept": "application/json",
+                "content-type": "application/json"
+              },
+              body: json.encode(data),
+              encoding: Encoding.getByName("utf-8"))
+          .timeout(Duration(seconds: 5));
+      print(response.body.toString());
+      if (response.statusCode == 200) {
+        return PacienteModel.fromJson(json.decode(response.body));
+      } else {
+        MensagemModel teste =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(teste.getMensagem()[0].mensagem.toString());
+      }
+    
   }
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://172.16.64.12:3010/saude/getUnidades", headers: {
+        .get("http://172.16.64.17:3010/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     });
@@ -66,7 +70,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.12:3010/saude/getEspecialidades",
+        "http://172.16.64.17:3010/saude/getEspecialidades",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -92,7 +96,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.12:3010/saude/getConsultas",
+        "http://172.16.64.17:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -112,7 +116,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client.post(
-        "http://172.16.64.12:3010/saude/getConsultas",
+        "http://172.16.64.17:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -132,7 +136,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://172.16.64.12:3010/saude/postConsulta",
+        "http://172.16.64.17:3010/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -171,10 +175,10 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.12:3010/saude/postPaciente",         
+        "http://172.16.64.17:3010/saude/postPaciente",
         headers: {
           "Accept": "application/json",
-          "content-type": "application/json"
+          "content-type": "application/json" 
         },
         body: json.encode(data),
         encoding: Encoding.getByName("utf-8"));
@@ -182,13 +186,15 @@ class SaudeApi {
     if (response.statusCode == 200) {
       return InsertModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Erro');
+     MensagemModel teste =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(teste.getMensagem()[0].mensagem.toString());
     }
   }
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://172.16.64.12:3010/saude/getBairros", headers: {
+        .get("http://172.16.64.17:3010/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     });

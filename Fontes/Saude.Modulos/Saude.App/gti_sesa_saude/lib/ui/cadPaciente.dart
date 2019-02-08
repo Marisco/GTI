@@ -56,9 +56,10 @@ class _CadPacienteState extends State<_CadPaciente> {
   var pacienteId;
   var _paciente = [];
   var _bairros = [];
-  String _selBairro;  
+  String _selBairro;
+  String _dsErro = "";
 
-  DialogState _dialogState = DialogState.DISMISSED;
+  DialogState _dialogState;
   DateTime selectedDate = DateTime.now();
 
   int _tpSexo = 0;
@@ -67,14 +68,15 @@ class _CadPacienteState extends State<_CadPaciente> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     initializeDateFormatting("pt_BR", null).then((_) {
+      this._dialogState = DialogState.DISMISSED;
       this._dataNascimento.text = this.dataNascimento;
       _cpf.text = this.documento.length == 14 ? this.documento : "";
       _cartaoSus.text = this.documento.length > 14 ? this.documento : "";
       this._dataNascimento.text = this.dataNascimento;
       this._getBairro();
-      focusCpf.addListener(_onFocusChange);      
+      focusCpf.addListener(_onFocusChange);
     });
   }
 
@@ -82,10 +84,9 @@ class _CadPacienteState extends State<_CadPaciente> {
   void dispose() {
     _cpf.dispose();
     _cartaoSus.dispose();
-    _dataNascimento.dispose();    
+    _dataNascimento.dispose();
     super.dispose();
   }
-  
 
   void _tpSexoChange(int value) {
     setState(() {
@@ -111,20 +112,30 @@ class _CadPacienteState extends State<_CadPaciente> {
 
   void _postPaciente() async {
     setState(() => _dialogState = DialogState.LOADING);
-    InsertModel pacienteModel = await insertBloc.pushPaciente(
-        this._nome.text,
-        this._cpf.text,
-        this._cartaoSus.text,
-        this._dataNascimento.text,
-        this._dsSexo.substring(0, 1),
-        this._telefone.text,
-        _selBairro);
+    InsertModel pacienteModel = await insertBloc
+        .pushPaciente(
+            this._nome.text,
+            this._cpf.text,
+            this._cartaoSus.text,
+            this._dataNascimento.text,
+            this._dsSexo.substring(0, 1),
+            this._telefone.text,
+            _selBairro)
+        .catchError((e) {
+      setState(() {
+        _dialogState = DialogState.ERROR;
+        _dsErro = e.message.toString().toLowerCase().contains("future")
+            ? "Serviço insiponível!" 
+            : e.message;
+      });
+    });
+
     _paciente = pacienteModel.getInsertId();
     setState(() {
       _dialogState = DialogState.COMPLETED;
       if (_paciente.isNotEmpty) {
         paciente = this._nome.text;
-        pacienteId = _paciente[0].numero.toString();        
+        pacienteId = _paciente[0].numero.toString();
       }
     });
   }
@@ -161,7 +172,10 @@ class _CadPacienteState extends State<_CadPaciente> {
                       Row(children: [
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
-                          height: MediaQuery.of(context).size.height * (_dialogState != DialogState.DISMISSED? 0.70 :0.5),
+                          height: MediaQuery.of(context).size.height *
+                              (_dialogState != DialogState.DISMISSED
+                                  ? 0.70
+                                  : 0.5),
                           width: MediaQuery.of(context).size.width * .87,
                           decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
@@ -208,226 +222,210 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                 pacienteId: this.pacienteId)),
                                         slideRightRouteBtnCancel:
                                             SlideRightRoute(
-                                                builder: (_) => Passo01(dialogState: DialogState.DISMISSED)),
+                                                builder: (_) => Passo01(
+                                                    dialogState:
+                                                        DialogState.DISMISSED)),
                                         color: Colors.transparent)
-                                    :SizedBox(
-                                    height: MediaQuery.of(context).size.height * .5,                                    
-                                    child: ListView(
-                                        children: <Widget>[
-                                          Align(
-                                              child: Stack(children: <Widget>[
-                                            Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                padding: EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Row(children: <Widget>[
-                                                        Text(
-                                                          'Sexo:',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Humanist',
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        ),
-                                                        Expanded(
-                                                            flex: 1,
-                                                            child: Radio(
-                                                              value: 0,
-                                                              groupValue:
-                                                                  _tpSexo,
-                                                              onChanged:
-                                                                  _tpSexoChange,
-                                                              activeColor: Color
-                                                                  .fromRGBO(
-                                                                      41,
-                                                                      84,
-                                                                      142,
-                                                                      9),
-                                                            )),
-                                                        Text(
-                                                          'Masculino',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Humanist',
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        ),
-                                                        Expanded(
-                                                            flex: 1,
-                                                            child: Radio(
-                                                              value: 1,
-                                                              groupValue:
-                                                                  _tpSexo,
-                                                              onChanged:
-                                                                  _tpSexoChange,
-                                                              activeColor: Color
-                                                                  .fromRGBO(
-                                                                      41,
-                                                                      84,
-                                                                      142,
-                                                                      9),
-                                                            )),
-                                                        Text(
-                                                          'Feminino',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Humanist',
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        ),
-                                                      ]),
-                                                      Theme(
-                                                          data: Theme.of(
-                                                                  context)
-                                                              .copyWith(
-                                                                  accentColor: Color
-                                                                      .fromRGBO(
-                                                                          41,
-                                                                          84,
-                                                                          142,
-                                                                          75),
-                                                                  canvasColor: Color
-                                                                      .fromRGBO(
-                                                                          41,
-                                                                          84,
-                                                                          142,
-                                                                          75)),
-                                                          child: DropdownButton(
-                                                            isDense: false,
-                                                            iconSize: 36,
-                                                            hint: Text(
-                                                              'Bairro onde mora:',
-                                                              style: TextStyle(
+                                    : _dialogState == DialogState.ERROR
+                                      ? MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: "",
+                                          pacienteId: "",
+                                          textoTitle: "Desculpe!",
+                                          textoMensagem: _dsErro,
+                                          textoBtnOK: "",
+                                          textoBtnCancel: "Voltar",
+                                          textoState: "",
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => CadPaciente(dataNascimento: this.dataNascimento, documento: this.paciente)),
+                                          color:
+                                              Color.fromRGBO(41, 84, 142, 0.5),
+                                        ):
+                                        SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .5,
+                                        child: ListView(
+                                          children: <Widget>[
+                                            Align(
+                                                child: Stack(children: <Widget>[
+                                              Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: 10, right: 10),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10, right: 10),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Row(children: <Widget>[
+                                                          Text(
+                                                            'Sexo:',
+                                                            style: TextStyle(
                                                                 fontFamily:
                                                                     'Humanist',
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize: 25,
-                                                                shadows: <
-                                                                    Shadow>[
-                                                                  Shadow(
-                                                                      offset: Offset(
-                                                                          1.0,
-                                                                          1.0),
-                                                                      blurRadius:
-                                                                          3.0,
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.7)),
-                                                                  Shadow(
-                                                                      offset: Offset(
-                                                                          1.0,
-                                                                          1.0),
-                                                                      blurRadius:
-                                                                          8.0,
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.7)),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            value: _selBairro,
-                                                            items: _bairros
-                                                                .map((bairro) {
-                                                              return DropdownMenuItem(
-                                                                value: bairro
-                                                                    .numero,
-                                                                child: Text(
-                                                                  bairro.nome,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        'Humanist',
-                                                                    fontSize:
-                                                                        25,
-                                                                    shadows: <
-                                                                        Shadow>[
-                                                                      Shadow(
-                                                                          offset: Offset(1.0,
-                                                                              1.0),
-                                                                          blurRadius:
-                                                                              3.0,
-                                                                          color: Colors
-                                                                              .black
-                                                                              .withOpacity(0.7)),
-                                                                      Shadow(
-                                                                          offset: Offset(1.0,
-                                                                              1.0),
-                                                                          blurRadius:
-                                                                              8.0,
-                                                                          color: Colors
-                                                                              .black
-                                                                              .withOpacity(0.7)),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }).toList(),
-                                                            onChanged:
-                                                                (newVal) {
-                                                              setState(() {
-                                                                _selBairro =
-                                                                    newVal;
-                                                              });
-                                                            },
-                                                            style: TextStyle(
-                                                              //color: Colors.black,
-                                                              fontSize: 20,
-                                                            ),
-                                                            isExpanded: true,
-                                                            elevation: 24,
-                                                          )),
-                                                      TextField(
-                                                        controller: _nome,
-                                                        textInputAction:
-                                                            TextInputAction
-                                                                .next,
-                                                        onSubmitted: (v) {
-                                                          FocusScope.of(context)
-                                                              .requestFocus(
-                                                                  focusCpf);
-                                                        },
-                                                        //maxLength: 11,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          counterText: '',
-                                                          labelText:
-                                                              "Nome comnpleto:",
-                                                          labelStyle: TextStyle(
-                                                            fontFamily:
-                                                                'Humanist',
-                                                            color:
-                                                                Colors.white70,
-                                                            fontSize: 25,
+                                                                fontSize: 20),
                                                           ),
-                                                        ),
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Humanist',
-                                                            color: Colors.white,
-                                                            fontSize: 20),
-                                                        keyboardType:
-                                                            TextInputType.text,
-                                                      ),
-                                                      TextField(
-                                                          focusNode: focusCpf,
-                                                          controller: _cpf,
+                                                          Expanded(
+                                                              flex: 1,
+                                                              child: Radio(
+                                                                value: 0,
+                                                                groupValue:
+                                                                    _tpSexo,
+                                                                onChanged:
+                                                                    _tpSexoChange,
+                                                                activeColor: Color
+                                                                    .fromRGBO(
+                                                                        41,
+                                                                        84,
+                                                                        142,
+                                                                        9),
+                                                              )),
+                                                          Text(
+                                                            'Masculino',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Humanist',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20),
+                                                          ),
+                                                          Expanded(
+                                                              flex: 1,
+                                                              child: Radio(
+                                                                value: 1,
+                                                                groupValue:
+                                                                    _tpSexo,
+                                                                onChanged:
+                                                                    _tpSexoChange,
+                                                                activeColor: Color
+                                                                    .fromRGBO(
+                                                                        41,
+                                                                        84,
+                                                                        142,
+                                                                        9),
+                                                              )),
+                                                          Text(
+                                                            'Feminino',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Humanist',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20),
+                                                          ),
+                                                        ]),
+                                                        Theme(
+                                                            data: Theme.of(
+                                                                    context)
+                                                                .copyWith(
+                                                                    accentColor:
+                                                                        Color.fromRGBO(
+                                                                            41,
+                                                                            84,
+                                                                            142,
+                                                                            75),
+                                                                    canvasColor:
+                                                                        Color.fromRGBO(
+                                                                            41,
+                                                                            84,
+                                                                            142,
+                                                                            75)),
+                                                            child:
+                                                                DropdownButton(
+                                                              isDense: false,
+                                                              iconSize: 36,
+                                                              hint: Text(
+                                                                'Bairro onde mora:',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Humanist',
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 25,
+                                                                  shadows: <
+                                                                      Shadow>[
+                                                                    Shadow(
+                                                                        offset: Offset(1.0,
+                                                                            1.0),
+                                                                        blurRadius:
+                                                                            3.0,
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                    Shadow(
+                                                                        offset: Offset(1.0,
+                                                                            1.0),
+                                                                        blurRadius:
+                                                                            8.0,
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              value: _selBairro,
+                                                              items: _bairros
+                                                                  .map(
+                                                                      (bairro) {
+                                                                return DropdownMenuItem(
+                                                                  value: bairro
+                                                                      .numero,
+                                                                  child: Text(
+                                                                    bairro.nome,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontFamily:
+                                                                          'Humanist',
+                                                                      fontSize:
+                                                                          25,
+                                                                      shadows: <
+                                                                          Shadow>[
+                                                                        Shadow(
+                                                                            offset: Offset(
+                                                                                1.0, 1.0),
+                                                                            blurRadius:
+                                                                                3.0,
+                                                                            color:
+                                                                                Colors.black.withOpacity(0.7)),
+                                                                        Shadow(
+                                                                            offset: Offset(
+                                                                                1.0, 1.0),
+                                                                            blurRadius:
+                                                                                8.0,
+                                                                            color:
+                                                                                Colors.black.withOpacity(0.7)),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }).toList(),
+                                                              onChanged:
+                                                                  (newVal) {
+                                                                setState(() {
+                                                                  _selBairro =
+                                                                      newVal;
+                                                                });
+                                                              },
+                                                              style: TextStyle(
+                                                                //color: Colors.black,
+                                                                fontSize: 20,
+                                                              ),
+                                                              isExpanded: true,
+                                                              elevation: 24,
+                                                            )),
+                                                        TextField(
+                                                          controller: _nome,
                                                           textInputAction:
                                                               TextInputAction
                                                                   .next,
@@ -435,13 +433,14 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                             FocusScope.of(
                                                                     context)
                                                                 .requestFocus(
-                                                                    focusCns);
+                                                                    focusCpf);
                                                           },
-                                                          maxLength: 14,
+                                                          //maxLength: 11,
                                                           decoration:
                                                               InputDecoration(
                                                             counterText: '',
-                                                            labelText: "Cpf:",
+                                                            labelText:
+                                                                "Nome comnpleto:",
                                                             labelStyle:
                                                                 TextStyle(
                                                               fontFamily:
@@ -459,118 +458,156 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                               fontSize: 20),
                                                           keyboardType:
                                                               TextInputType
-                                                                  .number,
-                                                          inputFormatters: <
-                                                              TextInputFormatter>[
-                                                            WhitelistingTextInputFormatter
-                                                                .digitsOnly,
-                                                            FormatarCPF()
-                                                          ]),
-                                                      TextField(
-                                                          focusNode: focusCns,
-                                                          controller:
-                                                              _cartaoSus,
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .next,
-                                                          onSubmitted: (v) {
-                                                            FocusScope.of(
-                                                                    context)
-                                                                .requestFocus(
-                                                                    focusNasc);
-                                                          },
-                                                          maxLength: 18,
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  counterText:
-                                                                      '',
-                                                                  labelText:
-                                                                      "Cartão SUS:",
-                                                                  labelStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        'Humanist',
-                                                                    color: Colors
-                                                                        .white70,
-                                                                    fontSize:
-                                                                        25,
-                                                                  )),
-                                                          style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
-                                                          keyboardType: TextInputType.number,
-                                                          inputFormatters: <TextInputFormatter>[
-                                                            WhitelistingTextInputFormatter
-                                                                .digitsOnly,
-                                                            FormatarCNS()
-                                                          ]),
-                                                      TextField(
-                                                          controller:
-                                                              _dataNascimento,
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .next,
-                                                          focusNode: focusNasc,
-                                                          onSubmitted: (v) {
-                                                            FocusScope.of(
-                                                                    context)
-                                                                .requestFocus(
-                                                                    focusTel);
-                                                          },
-                                                          maxLength: 10,
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  counterText:
-                                                                      '',
-                                                                  labelText:
-                                                                      "Data de nascimento:",
-                                                                  labelStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        'Humanist',
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        25,
-                                                                  )),
-                                                          style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
-                                                          keyboardType: TextInputType.datetime,
-                                                          inputFormatters: <TextInputFormatter>[
-                                                            WhitelistingTextInputFormatter
-                                                                .digitsOnly,
-                                                            FormatarData()
-                                                          ]),
-                                                      TextField(
-                                                          controller: _telefone,
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          focusNode: focusTel,
-                                                          onSubmitted: (v) {
-                                                            _postPaciente();
-                                                          },
-                                                          maxLength: 15,
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  counterText:
-                                                                      '',
-                                                                  labelText:
-                                                                      "Telefone com DDD:",
-                                                                  labelStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        'Humanist',
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        25,
-                                                                  )),
-                                                          style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
-                                                          keyboardType: TextInputType.number,
-                                                          inputFormatters: <TextInputFormatter>[
-                                                            WhitelistingTextInputFormatter
-                                                                .digitsOnly,
-                                                            FormatarTelefone()
-                                                          ]),
-                                                    ])),
-                                          ])),
-                                        ],
-                                      )),
+                                                                  .text,
+                                                        ),
+                                                        TextField(
+                                                            focusNode: focusCpf,
+                                                            controller: _cpf,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .next,
+                                                            onSubmitted: (v) {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      focusCns);
+                                                            },
+                                                            maxLength: 14,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              counterText: '',
+                                                              labelText: "Cpf:",
+                                                              labelStyle:
+                                                                  TextStyle(
+                                                                fontFamily:
+                                                                    'Humanist',
+                                                                color: Colors
+                                                                    .white70,
+                                                                fontSize: 25,
+                                                              ),
+                                                            ),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Humanist',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20),
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            inputFormatters: <
+                                                                TextInputFormatter>[
+                                                              WhitelistingTextInputFormatter
+                                                                  .digitsOnly,
+                                                              FormatarCPF()
+                                                            ]),
+                                                        TextField(
+                                                            focusNode: focusCns,
+                                                            controller:
+                                                                _cartaoSus,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .next,
+                                                            onSubmitted: (v) {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      focusNasc);
+                                                            },
+                                                            maxLength: 18,
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    counterText:
+                                                                        '',
+                                                                    labelText:
+                                                                        "Cartão SUS:",
+                                                                    labelStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Humanist',
+                                                                      color: Colors
+                                                                          .white70,
+                                                                      fontSize:
+                                                                          25,
+                                                                    )),
+                                                            style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
+                                                            keyboardType: TextInputType.number,
+                                                            inputFormatters: <TextInputFormatter>[
+                                                              WhitelistingTextInputFormatter
+                                                                  .digitsOnly,
+                                                              FormatarCNS()
+                                                            ]),
+                                                        TextField(
+                                                            controller:
+                                                                _dataNascimento,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .next,
+                                                            focusNode:
+                                                                focusNasc,
+                                                            onSubmitted: (v) {
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      focusTel);
+                                                            },
+                                                            maxLength: 10,
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    counterText:
+                                                                        '',
+                                                                    labelText:
+                                                                        "Data de nascimento:",
+                                                                    labelStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Humanist',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          25,
+                                                                    )),
+                                                            style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
+                                                            keyboardType: TextInputType.datetime,
+                                                            inputFormatters: <TextInputFormatter>[
+                                                              WhitelistingTextInputFormatter
+                                                                  .digitsOnly,
+                                                              FormatarData()
+                                                            ]),
+                                                        TextField(
+                                                            controller:
+                                                                _telefone,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            focusNode: focusTel,
+                                                            onSubmitted: (v) {
+                                                              _postPaciente();
+                                                            },
+                                                            maxLength: 15,
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    counterText:
+                                                                        '',
+                                                                    labelText:
+                                                                        "Telefone com DDD:",
+                                                                    labelStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Humanist',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          25,
+                                                                    )),
+                                                            style: TextStyle(fontFamily: 'Humanist', color: Colors.white, fontSize: 20),
+                                                            keyboardType: TextInputType.number,
+                                                            inputFormatters: <TextInputFormatter>[
+                                                              WhitelistingTextInputFormatter
+                                                                  .digitsOnly,
+                                                              FormatarTelefone()
+                                                            ]),
+                                                      ])),
+                                            ])),
+                                          ],
+                                        )),
                               ]),
                         )
                       ]),

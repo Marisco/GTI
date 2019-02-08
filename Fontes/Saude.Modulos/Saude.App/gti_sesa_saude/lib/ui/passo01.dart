@@ -88,7 +88,7 @@ class _PacienteState extends State<Paciente> {
         .catchError((e) {      
       setState(() { 
         _dialogState = DialogState.ERROR;
-        _dsErro = e.message;
+        _dsErro = e.message.toString().toLowerCase().contains("future")?"Serviço insiponível!" :e.message;
       });
     });
 
@@ -326,8 +326,7 @@ class _PacienteState extends State<Paciente> {
                                           paciente: "",
                                           pacienteId: "",
                                           textoTitle: "Desculpe!",
-                                          textoMensagem: _dsErro +
-                                              "\nPor favor, tente novamente.",
+                                          textoMensagem: _dsErro,
                                           textoBtnOK: "",
                                           textoBtnCancel: "Voltar",
                                           textoState: "",
