@@ -11,8 +11,6 @@ import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/ui/passo02.dart';
 
 class Passo01 extends StatelessWidget {
-  final DialogState dialogState;
-  Passo01({@required this.dialogState});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,20 +20,16 @@ class Passo01 extends StatelessWidget {
           backgroundColor: Color.fromARGB(1, 41, 84, 142),
           hintColor: Colors.white,
         ),
-        home: Paciente(dialogState: this.dialogState));
+        home: Paciente());
   }
 }
 
 class Paciente extends StatefulWidget {
-  final DialogState dialogState;
-  Paciente({@required this.dialogState});
-
   @override
-  _PacienteState createState() => _PacienteState(dialogState: this.dialogState);
+  _PacienteState createState() => _PacienteState();
 }
 
 class _PacienteState extends State<Paciente> {
-  final DialogState dialogState;
   final _documento = TextEditingController();
   final _dataNascimento = TextEditingController();
   final focus = FocusNode();
@@ -45,22 +39,20 @@ class _PacienteState extends State<Paciente> {
   var _paciente = [];
   DateTime selectedDate = DateTime.now();
   String _dsDocumento;
-  String _dsErro = "";
-  DialogState _dialogState;
-  _PacienteState({@required this.dialogState});
+  String _msgErro = "";
+  DialogState _dialogState = DialogState.DISMISSED;
+  _PacienteState();
 
   @override
   void initState() {
+    initializeDateFormatting("pt_BR", null);
+    _tpDocumentoChange(0);
     super.initState();
-    initializeDateFormatting("pt_BR", null).then((_) {
-      _tpDocumentoChange(0);
-      _dialogState =
-          this.dialogState == null ? DialogState.DISMISSED : this.dialogState;
-    });
   }
 
   @override
   void dispose() {
+    _dialogState = DialogState.DISMISSED;
     _documento.dispose();
     _dataNascimento.dispose();
     super.dispose();
@@ -85,10 +77,12 @@ class _PacienteState extends State<Paciente> {
     setState(() => _dialogState = DialogState.LOADING);
     PacienteModel pacienteModel = await pacienteBloc
         .fetchPaciente(this._documento.text, this._dataNascimento.text)
-        .catchError((e) {      
-      setState(() { 
+        .catchError((e) {
+      setState(() {
         _dialogState = DialogState.ERROR;
-        _dsErro = e.message.toString().toLowerCase().contains("future")?"Serviço insiponível!" :e.message;
+        _msgErro = e.message.toString().toLowerCase().contains("future")
+            ? "Serviço insiponível!"
+            : e.message;
       });
     });
 
@@ -100,12 +94,7 @@ class _PacienteState extends State<Paciente> {
         pacienteId = _paciente[0].numero.toString();
       } else {
         _dialogState = DialogState.DISMISSED;
-        Navigator.push(
-            context,
-            SlideRightRoute(
-                builder: (_) => CadPaciente(
-                    documento: this._documento.text,
-                    dataNascimento: this._dataNascimento.text)));
+        Navigator.pop(context);
       }
     });
   }
@@ -142,6 +131,8 @@ class _PacienteState extends State<Paciente> {
                                   ? Container(
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -264,7 +255,7 @@ class _PacienteState extends State<Paciente> {
                                                     padding: EdgeInsets.only(
                                                       left: 20,
                                                     ),
-                                                    child: TextField(                                                                                                            
+                                                    child: TextField(
                                                         controller:
                                                             _dataNascimento,
                                                         focusNode: focus,
@@ -321,62 +312,66 @@ class _PacienteState extends State<Paciente> {
                                           ]),
                                     )
                                   : _dialogState == DialogState.ERROR
-                                      ? MensagemDialog(
-                                          state: _dialogState,
-                                          paciente: "",
-                                          pacienteId: "",
-                                          textoTitle: "Desculpe!",
-                                          textoMensagem: _dsErro,
-                                          textoBtnOK: "",
-                                          textoBtnCancel: "Voltar",
-                                          textoState: "",
-                                          slideRightRouteBtnCancel:
-                                              SlideRightRoute(
-                                                  builder: (_) => Passo01(
-                                                      dialogState: DialogState
-                                                          .DISMISSED)),
-                                          color:
-                                              Color.fromRGBO(41, 84, 142, 0.5),
-                                        )
-                                      : MensagemDialog(
-                                          state: _dialogState,
-                                          paciente: this.paciente == null
-                                              ? ""
-                                              : this.paciente,
-                                          pacienteId: this.pacienteId == null
-                                              ? ""
-                                              : this.pacienteId,
-                                          textoTitle: this.pacienteId == null
-                                              ? " Aguarde..."
-                                              : " Olá " + this.paciente + "!",
-                                          textoMensagem:
-                                              "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!",
-                                          textoBtnOK: "Sim",
-                                          textoBtnCancel: "Não",
-                                          textoState: (this
-                                                          ._documento
-                                                          .text
-                                                          .length ==
-                                                      14
-                                                  ? "Localizando Cpf"
-                                                  : "Localizando Catão SUS") +
-                                              ":\n " +
-                                              this._documento.text +
-                                              "",
-                                          slideRightRouteBtnOK: SlideRightRoute(
-                                              builder: (_) => Passo02(
-                                                  paciente: this.paciente,
-                                                  pacienteId: this.pacienteId)),
-                                          slideRightRouteBtnCancel:
-                                              SlideRightRoute(
-                                                  builder: (_) => Passo01(
-                                                      dialogState: DialogState
-                                                          .DISMISSED)),
-                                          color: this.paciente == null
-                                              ? Colors.transparent
-                                              : Color.fromRGBO(
-                                                  41, 84, 142, 0.5),
-                                        ),
+                                      ? Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: MensagemDialog(
+                                            state: _dialogState,
+                                            paciente: "",
+                                            pacienteId: "",
+                                            textoTitle: "Desculpe!",
+                                            textoMensagem: _msgErro,
+                                            textoBtnOK: "",
+                                            textoBtnCancel: "Voltar",
+                                            textoState: "",
+                                            slideRightRouteBtnCancel:
+                                                SlideRightRoute(
+                                                    builder: (_) => Passo01()),
+                                            color: Color.fromRGBO(
+                                                41, 84, 142, 0.5),
+                                          ))
+                                      : Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: MensagemDialog(
+                                            state: _dialogState,
+                                            paciente: this.paciente == null
+                                                ? ""
+                                                : this.paciente,
+                                            pacienteId: this.pacienteId == null
+                                                ? ""
+                                                : this.pacienteId,
+                                            textoTitle: this.pacienteId == null
+                                                ? " Aguarde..."
+                                                : " Olá " + this.paciente + "!",
+                                            textoMensagem:
+                                                "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!",
+                                            textoBtnOK: "Sim",
+                                            textoBtnCancel: "Não",
+                                            textoState: (this
+                                                            ._documento
+                                                            .text
+                                                            .length ==
+                                                        14
+                                                    ? "Localizando Cpf"
+                                                    : "Localizando Catão SUS") +
+                                                ":\n " +
+                                                this._documento.text +
+                                                "",
+                                            slideRightRouteBtnOK:
+                                                SlideRightRoute(
+                                                    builder: (_) => Passo02(
+                                                        paciente: this.paciente,
+                                                        pacienteId:
+                                                            this.pacienteId)),
+                                            slideRightRouteBtnCancel:
+                                                SlideRightRoute(
+                                                    builder: (_) => Passo01()),
+                                            color: this.paciente == null
+                                                ? Colors.transparent
+                                                : Color.fromRGBO(
+                                                    41, 84, 142, 0.5),
+                                          ))
                             ],
                           ),
                         )

@@ -12,7 +12,7 @@ class UnidadeModel {
     this._results = temp;
   }
   List<_Unidade> getUnidades() {
-    return this._results.isEmpty ? null : this._results;
+    return this._results.isEmpty ? [] : this._results;
   }
 }
 

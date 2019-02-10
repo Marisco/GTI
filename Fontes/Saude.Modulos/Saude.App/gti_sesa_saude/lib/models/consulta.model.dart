@@ -12,7 +12,7 @@ class ConsultaModel {
     this._results = temp;
   }
   List<_Consulta> getConsultas() {
-    return this._results.isEmpty ? null : this._results;
+    return this._results.isEmpty ? [] : this._results;
   }
 }
 

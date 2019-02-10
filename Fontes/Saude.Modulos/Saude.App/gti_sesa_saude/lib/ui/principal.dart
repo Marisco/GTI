@@ -38,7 +38,7 @@ class _PrincipalState extends State<Principal> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
-            child: Center(child: Passo01(dialogState: null)),
+            child: Center(child: Passo01()),
           ),
           Container(
             child: Center(child: Passo02(paciente:"", pacienteId: "")),

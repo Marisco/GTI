@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/blocs/especialidade.bloc.dart';
 import 'package:gti_sesa_saude/models/especialidade.model.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo02.dart';
 import 'package:gti_sesa_saude/ui/passo04.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
@@ -48,7 +49,8 @@ class _EspecialidadeState extends State<Especialidade> {
   final String unidadeId;
   var _especialidades = [];
   String _selEspecialidade;
-  DialogState _dialogState = DialogState.DISMISSED;
+  String _msgErro;
+  DialogState _dialogState;
   _EspecialidadeState(
       {@required this.paciente,
       @required this.pacienteId,
@@ -56,33 +58,39 @@ class _EspecialidadeState extends State<Especialidade> {
 
   @override
   void initState() {
-    super.initState();
+    initializeDateFormatting("pt_BR", null);
+    this._msgErro = "";
+    _dialogState = DialogState.DISMISSED;
     this._getEspecialidades();
+    super.initState();
   }
 
   @override
   void dispose() {
+    _dialogState = DialogState.DISMISSED;
     super.dispose();
   }
 
   void _getEspecialidades() async {
     setState(() => _dialogState = DialogState.LOADING);
-    EspecialidadeModel especialidadeModel =
-        await especialidadeBloc.fetchEspecialidades(
-            this.unidadeId,
-            DateTime.now().toString(),
-            DateTime.now().add(Duration(days: 2)).toString()).catchError((e) {
-      Navigator.push(
-          context,
-          SlideRightRouteR(
-              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    EspecialidadeModel especialidadeModel = await especialidadeBloc
+        .fetchEspecialidades(this.unidadeId, DateTime.now().toString(),
+            DateTime.now().add(Duration(days: 4)).toString())
+        .catchError((e) {
+      _dialogState = DialogState.ERROR;
+      _msgErro = e.message.toString().toLowerCase().contains("future")
+          ? "Serviço insiponível!"
+          : e.message;
     });
-    var especialidade = especialidadeModel.getEspecialidades();
-
     Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {
-        _dialogState = DialogState.COMPLETED;
-        _especialidades = especialidade;
+        _especialidades = especialidadeModel.getEspecialidades().toList();
+        if (_especialidades.isNotEmpty && _especialidades[0] != null) {
+          _dialogState = DialogState.COMPLETED;
+        } else {
+          _dialogState = DialogState.ERROR;
+          _msgErro = "Especialidade indisponível";
+        }
       });
     });
   }
@@ -97,13 +105,11 @@ class _EspecialidadeState extends State<Especialidade> {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 onHorizontalDragStart: (_) {
-                  Navigator.push(
-                      context,
-                      SlideRightRouteR(
-                          builder: (_) => Passo02(
-                              paciente: this.paciente,
-                              pacienteId: this.pacienteId
-                              )));
+                  Navigator.pop(context);
+                  SlideRightRouteR(
+                      builder: (_) => Passo02(
+                          paciente: this.paciente,
+                          pacienteId: this.pacienteId));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -118,7 +124,7 @@ class _EspecialidadeState extends State<Especialidade> {
                         Cabecalho(
                           state: DialogState.DISMISSED,
                           textoMensagem:
-                              'Agora, escolha a especialidade médica disponível',
+                              'Escolha a especialidade médica.',
                         ),
                       ]),
                       Row(children: <Widget>[
@@ -127,156 +133,192 @@ class _EspecialidadeState extends State<Especialidade> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                SizedBox(
-                                    child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                      accentColor:
-                                          Color.fromRGBO(63, 157, 184, 0.75),
-                                      canvasColor:
-                                          Color.fromRGBO(63, 157, 184, 0.75)),
-                                  child: Container(
-                                      margin: EdgeInsets.all(40),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            _dialogState != DialogState.LOADING
-                                                ? DropdownButton(
-                                                    iconSize: 48,
-                                                    isDense: false,
-                                                    hint: Text(
-                                                      'Escolha uma opção:',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontFamily: 'Humanist',
-                                                        fontSize: 28,
-                                                        shadows: <Shadow>[
-                                                          Shadow(
-                                                              offset: Offset(
-                                                                  1.0, 1.0),
-                                                              blurRadius: 3.0,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                          Shadow(
-                                                              offset: Offset(
-                                                                  1.0, 1.0),
-                                                              blurRadius: 8.0,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    value: _selEspecialidade,
-                                                    items: _especialidades
-                                                        .map((unidade) {
-                                                      return DropdownMenuItem(
-                                                        value: unidade.numero,
-                                                        child: Text(
-                                                          unidade.nome,
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontFamily:
-                                                                'Humanist',
-                                                            fontSize: 25,
-                                                            shadows: <Shadow>[
-                                                              Shadow(
-                                                                  offset:
-                                                                      Offset(
-                                                                          1.0,
-                                                                          1.0),
-                                                                  blurRadius:
-                                                                      3.0,
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.7)),
-                                                              Shadow(
-                                                                  offset:
-                                                                      Offset(
-                                                                          1.0,
-                                                                          1.0),
-                                                                  blurRadius:
-                                                                      8.0,
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.7)),
-                                                            ],
+                                _dialogState == DialogState.ERROR
+                                    ? SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        child: MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: "",
+                                          pacienteId: "",
+                                          textoTitle: "Desculpe!",
+                                          textoMensagem: _msgErro,
+                                          textoBtnOK: "",
+                                          textoBtnCancel: "Voltar",
+                                          textoState: "",
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Passo02(
+                                                      paciente: this.paciente,
+                                                      pacienteId:
+                                                          this.pacienteId)),
+                                          color: Color.fromRGBO(
+                                              63, 157, 184, 0.75),
+                                        ))
+                                    : SizedBox(
+                                        child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                            accentColor: Color.fromRGBO(
+                                                63, 157, 184, 0.75),
+                                            canvasColor: Color.fromRGBO(
+                                                63, 157, 184, 0.75)),
+                                        child: Container(
+                                            margin: EdgeInsets.all(40),
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  _dialogState !=
+                                                          DialogState.LOADING
+                                                      ? DropdownButton(
+                                                          iconSize: 48,
+                                                          isDense: false,
+                                                          hint: Text(
+                                                            'Escolha uma opção:',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontFamily:
+                                                                  'Humanist',
+                                                              fontSize: 28,
+                                                              shadows: <Shadow>[
+                                                                Shadow(
+                                                                    offset:
+                                                                        Offset(
+                                                                            1.0,
+                                                                            1.0),
+                                                                    blurRadius:
+                                                                        3.0,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.7)),
+                                                                Shadow(
+                                                                    offset:
+                                                                        Offset(
+                                                                            1.0,
+                                                                            1.0),
+                                                                    blurRadius:
+                                                                        8.0,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.7)),
+                                                              ],
+                                                            ),
                                                           ),
+                                                          value:
+                                                              _selEspecialidade,
+                                                          items: _especialidades
+                                                              .map((unidade) {
+                                                            return DropdownMenuItem(
+                                                              value: unidade
+                                                                  .numero,
+                                                              child: Text(
+                                                                unidade.nome,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontFamily:
+                                                                      'Humanist',
+                                                                  fontSize: 25,
+                                                                  shadows: <
+                                                                      Shadow>[
+                                                                    Shadow(
+                                                                        offset: Offset(1.0,
+                                                                            1.0),
+                                                                        blurRadius:
+                                                                            3.0,
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                    Shadow(
+                                                                        offset: Offset(1.0,
+                                                                            1.0),
+                                                                        blurRadius:
+                                                                            8.0,
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7)),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                          onChanged: (newVal) {
+                                                            setState(() {
+                                                              _selEspecialidade =
+                                                                  newVal;
+                                                            });
+                                                          },
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                          ),
+                                                          isExpanded: true,
+                                                          elevation: 24,
+                                                        )
+                                                      : CircularProgressIndicator(
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  Colors
+                                                                      .white)),
+                                                  Padding(
+                                                      padding:
+                                                          EdgeInsets.all(40),
+                                                      child: RaisedButton.icon(
+                                                        onPressed:
+                                                            _dialogState ==
+                                                                    DialogState
+                                                                        .LOADING
+                                                                ? null
+                                                                : () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        SlideRightRoute(
+                                                                            builder: (_) => Passo04(
+                                                                                paciente: this.paciente,
+                                                                                pacienteId: this.pacienteId,
+                                                                                unidadeId: this.unidadeId,
+                                                                                especialidadeId: this._selEspecialidade)));
+                                                                  },
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      30.0),
                                                         ),
-                                                      );
-                                                    }).toList(),
-                                                    onChanged: (newVal) {
-                                                      setState(() {
-                                                        _selEspecialidade =
-                                                            newVal;
-                                                      });
-                                                    },
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                    ),
-                                                    isExpanded: true,
-                                                    elevation: 24,
-                                                  )
-                                                : CircularProgressIndicator(
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                                Color>(
-                                                            Colors.white)),
-                                            Padding(
-                                                padding: EdgeInsets.all(40),
-                                                child: RaisedButton.icon(
-                                                  onPressed: _dialogState ==
-                                                          DialogState.LOADING
-                                                      ? null
-                                                      : () {
-                                                          Navigator.push(
-                                                              context,
-                                                              SlideRightRoute(
-                                                                  builder: (_) => Passo04(
-                                                                      paciente: this
-                                                                          .paciente,
-                                                                      pacienteId:
-                                                                          this
-                                                                              .pacienteId,
-                                                                      unidadeId:
-                                                                          this
-                                                                              .unidadeId,
-                                                                      especialidadeId:
-                                                                          this._selEspecialidade)));
-                                                        },
-                                                  elevation: 5.0,
-                                                  shape:
-                                                      RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius
-                                                            .circular(30.0),
-                                                  ),
-                                                  color: _dialogState ==
-                                                          DialogState.LOADING
-                                                      ? Colors.grey
-                                                          .withOpacity(0.75)
-                                                      : Color.fromRGBO(
-                                                          63,
-                                                          157,
-                                                          184,
-                                                          0.75), 
-                                                  icon: Icon(Icons.play_arrow,
-                                                      color: Colors.white70),
-                                                  label: Text(
-                                                    "",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Humanist',
-                                                        fontSize: 30,
-                                                        color: Colors.white),
-                                                  ),
-                                                )),
-                                          ])),
-                                ))
+                                                        color: _dialogState ==
+                                                                DialogState
+                                                                    .LOADING
+                                                            ? Colors.grey
+                                                                .withOpacity(
+                                                                    0.75)
+                                                            : Color.fromRGBO(63,
+                                                                157, 184, 0.75),
+                                                        icon: Icon(
+                                                            Icons.play_arrow,
+                                                            color:
+                                                                Colors.white70),
+                                                        label: Text(
+                                                          "",
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Humanist',
+                                                              fontSize: 30,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      )),
+                                                ])),
+                                      ))
                               ],
                             )),
                       ])

@@ -69,7 +69,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(60)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo01(dialogState: null)));
+                    context, new TransicaoTela(builder: (_) => Passo01()));
                 _changeButton(1);
               }),
           OutlineButton(

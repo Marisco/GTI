@@ -28,10 +28,12 @@ class MensagemDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double maxHeight = MediaQuery.of(context).size.height;
+    double maxWidth = MediaQuery.of(context).size.width;
     return state == DialogState.DISMISSED
         ? Container()
         : Container(
-            height: maxHeight * .65,
+            height: maxHeight * .55,
+            width: maxWidth,
             decoration: BoxDecoration(
                 color: this.color,
                 shape: BoxShape.rectangle,
@@ -39,14 +41,14 @@ class MensagemDialog extends StatelessWidget {
             margin: EdgeInsets.all(10),
             child: ListView(children: <Widget>[
               AlertDialog(
-                contentPadding: EdgeInsets.all(5),
+                contentPadding: EdgeInsets.all(0),
                 title: Text(
                   this.textoTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Humanist',
-                    fontSize: 24,
+                    fontSize: 25,
                     shadows: <Shadow>[
                       Shadow(
                           offset: Offset(2.0, 2.0),
@@ -79,7 +81,7 @@ class MensagemDialog extends StatelessWidget {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Humanist',
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   shadows: <Shadow>[
                                     Shadow(
                                         offset: Offset(1.0, 1.0),
@@ -100,7 +102,7 @@ class MensagemDialog extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Humanist',
-                              fontSize: 25,
+                              fontSize: 20,
                               shadows: <Shadow>[
                                 Shadow(
                                     offset: Offset(1.0, 1.0),
@@ -123,7 +125,7 @@ class MensagemDialog extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.red,
                                 fontFamily: 'Humanist',
-                                fontSize: 30,
+                                fontSize: 25,
                                 shadows: <Shadow>[
                                   Shadow(
                                       offset: Offset(2.0, 2.0),
@@ -137,6 +139,7 @@ class MensagemDialog extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
+                               Navigator.pop(context);
                               Navigator.push(context, slideRightRouteBtnCancel);
                             }),
                         FlatButton(

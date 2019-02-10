@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo03.dart';
 import 'package:gti_sesa_saude/ui/passo05.dart';
 import 'package:intl/intl.dart';
@@ -56,7 +55,8 @@ class _ConsultaState extends State<Consulta> {
   final String especialidadeId;
   var _consultas = [];
   var _selConsulta;
-  DialogState _dialogState = DialogState.DISMISSED;
+  DialogState _dialogState;
+  String _msgErro;
   _ConsultaState(
       {@required this.paciente,
       @required this.pacienteId,
@@ -66,14 +66,16 @@ class _ConsultaState extends State<Consulta> {
 
   @override
   void initState() {
+    initializeDateFormatting("pt_BR", null);
+    this._msgErro = "";
+    _dialogState = DialogState.DISMISSED;
+    this._getConsultas();
     super.initState();
-    initializeDateFormatting("pt_BR", null).then((_) {
-      this._getConsultas();
-    });
   }
 
   @override
   void dispose() {
+    _dialogState = DialogState.DISMISSED;
     super.dispose();
   }
 
@@ -87,24 +89,28 @@ class _ConsultaState extends State<Consulta> {
             DateTime.now().add(Duration(days: 1)).toString(),
             DateTime.now().add(Duration(days: 3)).toString())
         .catchError((e) {
-      Navigator.push(
-          context,
-          SlideRightRouteR(
-              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+      _dialogState = DialogState.ERROR;
+      _msgErro = e.message.toString().toLowerCase().contains("future")
+          ? "Serviço insiponível!"
+          : e.message;
     });
-    var consulta = consultaModel.getConsultas();
-    Future.delayed(Duration(milliseconds: 1000), () {
+    _consultas = consultaModel.getConsultas().toList();
+    Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
-        _dialogState = DialogState.COMPLETED;
-        _consultas = consulta;
-        _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
-            false,
-            consulta.numero,
-            consulta.consultorio,
-            consulta.especialidade,
-            consulta.medico,
-            consulta.dataInicio,
-            consulta.dataFim)));
+        if (_consultas.isNotEmpty && _consultas[0] != null) {
+          _dialogState = DialogState.COMPLETED;
+          _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
+              false,
+              consulta.numero,
+              consulta.consultorio,
+              consulta.especialidade,
+              consulta.medico,
+              consulta.dataInicio,
+              consulta.dataFim)));
+        } else {
+          _dialogState = DialogState.ERROR;
+          _msgErro = "Consulta indisponível";
+        }
       });
     });
   }
@@ -119,13 +125,12 @@ class _ConsultaState extends State<Consulta> {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 onHorizontalDragStart: (_) {
-                  Navigator.push(
-                      context,
-                      SlideRightRouteR(
-                          builder: (_) => Passo03(
-                              paciente: this.paciente,
-                              pacienteId: this.pacienteId,
-                              unidadeId: this.unidadeId)));
+                  Navigator.pop(context);
+                  SlideRightRouteR(
+                      builder: (_) => Passo03(
+                          pacienteId: this.pacienteId,
+                          paciente: this.paciente,
+                          unidadeId: this.unidadeId));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -140,7 +145,7 @@ class _ConsultaState extends State<Consulta> {
                         Cabecalho(
                           state: DialogState.DISMISSED,
                           textoMensagem:
-                              'Escolha dentre os horários diponíveis:',
+                              'Escolha um horário.',
                         ),
                       ]),
                       Row(children: <Widget>[
@@ -149,130 +154,154 @@ class _ConsultaState extends State<Consulta> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                SizedBox(
-                                    child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                      accentColor:
-                                          Color.fromRGBO(189, 112, 162, 0.75),
-                                      canvasColor:
-                                          Color.fromRGBO(189, 112, 162, 0.75)),
-                                  child: Container(
-                                      margin: EdgeInsets.all(20),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    (_dialogState ==
-                                                            DialogState.LOADING
-                                                        ? 0.07
-                                                        : 0.37),
-                                                child: Theme(
-                                                    data: Theme.of(context)
-                                                        .copyWith(
-                                                            accentColor:
-                                                                Color.fromRGBO(
-                                                                    189,
-                                                                    112,
-                                                                    162,
-                                                                    0.75),
-                                                            canvasColor:
-                                                                Colors.black),
-                                                    child:
-                                                        _dialogState !=
+                                _dialogState == DialogState.ERROR
+                                    ? SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.55,
+                                        child: MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: "",
+                                          pacienteId: "",
+                                          textoTitle: "Desculpe!",
+                                          textoMensagem: _msgErro,
+                                          textoBtnOK: "",
+                                          textoBtnCancel: "Voltar",
+                                          textoState: "",
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Passo03(
+                                                      pacienteId:
+                                                          this.pacienteId,
+                                                      paciente: this.paciente,
+                                                      unidadeId:
+                                                          this.unidadeId)),
+                                          color: Color.fromRGBO(
+                                              125, 108, 187, 0.75),
+                                        ))
+                                    : SizedBox(
+                                        child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                            accentColor: Color.fromRGBO(
+                                                189, 112, 162, 0.75),
+                                            canvasColor: Color.fromRGBO(
+                                                189, 112, 162, 0.75)),
+                                        child: Container(
+                                            margin: EdgeInsets.all(20),
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              (_dialogState ==
+                                                                      DialogState
+                                                                          .LOADING
+                                                                  ? 0.06
+                                                                  : 0.37),
+                                                      child: Theme(
+                                                          data: Theme.of(context).copyWith(
+                                                              accentColor:
+                                                                  Color.fromRGBO(
+                                                                      189,
+                                                                      112,
+                                                                      162,
+                                                                      0.75),
+                                                              canvasColor:
+                                                                  Colors.black),
+                                                          child:
+                                                              _dialogState !=
+                                                                      DialogState
+                                                                          .LOADING
+                                                                  ? ListView
+                                                                      .builder(
+                                                                      itemCount:
+                                                                          dadosConsulta
+                                                                              .length,
+                                                                      itemBuilder:
+                                                                          (BuildContext context,
+                                                                              int index) {
+                                                                        return InkWell(
+                                                                          splashColor: Color.fromRGBO(
+                                                                              189,
+                                                                              112,
+                                                                              162,
+                                                                              0.75),
+                                                                          onTap:
+                                                                              () {
+                                                                            setState(() {
+                                                                              _selConsulta = dadosConsulta[index].numero;
+                                                                              dadosConsulta.forEach((element) => element.isSelected = false);
+                                                                              dadosConsulta[index].isSelected = true;
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              RadioItem(dadosConsulta[index]),
+                                                                        );
+                                                                      },
+                                                                    )
+                                                                  : CircularProgressIndicator(
+                                                                      valueColor:
+                                                                          AlwaysStoppedAnimation<Color>(
+                                                                              Colors.white)))),
+                                                  Padding(
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      child: RaisedButton.icon(
+                                                        onPressed:
+                                                            _dialogState ==
+                                                                    DialogState
+                                                                        .LOADING
+                                                                ? null
+                                                                : () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        SlideRightRoute(
+                                                                            builder: (_) => Passo05(
+                                                                                paciente: this.paciente,
+                                                                                pacienteId: this.pacienteId,
+                                                                                unidadeId: this.unidadeId,
+                                                                                especialidadeId: this.especialidadeId,
+                                                                                consultaId: this._selConsulta)));
+                                                                  },
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      30.0),
+                                                        ),
+                                                        color: _dialogState ==
                                                                 DialogState
                                                                     .LOADING
-                                                            ? ListView.builder(
-                                                                itemCount:
-                                                                    dadosConsulta
-                                                                        .length,
-                                                                itemBuilder:
-                                                                    (BuildContext
-                                                                            context,
-                                                                        int index) {
-                                                                  return InkWell(
-                                                                    splashColor:
-                                                                        Color.fromRGBO(
-                                                                            189,
-                                                                            112,
-                                                                            162,
-                                                                            0.75),
-                                                                    onTap: () {
-                                                                      setState(
-                                                                          () {
-                                                                        _selConsulta =
-                                                                            dadosConsulta[index].numero;
-                                                                        dadosConsulta.forEach((element) =>
-                                                                            element.isSelected =
-                                                                                false);
-                                                                        dadosConsulta[index].isSelected =
-                                                                            true;
-                                                                      });
-                                                                    },
-                                                                    child: RadioItem(
-                                                                        dadosConsulta[
-                                                                            index]),
-                                                                  );
-                                                                },
-                                                              )
-                                                            : CircularProgressIndicator(
-                                                                valueColor: AlwaysStoppedAnimation<Color>(
-                                                                    Colors.white)))),
-                                            Padding(
-                                                padding: EdgeInsets.all(20),
-                                                child: RaisedButton.icon(
-                                                  onPressed: _dialogState ==
-                                                          DialogState.LOADING
-                                                      ? null
-                                                      : () {
-                                                          Navigator.push(
-                                                              context,
-                                                              SlideRightRoute(
-                                                                  builder: (_) => Passo05(
-                                                                      paciente: this
-                                                                          .paciente,
-                                                                      pacienteId:
-                                                                          this
-                                                                              .pacienteId,
-                                                                      unidadeId:
-                                                                          this
-                                                                              .unidadeId,
-                                                                      especialidadeId:
-                                                                          this
-                                                                              .especialidadeId,
-                                                                      consultaId:
-                                                                          this._selConsulta)));
-                                                        },
-                                                  elevation: 5.0,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.0),
-                                                  ),
-                                                  color: _dialogState ==
-                                                          DialogState.LOADING
-                                                      ? Colors.grey
-                                                          .withOpacity(0.75)
-                                                      : Color.fromRGBO(
-                                                          189,
-                                                          112,
-                                                          162,
-                                                          0.75), //Color.fromRGBO(41, 84, 142, 1),
-                                                  icon: Icon(Icons.play_arrow,
-                                                      color: Colors.white70),
-                                                  label: Text(
-                                                    "",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Humanist',
-                                                        fontSize: 30,
-                                                        color: Colors.white),
-                                                  ),
-                                                )),
-                                          ])),
-                                ))
+                                                            ? Colors.grey
+                                                                .withOpacity(
+                                                                    0.75)
+                                                            : Color.fromRGBO(
+                                                                189,
+                                                                112,
+                                                                162,
+                                                                0.75), //Color.fromRGBO(41, 84, 142, 1),
+                                                        icon: Icon(
+                                                            Icons.play_arrow,
+                                                            color:
+                                                                Colors.white70),
+                                                        label: Text(
+                                                          "",
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Humanist',
+                                                              fontSize: 30,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      )),
+                                                ])),
+                                      ))
                               ],
                             )),
                       ])
@@ -282,9 +311,9 @@ class _ConsultaState extends State<Consulta> {
 
 class RadioItem extends StatelessWidget {
   final RadioModel _item;
-  final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy");
-  final diaSemana = DateFormat("EEEE");
-  final hora = DateFormat("Hm");
+  final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy", "pt_BR");
+  final diaSemana = DateFormat("EEEE","pt_BR");
+  final hora = DateFormat("Hm", "pt_BR");
   RadioItem(this._item);
   @override
   Widget build(BuildContext context) {

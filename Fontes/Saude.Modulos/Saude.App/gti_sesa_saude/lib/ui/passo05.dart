@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
+import 'package:gti_sesa_saude/ui/passo04.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
@@ -63,11 +64,12 @@ class _ConfirmacaoState extends State<Confirmacao> {
   final String consultaId;
   var _consultas = [];
   var _mensagem = [];
-  final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy");
-  final diaSemana = DateFormat("EEEE");
-  final hora = DateFormat("Hm");
-  DialogState _dialogState = DialogState.DISMISSED;
-  String _tpAcao = "Verificando";
+  final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy", "pt_BR");
+  final diaSemana = DateFormat("EEEE", "pt_BR");
+  final hora = DateFormat("Hm", "pt_BR");
+  String _tpAcao;
+  DialogState _dialogState;
+  String _msgErro;
   _ConfirmacaoState(
       {@required this.paciente,
       @required this.pacienteId,
@@ -76,34 +78,45 @@ class _ConfirmacaoState extends State<Confirmacao> {
       this.consultaId});
   @override
   void initState() {
+    this._tpAcao = "Verificando";
+    this._msgErro = "";
+    this._dialogState = DialogState.DISMISSED;
+    initializeDateFormatting("pt_BR", null);
+    this._getConsultas();
     super.initState();
-    initializeDateFormatting("pt_BR", null).then((_) {
-      this._getConsultas();
-    });
   }
 
   @override
   void dispose() {
+    _dialogState = DialogState.DISMISSED;
     super.dispose();
   }
 
   void _getConsultas() async {
     setState(() => _dialogState = DialogState.LOADING);
-    ConsultaModel consultaModel = await consultaBloc.fetchConsultas(
-        this.consultaId,
-        this.unidadeId,
-        this.especialidadeId,
-        DateTime.now().add(Duration(days: 1)).toString(),
-        DateTime.now().add(Duration(days: 3)).toString()).catchError((e) {
-      Navigator.push(
-          context,
-          SlideRightRouteR(
-              builder: (_) => Passo01(dialogState: DialogState.ERROR)));
+    ConsultaModel consultaModel = await consultaBloc
+        .fetchConsultas(
+            this.consultaId,
+            this.unidadeId,
+            this.especialidadeId,
+            DateTime.now().add(Duration(days: 1)).toString(),
+            DateTime.now().add(Duration(days: 3)).toString())
+        .catchError((e) {
+      _dialogState = DialogState.ERROR;
+      _msgErro = e.message.toString().toLowerCase().contains("future")
+          ? "Serviço insiponível!"
+          : e.message;
     });
-    var consulta = consultaModel.getConsultas()[0];
-    setState(() {
-      _dialogState = DialogState.COMPLETED;
-      _consultas = [consulta];
+    _consultas = consultaModel.getConsultas().toList();
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        if (_consultas.isNotEmpty && _consultas[0] != null) {
+          _dialogState = DialogState.DISMISSED;
+        } else {
+          _dialogState = DialogState.ERROR;
+          _msgErro = "Consulta indisponível";
+        }
+      });
     });
   }
 
@@ -112,7 +125,7 @@ class _ConfirmacaoState extends State<Confirmacao> {
       _dialogState = DialogState.LOADING;
       _tpAcao = "Registrando";
     });
-    
+
     MensagemModel mensagemModel =
         await consultaBloc.pushConsulta(this.pacienteId, this.consultaId);
     var mensagem = mensagemModel.getMensagem();
@@ -124,11 +137,21 @@ class _ConfirmacaoState extends State<Confirmacao> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(        
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(
             child: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
+                },
+                onHorizontalDragStart: (_) {
+                  Navigator.pop(context);
+                  SlideRightRouteR(
+                      builder: (_) => Passo04(
+                          paciente: this.paciente,
+                          pacienteId: this.pacienteId,
+                          unidadeId: this.unidadeId,
+                          especialidadeId: this.especialidadeId));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -140,234 +163,196 @@ class _ConfirmacaoState extends State<Confirmacao> {
                       ),
                     ),
                     child: Column(children: <Widget>[
-                      Row(children: [
+                      Row(children: <Widget>[
                         Cabecalho(
-                            textoMensagem:
-                                'Leia com atenção e confirme o agendamento da sua consulta!',
-                            state: _dialogState),
-                      ]),
-                      Row(children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 20, right: 20),
-                          height: MediaQuery.of(context).size.height * (_dialogState != DialogState.DISMISSED? 0.7 :0.5),
-                          width: MediaQuery.of(context).size.width * .87,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(146, 174, 112, 0.75),
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.65,
-                                  child: Theme(
-                                      data: Theme.of(context).copyWith(
-                                          accentColor:
-                                              Color.fromRGBO(146, 174, 112, 0),
-                                          canvasColor:
-                                              Color.fromRGBO(146, 174, 112, 0)),
-                                      child: ListView(children: <Widget>[
-                                        Align(
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Visibility(
-                                                visible: _dialogState ==
-                                                    DialogState.COMPLETED,
-                                                child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10, right: 10),
-                                                    padding: EdgeInsets.only(
-                                                        left: 10,
-                                                        right: 10,
-                                                        top: 20),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          Text(
-                                                              (this
-                                                                      ._consultas
-                                                                      .isEmpty
-                                                                  ? ""
-                                                                  : "Paciente: " +
-                                                                      this
-                                                                          .paciente +
-                                                                      ".\nData: " +
-                                                                      diaSemana.format(DateTime.parse(this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .dataInicio)) +
-                                                                      ", " +
-                                                                      diaMesAno.format(DateTime.parse(this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .dataInicio)) +
-                                                                      ".\nHorário: " +
-                                                                      hora.format(DateTime.parse(this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .dataInicio)) +
-                                                                      ".\nUnidade: " +
-                                                                      this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .unidade +
-                                                                      ".\nSala/Consultório: " +
-                                                                      this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .consultorio +
-                                                                      ".\nDr(a): " +
-                                                                      this
-                                                                          ._consultas[
-                                                                              0]
-                                                                          .medico +
-                                                                      ".\nEspecialidade: " +
-                                                                      this
-                                                                          ._consultas[0]
-                                                                          .especialidade),
-                                                              style: TextStyle(color: Colors.white, fontFamily: 'Humanist', fontSize: 20, shadows: <Shadow>[
-                                                                Shadow(
-                                                                    offset:
-                                                                        Offset(
-                                                                            2.0,
-                                                                            2.0),
-                                                                    blurRadius:
-                                                                        3.0,
-                                                                    color: Colors
-                                                                        .green
-                                                                        .withOpacity(
-                                                                            0.7)),
-                                                                Shadow(
-                                                                    offset:
-                                                                        Offset(
-                                                                            2.0,
-                                                                            2.0),
-                                                                    blurRadius:
-                                                                        8.0,
-                                                                    color: Colors
-                                                                        .green
-                                                                        .withOpacity(
-                                                                            0.7)),
-                                                              ]),
-                                                              textAlign: TextAlign.left),
-                                                          Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(20),
-                                                              child:
-                                                                  RaisedButton
-                                                                      .icon(
-                                                                onPressed: () {
-                                                                  this._postConsulta();
-                                                                },
-                                                                elevation: 5.0,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              30.0),
-                                                                ),
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        146,
-                                                                        174,
-                                                                        112,
-                                                                        0.75),
-                                                                icon: Icon(
-                                                                    Icons
-                                                                        .done_all,
-                                                                    color: Colors
-                                                                        .white70),
-                                                                label: Text(
-                                                                  "Confirmar",
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Humanist',
-                                                                      fontSize:
-                                                                          30,
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              ))
-                                                        ])),
-                                              ),
-                                              Visibility(
-                                                visible: _dialogState !=
-                                                    DialogState.COMPLETED,
-                                                child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: <Widget>[
-                                                          MensagemDialog(
-                                                            state: _dialogState,
-                                                            paciente:
-                                                                this.paciente ==
-                                                                        null
-                                                                    ? ""
-                                                                    : this
-                                                                        .paciente,
-                                                            pacienteId:
-                                                                this.pacienteId ==
-                                                                        null
-                                                                    ? ""
-                                                                    : this
-                                                                        .pacienteId,
-                                                            textoTitle: this
-                                                                    ._mensagem
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : this
-                                                                    ._mensagem[
-                                                                        0]
-                                                                    .tipoMensagem,
-                                                            textoMensagem: this
-                                                                    ._mensagem
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : this
-                                                                    ._mensagem[
-                                                                        0]
-                                                                    .mensagem,
-                                                            textoBtnOK: "OK",
-                                                            textoBtnCancel: "",
-                                                            textoState: _tpAcao +
-                                                                " agendamento no sistema...",
-                                                            slideRightRouteBtnOK:
-                                                                SlideRightRoute(
-                                                                    builder: (_) =>
-                                                                        Passo01(dialogState: DialogState.DISMISSED)),
-                                                          color:Color
-                                                                    .fromRGBO(
-                                                                        146,
-                                                                        174,
-                                                                        112,
-                                                                        0.75),
-                                                          )
-                                                        ])),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ])))
-                            ],
-                          ),
+                          state: DialogState.DISMISSED,
+                          textoMensagem: 'Atenção! Confira os dados e confirme seu agendamento!',
                         ),
                       ]),
+                      Row(children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  _dialogState == DialogState.COMPLETED
+                                      ? SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.9,
+                                          child: MensagemDialog(
+                                            state: _dialogState,
+                                            paciente: this.paciente == null
+                                                ? ""
+                                                : this.paciente,
+                                            pacienteId: this.pacienteId == null
+                                                ? ""
+                                                : this.pacienteId,
+                                            textoTitle: this._mensagem.isEmpty
+                                                ? ""
+                                                : this
+                                                    ._mensagem[0]
+                                                    .tipoMensagem,
+                                            textoMensagem: this
+                                                    ._mensagem
+                                                    .isEmpty
+                                                ? ""
+                                                : this._mensagem[0].mensagem,
+                                            textoBtnOK: "OK",
+                                            textoBtnCancel: "",
+                                            textoState: _tpAcao +
+                                                " agendamento no sistema...",
+                                            slideRightRouteBtnOK:
+                                                SlideRightRoute(
+                                                    builder: (_) => Passo01()),
+                                            color: Color.fromRGBO(
+                                                146, 174, 112, 0.75),
+                                          ))
+                                      : _dialogState == DialogState.ERROR
+                                          ? SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.5,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.9,
+                                              child: MensagemDialog(
+                                                state: _dialogState,
+                                                paciente: "",
+                                                pacienteId: "",
+                                                textoTitle: "Desculpe!",
+                                                textoMensagem: _msgErro,
+                                                textoBtnOK: "",
+                                                textoBtnCancel: "Voltar",
+                                                textoState: "",
+                                                slideRightRouteBtnCancel:
+                                                    SlideRightRoute(
+                                                        builder: (_) => Passo04(
+                                                            paciente:
+                                                                this.paciente,
+                                                            pacienteId:
+                                                                this.pacienteId,
+                                                            unidadeId:
+                                                                this.unidadeId,
+                                                            especialidadeId: this
+                                                                .especialidadeId)),
+                                                color: Color.fromRGBO(
+                                                    146, 174, 112, 0.75),
+                                              ))
+                                          : SizedBox(
+                                              child: Theme(
+                                              data: Theme.of(context).copyWith(
+                                                  accentColor: Color.fromRGBO(
+                                                      146, 174, 112, 0),
+                                                  canvasColor: Color.fromRGBO(
+                                                      146, 174, 112, 0)),
+                                              child: Container(
+                                                  margin: EdgeInsets.all(0),
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        _dialogState !=
+                                                                DialogState
+                                                                    .LOADING
+                                                            ? Container(
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10),
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10,
+                                                                        top:
+                                                                            20),
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Text(
+                                                                          (this._consultas.isEmpty
+                                                                              ? ""
+                                                                              : "Paciente: " + this.paciente + ".\nData: " + diaSemana.format(DateTime.parse(this._consultas[0].dataInicio)) + ", " + diaMesAno.format(DateTime.parse(this._consultas[0].dataInicio)) + ".\nHorário: " + hora.format(DateTime.parse(this._consultas[0].dataInicio)) + ".\nUnidade: " + this._consultas[0].unidade + ".\nSala/Consultório: " + this._consultas[0].consultorio + ".\nDr(a): " + this._consultas[0].medico + ".\nEspecialidade: " + this._consultas[0].especialidade),
+                                                                          style: TextStyle(color: Colors.white, fontFamily: 'Humanist', fontSize: 20, shadows: <Shadow>[
+                                                                            Shadow(
+                                                                                offset: Offset(2.0, 2.0),
+                                                                                blurRadius: 3.0,
+                                                                                color: Colors.green.withOpacity(0.7)),
+                                                                            Shadow(
+                                                                                offset: Offset(2.0, 2.0),
+                                                                                blurRadius: 8.0,
+                                                                                color: Colors.green.withOpacity(0.7)),
+                                                                          ]),
+                                                                          textAlign: TextAlign.left),
+                                                                    ]))
+                                                            : CircularProgressIndicator(
+                                                                valueColor:
+                                                                    AlwaysStoppedAnimation<
+                                                                            Color>(
+                                                                        Colors
+                                                                            .white)),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    0),
+                                                            child: RaisedButton
+                                                                .icon(
+                                                              onPressed: () {
+                                                                this._postConsulta();
+                                                              },
+                                                              elevation: 5.0,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            30.0),
+                                                              ),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      146,
+                                                                      174,
+                                                                      112,
+                                                                      0.75),
+                                                              icon: Icon(
+                                                                  Icons
+                                                                      .done_all,
+                                                                  color: Colors
+                                                                      .white70),
+                                                              label: Text(
+                                                                "Confirmar",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Humanist',
+                                                                    fontSize:
+                                                                        30,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ))
+                                                      ])),
+                                            ))
+                                ])),
+                      ])
                     ])))));
   }
 }

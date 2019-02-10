@@ -28,7 +28,7 @@ class SaudeApi {
 
     
       final response = await client
-          .post("http://172.16.64.17:3010/saude/getPaciente",
+          .post("http://192.168.15.5:3010/saude/getPaciente",
               headers: {
                 "Accept": "application/json",
                 "content-type": "application/json"
@@ -37,28 +37,32 @@ class SaudeApi {
               encoding: Encoding.getByName("utf-8"))
           .timeout(Duration(seconds: 5));
       print(response.body.toString());
-      if (response.statusCode == 200) {
+      //client.close();
+      if (response.statusCode == 200) {        
         return PacienteModel.fromJson(json.decode(response.body));
       } else {
-        MensagemModel teste =
+        MensagemModel mensagem =
             MensagemModel.fromJson(json.decode(response.body));
-        throw Exception(teste.getMensagem()[0].mensagem.toString());
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
       }
     
   }
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://172.16.64.17:3010/saude/getUnidades", headers: {
+        .get("http://192.168.15.5:3010/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
-    });
+    }).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return UnidadeModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Erro');
-    }
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 
   Future<EspecialidadeModel> fetchEspecialidades(
@@ -70,19 +74,22 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.17:3010/saude/getEspecialidades",
+        "http://192.168.15.5:3010/saude/getEspecialidades",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
         },
         body: json.encode(data),
-        encoding: Encoding.getByName("utf-8"));
+        encoding: Encoding.getByName("utf-8")).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return EspecialidadeModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Erro');
-    }
+    }else {
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 
   Future<ConsultaModel> fetchConsultas(String consultaId, String unidadeId,
@@ -96,19 +103,22 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.17:3010/saude/getConsultas",
+        "http://192.168.15.5:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
         },
         body: json.encode(data),
-        encoding: Encoding.getByName("utf-8"));
+        encoding: Encoding.getByName("utf-8")).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return ConsultaModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Erro');
-    }
+    }else {
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 
   Future<ConsultaModel> fetchConsulta(
@@ -116,19 +126,22 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client.post(
-        "http://172.16.64.17:3010/saude/getConsultas",
+        "http://192.168.15.5:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
         },
         body: json.encode(data),
-        encoding: Encoding.getByName("utf-8"));
+        encoding: Encoding.getByName("utf-8")).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return ConsultaModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Erro');
-    }
+    }else {
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 
   Future<MensagemModel> pushConsulta(
@@ -136,7 +149,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://172.16.64.17:3010/saude/postConsulta",
+        "http://192.168.15.5:3010/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -144,11 +157,14 @@ class SaudeApi {
         body: json.encode(data),
         encoding: Encoding.getByName("utf-8"));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return MensagemModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Erro');
-    }
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 
   Future<InsertModel> pushPaciente(
@@ -175,34 +191,39 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://172.16.64.17:3010/saude/postPaciente",
+        "http://192.168.15.5:3010/saude/postPaciente",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json" 
         },
         body: json.encode(data),
-        encoding: Encoding.getByName("utf-8"));
+        encoding: Encoding.getByName("utf-8")).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return InsertModel.fromJson(json.decode(response.body));
+      
     } else {
-     MensagemModel teste =
+     MensagemModel mensagem =
             MensagemModel.fromJson(json.decode(response.body));
-        throw Exception(teste.getMensagem()[0].mensagem.toString());
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
     }
   }
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://172.16.64.17:3010/saude/getBairros", headers: {
+        .get("http://192.168.15.5:3010/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
-    });
+    }).timeout(Duration(seconds: 5));
     print(response.body.toString());
-    if (response.statusCode == 200) {
+    //client.close();
+    if (response.statusCode == 200) {      
       return BairroModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Erro');
-    }
+    }else {
+        MensagemModel mensagem =
+            MensagemModel.fromJson(json.decode(response.body));
+        throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+      }
   }
 }

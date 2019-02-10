@@ -222,9 +222,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                                                 pacienteId: this.pacienteId)),
                                         slideRightRouteBtnCancel:
                                             SlideRightRoute(
-                                                builder: (_) => Passo01(
-                                                    dialogState:
-                                                        DialogState.DISMISSED)),
+                                                builder: (_) => Passo01()),
                                         color: Colors.transparent)
                                     : _dialogState == DialogState.ERROR
                                       ? MensagemDialog(
