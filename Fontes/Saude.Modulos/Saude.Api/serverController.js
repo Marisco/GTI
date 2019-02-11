@@ -1,5 +1,5 @@
 const objModels = require("../Saude.Mod/Models");
-//const objValidacao = require('./validacao')
+const objValidacao = require('./validacao')
 
 var obterPaciente = function (req, res) {
 
@@ -75,7 +75,7 @@ var agendarConsulta = function (req, res) {
 };
 
 var inserirPaciente = function (req, res) {
-    var validarCampos = "";//objValidacao.validarCampos(req.body);
+    var validarCampos = objValidacao.validarCampos(req.body);
 
     if (validarCampos == "") {
         var models = objModels.ObjPaciente;

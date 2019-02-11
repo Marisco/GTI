@@ -28,7 +28,7 @@ class SaudeApi {
 
     
       final response = await client
-          .post("http://192.168.15.5:3010/saude/getPaciente",
+          .post("http://localhost:3010/saude/getPaciente",
               headers: {
                 "Accept": "application/json",
                 "content-type": "application/json"
@@ -50,7 +50,7 @@ class SaudeApi {
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://192.168.15.5:3010/saude/getUnidades", headers: {
+        .get("http://localhost:3010/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -74,7 +74,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://192.168.15.5:3010/saude/getEspecialidades",
+        "http://localhost:3010/saude/getEspecialidades",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -103,7 +103,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://192.168.15.5:3010/saude/getConsultas",
+        "http://localhost:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -126,7 +126,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client.post(
-        "http://192.168.15.5:3010/saude/getConsultas",
+        "http://localhost:3010/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -149,7 +149,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://192.168.15.5:3010/saude/postConsulta",
+        "http://localhost:3010/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -191,7 +191,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://192.168.15.5:3010/saude/postPaciente",
+        "http://localhost:3010/saude/postPaciente",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json" 
@@ -212,7 +212,7 @@ class SaudeApi {
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://192.168.15.5:3010/saude/getBairros", headers: {
+        .get("http://localhost:3010/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
