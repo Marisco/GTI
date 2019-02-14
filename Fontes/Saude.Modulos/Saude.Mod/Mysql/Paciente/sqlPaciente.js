@@ -8,7 +8,15 @@ const sqlListar =
 " INSERT INTO paciente (nome, cpf, telefone, cartao_sus, bairro , data_nascimento, sexo)    " +    
 "               VALUES (? , ? , ? , ? , ? , ? , ?)                                          " 
 
+const sqlValidar =
+    " SELECT IFNULL(COUNT(*),0) AS qtd " +    
+    "   FROM paciente pa, consulta co  " +
+    "  WHERE pa.numero = co.paciente   " +
+    "    AND estado = 'A'              " +    
+    "    AND ativo = 'S'               "
+
 module.exports = {
     sqlListar,
-    sqlInserir    
+    sqlInserir,
+    sqlValidar    
 };

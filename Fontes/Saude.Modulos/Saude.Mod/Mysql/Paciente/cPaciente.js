@@ -20,8 +20,15 @@ function inserirPaciente(db, body, callback) {
     return db.client.query(qry, [body.nome, body.cpf, body.telefone, body.cartaoSus, body.bairro, body.dataNascimento, body.sexo], callback);
 }
 
+function validarPaciente(db, body, callback) {
+    var qry = sqlPaciente.sqlValidar +
+    " AND " + ( body.pacienteId && body.pacienteId != "" ? "numero " : body.cpf !== "" ? "cpf " : "cartao_sus ") + " = " + "'" + (body.pacienteId && body.pacienteId != "" ? body.pacienteId : body.cpf !== "" ? body.cpf : body.cartaoSus) + "'";
+    return db.client.query(qry, callback) > 0;
+}
+
 module.exports = {
     cPaciente,
     obterPaciente,
-    inserirPaciente
+    inserirPaciente,
+    validarPaciente
 };

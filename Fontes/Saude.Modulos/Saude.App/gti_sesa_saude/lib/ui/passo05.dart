@@ -127,7 +127,12 @@ class _ConfirmacaoState extends State<Confirmacao> {
     });
 
     MensagemModel mensagemModel =
-        await consultaBloc.pushConsulta(this.pacienteId, this.consultaId);
+        await consultaBloc.pushConsulta(this.pacienteId, this.consultaId).catchError((e) {
+      _dialogState = DialogState.ERROR;
+      _msgErro = e.message.toString().toLowerCase().contains("future")
+          ? "Serviço insiponível!"
+          : e.message;
+    });
     var mensagem = mensagemModel.getMensagem();
     setState(() {
       _dialogState = DialogState.COMPLETED;
@@ -146,12 +151,14 @@ class _ConfirmacaoState extends State<Confirmacao> {
                 },
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
-                  SlideRightRouteR(
-                      builder: (_) => Passo04(
-                          paciente: this.paciente,
-                          pacienteId: this.pacienteId,
-                          unidadeId: this.unidadeId,
-                          especialidadeId: this.especialidadeId));
+                  _dialogState == DialogState.DISMISSED
+                      ? SlideRightRouteR(
+                          builder: (_) => Passo04(
+                              paciente: this.paciente,
+                              pacienteId: this.pacienteId,
+                              unidadeId: this.unidadeId,
+                              especialidadeId: this.especialidadeId))
+                      : SlideRightRouteR(builder: (_) => Passo01());
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -166,7 +173,8 @@ class _ConfirmacaoState extends State<Confirmacao> {
                       Row(children: <Widget>[
                         Cabecalho(
                           state: DialogState.DISMISSED,
-                          textoMensagem: 'Atenção! Confira os dados e confirme seu agendamento!',
+                          textoMensagem:
+                              'Atenção! Confira os dados e confirme seu agendamento!',
                         ),
                       ]),
                       Row(children: <Widget>[

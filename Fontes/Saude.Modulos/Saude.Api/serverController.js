@@ -3,20 +3,29 @@ const objValidacao = require('./validacao')
 
 var obterPaciente = function (req, res) {
 
-    var validarCampos = "";//objValidacao.validarCampos(req.body);
+    var validarCampos = objValidacao.validarCampos(req.body);    
+    var models = objModels.ObjPaciente;
+    
+    models.validarPaciente(objModels.dbMysql, req.body, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível validar o usuário:" + e }] })
+        }        
+        var consultasPaciente = data[0].qtd;
+        if (validarCampos == "" && consultasPaciente == 0) {
 
-    if (validarCampos == "") {
-        var models = objModels.ObjPaciente;
-        models.obterPaciente(objModels.dbMysql, req.body, (e, data) => {
-            if (e) {
-                res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
-            } else {
-                res.json({ paciente: data })
-            }
-        })
-    } else {
-        res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: validarCampos }] })
-    }
+            models.obterPaciente(objModels.dbMysql, req.body, (e, data) => {
+                if (e) {
+                    res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+                } else {
+                    res.json({ paciente: data })
+                }
+            })
+        } else {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: validarCampos !== "" ? validarCampos : "Você já possui "+ consultasPaciente +" consulta(s) agendada(s)."}] })
+        }
+    })
+
+    
 };
 
 var obterUnidades = function (req, res) {
@@ -66,10 +75,10 @@ var obterConsultas = function (req, res) {
 var agendarConsulta = function (req, res) {
     var models = objModels.ObjConsulta;
     models.agendarConsulta(objModels.dbMysql, req.body, (e, data) => {
-        if (e) {
-            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+        if (e || (data.affectedRows == 0)) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível realizar o agendamento.\nTente novamente." + e }] })
         } else {
-            res.json({ mensagens: [{ tipoMensagem: "Sucesso", mensagem: "Operação realizada com sucesso." }] })
+            res.json({ mensagens: [{ tipoMensagem: "Sucesso", mensagem: "Agendamento realizado com sucesso." }] })
         }
     })
 };
@@ -80,13 +89,13 @@ var inserirPaciente = function (req, res) {
     if (validarCampos == "") {
         var models = objModels.ObjPaciente;
         models.inserirPaciente(objModels.dbMysql, req.body, (e, data) => {
-            if (e) {                
+            if (e) {
                 res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível inserir o registro:" + e }] })
             } else {
                 res.json({ inserts: data })
             }
         })
-    }else {
+    } else {
         res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: validarCampos }] })
     }
 };

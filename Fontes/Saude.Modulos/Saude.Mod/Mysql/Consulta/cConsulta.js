@@ -40,12 +40,8 @@ function agendarConsulta(db, body  , callback) {
     return db.client.query(qry, callback)
 }
 
-
-
-
-
 module.exports = {
     cConsulta,
-    obterConsultas,
-    agendarConsulta
+    obterConsultas,    
+    agendarConsulta    
 };

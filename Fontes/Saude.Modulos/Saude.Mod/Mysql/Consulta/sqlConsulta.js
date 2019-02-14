@@ -10,20 +10,7 @@ const sqlListar =
     "  WHERE c.ativo = 'S'                                                                       " +
     "    AND c.estado = 'D'                                                                      "
 
-// const sqlAgendar =
-//     " UPDATE consulta                           " +
-//     "    SET estado = 'A',                      " +
-//     "        paciente = ?                       " +
-//     "        usuario = ( SELECT numero          " +
-//     "                      FROM usuario         " +
-//     "                     WHERE sistema = 'S'   " +
-//     "                     LIMIT 1)              " +
-//     "  WHERE numero = ?                         " +
-//     "    AND estado = 'D'                       " +
-//     "    AND paciente IS NULL                   " +
-//     "    AND ativo = 'S'                        "
 
 module.exports = {
-    sqlListar,
-    //sqlAgendar
+        sqlListar    
 };

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:intl/date_symbol_data_local.dart';
+final Locale myLocale = new Locale("pt", "PT");
 
 void main() => runApp(GtiSesaSaude());
 
@@ -19,7 +20,7 @@ class GtiSesaSaude extends StatelessWidget {
 
     return MaterialApp(
       title: 'APP.Saúde.SESA',
-      supportedLocales:[const Locale('pt', 'BR')],    
+      supportedLocales:[myLocale],    
       onGenerateRoute: (RouteSettings settings) {
         new TransicaoTela(builder: (_) => GtiSesaSaude());
       },
