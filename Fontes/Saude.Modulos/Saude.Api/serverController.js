@@ -62,7 +62,7 @@ var obterEspecialidades = function (req, res) {
     })
 };
 
-var obterConsultas = function (req, res) {
+var obterConsultas = function (req, res) {  
     var models = objModels.ObjConsulta;
     models.obterConsultas(objModels.dbMysql, req.body, (e, data) => {
         if (e) {

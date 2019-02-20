@@ -1,6 +1,7 @@
 const moment = require('moment')
 moment.locale('pt-br')
 const srvController = require('./serverController')
+const cadSusService = require('./cadSusService')
 var express = require('express')
 var app = express()
 var cors = require('cors');
@@ -20,6 +21,11 @@ app.post('/saude/getPaciente', function(req, res) {
   srvController.obterPaciente(req, res)  
 
 })
+ app.get('/saude/getPacienteCadSus', function(req, res) {
+  
+   cadSusService.consultarCadSus(req, res)  
+
+ })
 app.post('/saude/postPaciente', function(req, res) {
   
   srvController.inserirPaciente(req, res)  
