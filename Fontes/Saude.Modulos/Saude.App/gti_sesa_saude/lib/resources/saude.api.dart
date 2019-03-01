@@ -9,7 +9,9 @@ import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/models/insert.model.dart';
 
 class SaudeApi {
-  Client client = Client();
+  Client client = new Client();
+  //var url = "http://saude-api.azurewebsites.net";
+  var url = "https://localhost:3010";
 
   Future<PacienteModel> fetchPaciente(
       String documento, String dataNascimento) async {
@@ -28,7 +30,7 @@ class SaudeApi {
 
     
       final response = await client
-          .post("http://saude-api.azurewebsites.net/saude/getPaciente",
+          .post(url + "/saude/getPaciente",
               headers: {
                 "Accept": "application/json",
                 "content-type": "application/json"
@@ -50,7 +52,7 @@ class SaudeApi {
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://saude-api.azurewebsites.net/saude/getUnidades", headers: {
+        .get(url + "/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -74,7 +76,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://saude-api.azurewebsites.net/saude/getEspecialidades",
+        url + "/saude/getEspecialidades",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -103,7 +105,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://saude-api.azurewebsites.net/saude/getConsultas",
+        url + "/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -126,7 +128,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client.post(
-        "http://saude-api.azurewebsites.net/saude/getConsultas",
+        url + "/saude/getConsultas",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -149,7 +151,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://saude-api.azurewebsites.net/saude/postConsulta",
+        url + "/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -191,7 +193,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://saude-api.azurewebsites.net/saude/postPaciente",
+        url + "/saude/postPaciente",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json" 
@@ -212,7 +214,7 @@ class SaudeApi {
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://saude-api.azurewebsites.net/saude/getBairros", headers: {
+        .get(url + "/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));

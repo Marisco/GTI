@@ -92,9 +92,13 @@ class _PacienteState extends State<Paciente> {
         _dialogState = DialogState.COMPLETED;
         paciente = _paciente[0].nome;
         pacienteId = _paciente[0].numero.toString();
-      } else {
-        _dialogState = DialogState.DISMISSED;
-        Navigator.pop(context);
+      } else {        
+        Navigator.push(
+            context,
+            SlideRightRoute(
+                builder: (_) => CadPaciente(
+                    documento: this._documento.text,
+                    dataNascimento: this._dataNascimento.text)));
       }
     });
   }

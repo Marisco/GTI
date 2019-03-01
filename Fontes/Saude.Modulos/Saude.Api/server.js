@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 
-console.log('Prefeitura da Serra: Módulo Saude.Api  -Porta: ' + port)
+console.log('Prefeitura da Serra: Módulo Saude.Api - Porta: ' + port )
 
 
 app.post('/saude/getPaciente', function(req, res) {

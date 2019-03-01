@@ -87,7 +87,7 @@ class _ConsultaState extends State<Consulta> {
             this.unidadeId,
             this.especialidadeId,
             DateTime.now().add(Duration(days: 1)).toString(),
-            DateTime.now().add(Duration(days: 3)).toString())
+            DateTime.now().add(Duration(days: 7)).toString())
         .catchError((e) {
       _dialogState = DialogState.ERROR;
       _msgErro = e.message.toString().toLowerCase().contains("future")
