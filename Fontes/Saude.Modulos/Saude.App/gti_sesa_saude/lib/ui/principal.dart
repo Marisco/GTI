@@ -1,142 +1,175 @@
 import 'package:flutter/material.dart';
+import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo02.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
-import 'package:gti_sesa_saude/ui/passo04.dart';
-import 'package:gti_sesa_saude/ui/passo05.dart';
 
-class Principal extends StatefulWidget {
-  Principal({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _PrincipalState createState() => _PrincipalState();
-}
-
-class _PrincipalState extends State<Principal> {
-  PageController _pageController;  
-  String _title = "App Saúde Prefeitura de Serra ES";
-  Color _appBarColor = Color.fromRGBO(41, 84, 142, 1);
+class Principal extends StatelessWidget {
+  final String paciente;
+  final String pacienteId;
+  Principal({@required this.paciente, @required this.pacienteId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-          title: Text(_title),
-          backgroundColor: _appBarColor,
-          actions: <Widget>[
-            Image.asset(
-              "img/logo_icon.png",
-              width: 50,
-            )
-          ]),
-      body: PageView(
-        pageSnapping: true,
-        reverse: false,
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Container(
-            child: Center(child: Passo01()),
-          ),
-          Container(
-            child: Center(child: Passo02(paciente:"", pacienteId: "")),
-          ),
-          Container(
-            child: Center(child: Passo03(paciente:"", pacienteId: "",unidadeId: "" )),
-          ),
-          Container(
-            child: Center(child: Passo04(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "")),
-          ),
-          Container(
-            child: Center(child: Passo05(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "",consultaId: "",)),
-          ),
-        ],
-        controller: _pageController,
-        onPageChanged: onPageChanged,
-        physics:NeverScrollableScrollPhysics()
-        
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Image.asset("img/ic_passo01.png", width: 48),
-      //       title: Text("Passo"),
-      //       backgroundColor: Colors.blue
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Image.asset("img/ic_passo02.png", width: 48),
-      //       title: Text("Passo"),
-      //       backgroundColor: Colors.purple
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Image.asset("img/ic_passo03.png", width: 48),
-      //       title: Text("Passo"),
-      //       backgroundColor: Colors.cyan
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Image.asset("img/ic_passo04.png", width: 48),
-      //       title: Text("Passo"),
-      //       backgroundColor: Colors.pink
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Image.asset("img/ic_passo05.png", width: 48),
-      //       title: Text("Passo"),
-      //       backgroundColor: Colors.transparent
-      //     ),
-      //   ],
-      //   onTap: navigateToPage,
-      //   currentIndex: _page,
-      //   fixedColor: Colors.transparent,        
-      //   type: BottomNavigationBarType.shifting,
-        
-      // ),
-    );
+        body:
+            MenuServicos(paciente: this.paciente, pacienteId: this.pacienteId));
   }
+}
 
-  void navigateToPage(int page) {
-    _pageController.animateToPage(page,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+class MenuServicos extends StatefulWidget {
+  final String paciente;
+  final String pacienteId;
 
-  }
-
-  void onPageChanged(int page) {
-    String _temptitle = "";
-    Color _tempColor;
-    switch (page) {
-      case 0:
-        _temptitle = "App Saúde Prefeitura de Serra ES";
-        _tempColor = Colors.blue;//Color.fromRGBO(41, 84, 142, 1);
-        break;
-      case 1:
-        _temptitle = "App Saúde Prefeitura de Serra ES";
-        _tempColor = Colors.purple;
-        break;
-      case 2:
-        _temptitle = "App Saúde Prefeitura de Serra ES";
-        _tempColor = Colors.cyan;
-        break;
-      case 3:
-        _temptitle = "App Saúde Prefeitura de Serra ES";
-        _tempColor = Colors.pink
-        ;
-        break;
-      case 4:
-        _temptitle = "App Saúde Prefeitura de Serra ES";
-        _tempColor = Colors.green;
-        break;
-    }
-    setState(() {
-      //this._page = page;
-      this._title = _temptitle;
-      this._appBarColor = _tempColor;
-    });
-  }
-
+  MenuServicos({@required this.paciente, @required this.pacienteId});
   @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
+  _MenuServicos createState() =>
+      _MenuServicos(paciente: this.paciente, pacienteId: this.pacienteId);
+}
+
+class _MenuServicos extends State<MenuServicos> {
+  final String paciente;
+  final String pacienteId;
+  DialogState _dialogState;
+  String _msgErro;
+  _MenuServicos({@required this.paciente, @required this.pacienteId});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+            child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                onHorizontalDragStart: (_) {
+                  Navigator.pop(context);
+                  SlideRightRouteR(builder: (_) => Passo01());
+                },
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("img/passo03.jpg"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(children: <Widget>[
+                      Row(children: <Widget>[
+                        Cabecalho(
+                          state: DialogState.DISMISSED,
+                          textoMensagem: 'Serviços Disponíveis.',
+                        ),
+                      ]),
+                      Row(children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                _dialogState == DialogState.ERROR
+                                    ? SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        child: MensagemDialog(
+                                          state: _dialogState,
+                                          paciente: "",
+                                          pacienteId: "",
+                                          textoTitle: "Desculpe!",
+                                          textoMensagem: _msgErro,
+                                          textoBtnOK: "",
+                                          textoBtnCancel: "Voltar",
+                                          textoState: "",
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Principal(
+                                                      paciente: this.paciente,
+                                                      pacienteId:
+                                                          this.pacienteId)),
+                                          color: Color.fromRGBO(
+                                              63, 157, 184, 0.75),
+                                        ))
+                                    : SizedBox(
+                                        child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                            accentColor: Color.fromRGBO(
+                                                63, 157, 184, 0.75),
+                                            canvasColor: Color.fromRGBO(
+                                                63, 157, 184, 0.75)),
+                                        child: Container(
+                                            margin: EdgeInsets.all(40),
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  _dialogState ==
+                                                          DialogState.LOADING
+                                                      ? CircularProgressIndicator(
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  Colors.white))
+                                                      : 
+                                                              RaisedButton.icon(
+                                                            onPressed: _dialogState ==
+                                                                    DialogState
+                                                                        .LOADING
+                                                                ? null
+                                                                : () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        SlideRightRoute(
+                                                                            builder: (_) => Passo02(
+                                                                                  paciente: this.paciente,
+                                                                                  pacienteId: this.pacienteId,
+                                                                                )));
+                                                                  },
+                                                            elevation: 5.0,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          0.0),
+                                                            ),
+                                                            color: _dialogState ==
+                                                                    DialogState
+                                                                        .LOADING
+                                                                ? Colors.grey
+                                                                    .withOpacity(
+                                                                        0.75)
+                                                                : Color
+                                                                    .fromRGBO(
+                                                                        63,
+                                                                        157,
+                                                                        184,
+                                                                        0.75),
+                                                            icon: Icon(
+                                                                Icons
+                                                                    .perm_contact_calendar,
+                                                                color: Colors
+                                                                    .white70),
+                                                            label: Text(
+                                                              "Agendamento Online de  Consulta.",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Humanist',
+                                                                  fontSize: 25,
+                                                                  color: Colors
+                                                                      .white,                                                                      ),
+                                                            ),
+                                                            
+                                                         ),
+                                                ])),
+                                      ))
+                              ],
+                            )),
+                      ])
+                    ])))));
   }
 }

@@ -2,6 +2,7 @@ const moment = require('moment')
 moment.locale('pt-br')
 const srvController = require('./serverController')
 const cadSusService = require('./cadSusService')
+const bnafarService = require('./bnafarService')
 var express = require('express')
 var app = express()
 var cors = require('cors');
@@ -26,6 +27,13 @@ app.post('/saude/getPaciente', function(req, res) {
    cadSusService.consultarCadSus(req, res)  
 
  })
+
+ app.get('/saude/getConsultaBnafar', function(req, res) {
+  
+  bnafarService.consultarBnafar(req, res)  
+
+})
+
 app.post('/saude/postPaciente', function(req, res) {
   
   srvController.inserirPaciente(req, res)  

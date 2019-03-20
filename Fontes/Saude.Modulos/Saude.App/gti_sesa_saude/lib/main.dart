@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
+import 'package:gti_sesa_saude/ui/principal.dart';
 import 'package:intl/date_symbol_data_local.dart';
 //final Locale myLocale = new Locale("pt", "PT");
 
@@ -28,7 +29,7 @@ class GtiSesaSaude extends StatelessWidget {
           primarySwatch: Colors.blue,
           backgroundColor: Color.fromRGBO(41, 84, 142, 1)          
           ),
-      home: new Passo01(),
+      home: new Principal(),
     );
   }
 }
