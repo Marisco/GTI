@@ -71,3 +71,9 @@ app.get('/saude/getBairros', function(req, res) {
   srvController.obterBairros(req, res)  
 
 })
+
+app.get('/saude/getServicos', function(req, res) {
+  
+  srvController.obterBairros(req, res)  
+
+})

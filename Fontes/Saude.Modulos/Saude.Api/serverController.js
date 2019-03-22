@@ -100,6 +100,18 @@ var inserirPaciente = function (req, res) {
     }
 };
 
+var obterServicos = function (req, res) {
+    var models = objModels. ObjBairro;
+    models.obterBairros(objModels.dbMysql, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+        } else {
+            res.json({ bairros: data })
+        }
+    })
+};
+
+
 
 
 
