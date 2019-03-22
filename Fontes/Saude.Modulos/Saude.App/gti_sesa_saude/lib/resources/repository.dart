@@ -6,6 +6,7 @@ import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
 import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/models/insert.model.dart';
+import 'package:gti_sesa_saude/models/servico.model.dart';
 
 
 class Repository {
@@ -15,7 +16,7 @@ class Repository {
           String documento, String dataNascimento) =>
       saudeApi.fetchPaciente(documento, dataNascimento);
 
-  Future<UnidadeModel> fetchUnidades() => saudeApi.fetchUnidades();
+  Future<UnidadeModel> fetchUnidades() => saudeApi.fetchUnidades();  
 
   Future<EspecialidadeModel> fetchEspecialidades(
           String unidadeId, String dataInicio, String dataFim) =>
@@ -38,6 +39,8 @@ class Repository {
           nome, cpf, cartaoSus, dataNascimento, sexo, telefone, bairro);
   
   Future<BairroModel> fetchBairros() => saudeApi.fetchBairros();
+
+  Future<ServicoModel> fetchServicoss() => saudeApi.fetchServicos();
   
   
 }

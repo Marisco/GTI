@@ -5,6 +5,7 @@ const ObjUnidade = require('./Mysql/Unidade/cUnidade')
 const ObjEspecialidade = require('./Mysql/Especialidade/cEspecialidade')
 const ObjConsulta = require('./Mysql/Consulta/cConsulta')
 const ObjBairro = require('./Mysql/Bairro/cBairro')
+const ObjServico = require('./Mysql/Servico/cServico')
 
 
 module.exports = {
@@ -13,5 +14,6 @@ module.exports = {
      ObjUnidade,
      ObjEspecialidade,
      ObjConsulta,
-     ObjBairro
+     ObjBairro,
+     ObjServico
 };

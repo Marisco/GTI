@@ -114,58 +114,33 @@ class _MenuServicos extends State<MenuServicos> {
                                                               AlwaysStoppedAnimation<
                                                                       Color>(
                                                                   Colors.white))
-                                                      : 
-                                                              RaisedButton.icon(
-                                                            onPressed: _dialogState ==
-                                                                    DialogState
-                                                                        .LOADING
-                                                                ? null
-                                                                : () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        SlideRightRoute(
-                                                                            builder: (_) => Passo02(
-                                                                                  paciente: this.paciente,
-                                                                                  pacienteId: this.pacienteId,
-                                                                                )));
-                                                                  },
-                                                            elevation: 5.0,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          0.0),
-                                                            ),
-                                                            color: _dialogState ==
-                                                                    DialogState
-                                                                        .LOADING
-                                                                ? Colors.grey
-                                                                    .withOpacity(
-                                                                        0.75)
-                                                                : Color
-                                                                    .fromRGBO(
-                                                                        63,
-                                                                        157,
-                                                                        184,
-                                                                        0.75),
-                                                            icon: Icon(
-                                                                Icons
-                                                                    .perm_contact_calendar,
-                                                                color: Colors
-                                                                    .white70),
-                                                            label: Text(
-                                                              "Agendamento Online de  Consulta.",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Humanist',
-                                                                  fontSize: 25,
-                                                                  color: Colors
-                                                                      .white,                                                                      ),
-                                                            ),
-                                                            
-                                                         ),
-                                                ])),
+                                                      :  Expanded(
+      child: ListView.builder(
+                                                                      itemCount:planets.length,
+                                                                      itemExtent: 152.0,
+                                                                      itemBuilder:
+                                                                          (BuildContext context,
+                                                                              int index) {
+                                                                        return InkWell(
+                                                                          splashColor: Color.fromRGBO(
+                                                                              189,
+                                                                              112,
+                                                                              162,
+                                                                              0.75),
+                                                                          onTap:
+                                                                              () {
+                                                                            setState(() {
+                                                                              _selConsulta = dadosConsulta[index].numero;
+                                                                              dadosConsulta.forEach((element) => element.isSelected = false);
+                                                                              dadosConsulta[index].isSelected = true;
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              RadioItem(dadosConsulta[index]),
+                                                                        );
+                                                                      },
+                                                                    )
+                                        )])),
                                       ))
                               ],
                             )),
