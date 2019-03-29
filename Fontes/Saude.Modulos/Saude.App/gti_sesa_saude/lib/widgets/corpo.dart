@@ -16,7 +16,7 @@ class Corpo extends StatelessWidget {
     var margemBottom = MediaQuery.of(context).size.height * 0.05;
     return Row(children: [
       Container(
-          color: Colors.yellow,
+          //color: Colors.yellow,
           height: MediaQuery.of(context).size.height * 0.60,
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.only(

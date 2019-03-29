@@ -30,7 +30,7 @@ class Cabecalho extends StatelessWidget {
                   this.textoCabecalho,
                   style: TextStyle(
                     fontFamily: 'Humanist',
-                    color: Colors.blue,
+                    color: Colors.white,
                     fontSize: 30,
                   ),
                   textAlign: TextAlign.center,

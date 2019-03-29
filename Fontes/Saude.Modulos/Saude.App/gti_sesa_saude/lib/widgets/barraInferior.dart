@@ -13,7 +13,7 @@ class BarraInferior extends StatelessWidget {
     return Row(
       children: [
       Container(
-        color: Colors.orange,
+        //color: Colors.orange,
         height: MediaQuery.of(context).size.height * 0.05,
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(

@@ -16,7 +16,7 @@ class Rodape extends StatelessWidget {
     var margemBottom = 0.0;
     return Row(children: [
       Container(
-        color: Colors.blue,
+        //color: Colors.blue,
         height: MediaQuery.of(context).size.height * 0.15,
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(
