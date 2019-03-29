@@ -1,150 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
-import 'package:gti_sesa_saude/ui/passo02.dart';
+import 'package:gti_sesa_saude/widgets/rodape.dart';
+import 'package:gti_sesa_saude/widgets/corpo.dart';
+import 'package:gti_sesa_saude/widgets/barraInferior.dart';
+
 
 class Principal extends StatelessWidget {
-  final String paciente;
-  final String pacienteId;
-  Principal({@required this.paciente, @required this.pacienteId});
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body:
-            MenuServicos(paciente: this.paciente, pacienteId: this.pacienteId));
+    return Scaffold(body: _Principal());
   }
 }
 
-class MenuServicos extends StatefulWidget {
-  final String paciente;
-  final String pacienteId;
-
-  MenuServicos({@required this.paciente, @required this.pacienteId});
+class _Principal extends StatefulWidget {
   @override
-  _MenuServicos createState() =>
-      _MenuServicos(paciente: this.paciente, pacienteId: this.pacienteId);
+  _PrincipalState createState() => _PrincipalState();
 }
 
-class _MenuServicos extends State<MenuServicos> {
-  final String paciente;
-  final String pacienteId;
+class _PrincipalState extends State<_Principal> {
   DialogState _dialogState;
-  String _msgErro;
-  _MenuServicos({@required this.paciente, @required this.pacienteId});
+  String _msgErro;  
+
+  @override
+  void initState() {
+    initializeDateFormatting("pt_BR", null);
+    this._msgErro = "";
+    _dialogState = DialogState.DISMISSED;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dialogState = DialogState.DISMISSED;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: SingleChildScrollView(
-            child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                onHorizontalDragStart: (_) {
-                  Navigator.pop(context);
-                  SlideRightRouteR(builder: (_) => Passo01());
-                },
-                child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("img/passo03.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Column(children: <Widget>[
-                      Row(children: <Widget>[
-                        Cabecalho(
-                          state: DialogState.DISMISSED,
-                          textoMensagem: 'Serviços Disponíveis.',
-                        ),
-                      ]),
-                      Row(children: <Widget>[
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                _dialogState == DialogState.ERROR
-                                    ? SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.5,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.9,
-                                        child: MensagemDialog(
-                                          state: _dialogState,
-                                          paciente: "",
-                                          pacienteId: "",
-                                          textoTitle: "Desculpe!",
-                                          textoMensagem: _msgErro,
-                                          textoBtnOK: "",
-                                          textoBtnCancel: "Voltar",
-                                          textoState: "",
-                                          slideRightRouteBtnCancel:
-                                              SlideRightRoute(
-                                                  builder: (_) => Principal(
-                                                      paciente: this.paciente,
-                                                      pacienteId:
-                                                          this.pacienteId)),
-                                          color: Color.fromRGBO(
-                                              63, 157, 184, 0.75),
-                                        ))
-                                    : SizedBox(
-                                        child: Theme(
-                                        data: Theme.of(context).copyWith(
-                                            accentColor: Color.fromRGBO(
-                                                63, 157, 184, 0.75),
-                                            canvasColor: Color.fromRGBO(
-                                                63, 157, 184, 0.75)),
-                                        child: Container(
-                                            margin: EdgeInsets.all(40),
-                                            child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  _dialogState ==
-                                                          DialogState.LOADING
-                                                      ? CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                  Colors.white))
-                                                      :  Expanded(
-      child: ListView.builder(
-                                                                      itemCount:planets.length,
-                                                                      itemExtent: 152.0,
-                                                                      itemBuilder:
-                                                                          (BuildContext context,
-                                                                              int index) {
-                                                                        return InkWell(
-                                                                          splashColor: Color.fromRGBO(
-                                                                              189,
-                                                                              112,
-                                                                              162,
-                                                                              0.75),
-                                                                          onTap:
-                                                                              () {
-                                                                            setState(() {
-                                                                              _selConsulta = dadosConsulta[index].numero;
-                                                                              dadosConsulta.forEach((element) => element.isSelected = false);
-                                                                              dadosConsulta[index].isSelected = true;
-                                                                            });
-                                                                          },
-                                                                          child:
-                                                                              RadioItem(dadosConsulta[index]),
-                                                                        );
-                                                                      },
-                                                                    )
-                                        )])),
-                                      ))
-                              ],
-                            )),
-                      ])
-                    ])))));
+        body: Container(
+            height: MediaQuery.of(context).size.height,            
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("img/background.png"),
+                fit: BoxFit.cover                
+              ),
+            ),
+            child: Column(children: <Widget>[
+              Cabecalho(
+                state: DialogState.DISMISSED,
+                textoCabecalho: 'Cabeçalho',
+              ),
+              Corpo(
+                state: DialogState.DISMISSED,
+                textoCorpo: 'Corpo',
+              ),
+              Rodape(
+                state: DialogState.DISMISSED,
+                textoRodape: 'Rodapé',
+              )
+            ])),
+            bottomNavigationBar: BottomAppBar(
+              child: BarraInferior(
+                state: DialogState.DISMISSED,
+                textoBarraInferior: 'BarraInferior',
+              )
+             ),
+            );
   }
 }

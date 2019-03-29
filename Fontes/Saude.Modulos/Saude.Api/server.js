@@ -72,8 +72,31 @@ app.get('/saude/getBairros', function(req, res) {
 
 })
 
-app.get('/saude/getServicos', function(req, res) {
+app.get('/saude/getModulos', function(req, res) {
   
-  srvController.obterBairros(req, res)  
+  srvController.obterModulos(req, res)  
 
 })
+
+app.get('/saude/postFilaVirtual', function(req, res) {
+  
+  srvController.obterModulos(req, res)  
+
+})
+
+app.get('/saude/getFilaVirtual', function(req, res) {
+  
+  srvController.obterModulos(req, res)  
+
+})
+app.get('/saude/getFilasVirtuais', function(req, res) {
+  
+  srvController.obterModulos(req, res)  
+
+})
+app.get('/saude/getAvaliacoes', function(req, res) {
+  
+  srvController.obterModulos(req, res)  
+
+})
+

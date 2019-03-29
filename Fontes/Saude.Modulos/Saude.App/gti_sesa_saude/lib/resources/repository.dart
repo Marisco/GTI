@@ -6,17 +6,19 @@ import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
 import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/models/insert.model.dart';
-import 'package:gti_sesa_saude/models/servico.model.dart';
+import 'package:gti_sesa_saude/models/modulo.model.dart';
+import 'package:gti_sesa_saude/models/avaliacao.model.dart';
+import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
 
 
 class Repository {
-  final saudeApi = SaudeApi();  
-  
+  final saudeApi = SaudeApi();
+
   Future<PacienteModel> fetchPaciente(
           String documento, String dataNascimento) =>
       saudeApi.fetchPaciente(documento, dataNascimento);
 
-  Future<UnidadeModel> fetchUnidades() => saudeApi.fetchUnidades();  
+  Future<UnidadeModel> fetchUnidades() => saudeApi.fetchUnidades();
 
   Future<EspecialidadeModel> fetchEspecialidades(
           String unidadeId, String dataInicio, String dataFim) =>
@@ -37,10 +39,27 @@ class Repository {
           String dataNascimento, String sexo, String telefone, String bairro) =>
       saudeApi.pushPaciente(
           nome, cpf, cartaoSus, dataNascimento, sexo, telefone, bairro);
-  
+
   Future<BairroModel> fetchBairros() => saudeApi.fetchBairros();
 
-  Future<ServicoModel> fetchServicoss() => saudeApi.fetchServicos();
-  
-  
+  Future<ModuloModel> fetchModulos() => saudeApi.fetchModulos();
+  Future<AvaliacaoModel> fetchAvaliacoes() => saudeApi.fetchAvaliacoes();
+
+  Future<MensagemModel> pushFilaVirtual(
+          String pacienteId, String filaVirtualId) =>
+      saudeApi.pushFilaVirtual(pacienteId, filaVirtualId);
+
+  Future<FilaVirtualModel> fetchFilaVirtual(
+          String paciente, String especialidade) =>
+      saudeApi.fetchFilaVirtual(paciente, especialidade);
+
+  Future<FilaVirtualModel> fetchFilasVirtuais(
+          String filaVirtualId,
+          String unidadeId,
+          String especialidadeId,
+          String dataInicio,
+          String dataFim) =>
+      saudeApi.fetchFilasVirtuais(
+          filaVirtualId, unidadeId, especialidadeId, dataInicio, dataFim);
+          
 }

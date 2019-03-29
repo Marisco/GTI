@@ -5,7 +5,9 @@ const ObjUnidade = require('./Mysql/Unidade/cUnidade')
 const ObjEspecialidade = require('./Mysql/Especialidade/cEspecialidade')
 const ObjConsulta = require('./Mysql/Consulta/cConsulta')
 const ObjBairro = require('./Mysql/Bairro/cBairro')
-const ObjServico = require('./Mysql/Servico/cServico')
+const ObjModulo = require('./Mysql/Modulo/cModulo')
+const ObjAvaliacao = require('./Mysql/Avaliacao/cAvaliacao')
+const ObjFilaVirtual = require('./Mysql/FilaVirtual/cFilaVirtual')
 
 
 module.exports = {
@@ -15,5 +17,7 @@ module.exports = {
      ObjEspecialidade,
      ObjConsulta,
      ObjBairro,
-     ObjServico
+     ObjModulo,
+     ObjAvaliacao,
+     ObjFilaVirtual
 };

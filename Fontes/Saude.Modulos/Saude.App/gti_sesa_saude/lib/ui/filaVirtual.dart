@@ -1,75 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
-import 'package:gti_sesa_saude/models/consulta.model.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
-import 'package:gti_sesa_saude/ui/passo05.dart';
+import 'package:gti_sesa_saude/blocs/filaVirtual.bloc.dart';
+import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
+import 'package:gti_sesa_saude/ui/unidade.dart';
+import 'package:gti_sesa_saude/ui/confirmacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
-class Passo04 extends StatelessWidget {
+class FilaVirtual extends StatelessWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
-  Passo04(
+  FilaVirtual(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consulta(
+        body: FilaVirtual(
             paciente: this.paciente,
             pacienteId: this.pacienteId,
+            moduloId: this.moduloId,
             unidadeId: this.unidadeId,
             especialidadeId: this.especialidadeId));
   }
 }
 
-class Consulta extends StatefulWidget {
+class _FilaVirtual extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
-  Consulta(
+  _FilaVirtual(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
   @override
-  _ConsultaState createState() => _ConsultaState(
+  _FilaVirtualState createState() => _FilaVirtualState(
       paciente: this.paciente,
       pacienteId: this.pacienteId,
+      moduloId: this.moduloId,
       unidadeId: this.unidadeId,
       especialidadeId: this.especialidadeId);
 }
 
-class _ConsultaState extends State<Consulta> {
+class _FilaVirtualState extends State<_FilaVirtual> {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
-  var _consultas = [];
-  var _selConsulta;
+  var _filaVirtuals = [];
+  var _selFilaVirtual;
   DialogState _dialogState;
   String _msgErro;
-  _ConsultaState(
+  _FilaVirtualState(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
-  List<RadioModel> dadosConsulta = List<RadioModel>();
+  List<RadioModel> dadosFilaVirtual = List<RadioModel>();
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR", null);
     this._msgErro = "";
     _dialogState = DialogState.DISMISSED;
-    this._getConsultas();
+    this._getFilaVirtuals();
     super.initState();
   }
 
@@ -79,37 +87,37 @@ class _ConsultaState extends State<Consulta> {
     super.dispose();
   }
 
-  void _getConsultas() async {
+  void _getFilaVirtuals() async {
     setState(() => _dialogState = DialogState.LOADING);
-    ConsultaModel consultaModel = await consultaBloc
-        .fetchConsultas(
+    FilaVirtualModel filaVirtualModel = await filaVirtualBloc
+        .fetchFilasVirtuais(
             "0",
             this.unidadeId,
             this.especialidadeId,
             DateTime.now().add(Duration(days: 1)).toString(),
-            DateTime.now().add(Duration(days: 7)).toString())
+            DateTime.now().add(Duration(days: 3)).toString())
         .catchError((e) {
       _dialogState = DialogState.ERROR;
       _msgErro = e.message.toString().toLowerCase().contains("future")
           ? "Serviço insiponível!"
           : e.message;
     });
-    _consultas = consultaModel.getConsultas().toList();
+    _filaVirtuals = filaVirtualModel.getFilasVirtuais().toList();
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
-        if (_consultas.isNotEmpty && _consultas[0] != null) {
+        if (_filaVirtuals.isNotEmpty && _filaVirtuals[0] != null) {
           _dialogState = DialogState.COMPLETED;
-          _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
+          _filaVirtuals.forEach((filaVirtual) => dadosFilaVirtual.add(RadioModel(
               false,
-              consulta.numero,
-              consulta.consultorio,
-              consulta.especialidade,
-              consulta.medico,
-              consulta.dataInicio,
-              consulta.dataFim)));
+              filaVirtual.numero,
+              filaVirtual.consultorio,
+              filaVirtual.especialidade,
+              filaVirtual.medico,
+              filaVirtual.dataInicio,
+              filaVirtual.dataFim)));
         } else {
           _dialogState = DialogState.ERROR;
-          _msgErro = "Consulta indisponível";
+          _msgErro = "Fila Virtual indisponível";
         }
       });
     });
@@ -127,10 +135,11 @@ class _ConsultaState extends State<Consulta> {
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
                   SlideRightRouteR(
-                      builder: (_) => Passo03(
+                      builder: (_) => Unidade(
                           pacienteId: this.pacienteId,
                           paciente: this.paciente,
-                          unidadeId: this.unidadeId));
+                          moduloId: this.moduloId,
+                          ));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -170,12 +179,13 @@ class _ConsultaState extends State<Consulta> {
                                           textoState: "",
                                           slideRightRouteBtnCancel:
                                               SlideRightRoute(
-                                                  builder: (_) => Passo03(
+                                                  builder: (_) => Unidade(
                                                       pacienteId:
                                                           this.pacienteId,
                                                       paciente: this.paciente,
-                                                      unidadeId:
-                                                          this.unidadeId)),
+                                                      moduloId: this.moduloId,
+                                                      
+                                                      )),
                                           color: Color.fromRGBO(
                                               125, 108, 187, 0.75),
                                         ))
@@ -201,7 +211,7 @@ class _ConsultaState extends State<Consulta> {
                                                                       DialogState
                                                                           .LOADING
                                                                   ? 0.06
-                                                                  : 0.37),
+                                                                  : 0.5),
                                                       child: Theme(
                                                           data: Theme.of(context).copyWith(
                                                               accentColor:
@@ -219,7 +229,7 @@ class _ConsultaState extends State<Consulta> {
                                                                   ? ListView
                                                                       .builder(
                                                                       itemCount:
-                                                                          dadosConsulta
+                                                                          dadosFilaVirtual
                                                                               .length,
                                                                       itemBuilder:
                                                                           (BuildContext context,
@@ -233,13 +243,13 @@ class _ConsultaState extends State<Consulta> {
                                                                           onTap:
                                                                               () {
                                                                             setState(() {
-                                                                              _selConsulta = dadosConsulta[index].numero;
-                                                                              dadosConsulta.forEach((element) => element.isSelected = false);
-                                                                              dadosConsulta[index].isSelected = true;
+                                                                              _selFilaVirtual = dadosFilaVirtual[index].numero;
+                                                                              dadosFilaVirtual.forEach((element) => element.isSelected = false);
+                                                                              dadosFilaVirtual[index].isSelected = true;
                                                                             });
                                                                           },
                                                                           child:
-                                                                              RadioItem(dadosConsulta[index]),
+                                                                              RadioItem(dadosFilaVirtual[index]),
                                                                         );
                                                                       },
                                                                     )
@@ -260,12 +270,14 @@ class _ConsultaState extends State<Consulta> {
                                                                     Navigator.push(
                                                                         context,
                                                                         SlideRightRoute(
-                                                                            builder: (_) => Passo05(
+                                                                            builder: (_) => Confirmacao(
                                                                                 paciente: this.paciente,
                                                                                 pacienteId: this.pacienteId,
+                                                                                moduloId: this.moduloId,
                                                                                 unidadeId: this.unidadeId,
                                                                                 especialidadeId: this.especialidadeId,
-                                                                                consultaId: this._selConsulta)));
+                                                                                consultaId: "",
+                                                                                filaVirtualId: this._selFilaVirtual)));
                                                                   },
                                                         elevation: 5.0,
                                                         shape:

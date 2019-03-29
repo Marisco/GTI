@@ -2,57 +2,68 @@ import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
-import 'package:gti_sesa_saude/ui/passo05.dart';
+import 'package:gti_sesa_saude/ui/especialidade.dart';
+import 'package:gti_sesa_saude/ui/confirmacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
-class Passo04 extends StatelessWidget {
+class Consulta extends StatelessWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
-  Passo04(
+
+  Consulta(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consulta(
+        body: _Consulta(
             paciente: this.paciente,
             pacienteId: this.pacienteId,
+            moduloId: this.moduloId,
             unidadeId: this.unidadeId,
-            especialidadeId: this.especialidadeId));
+            especialidadeId: this.especialidadeId
+            ));
   }
 }
 
-class Consulta extends StatefulWidget {
+class _Consulta extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
-  Consulta(
+
+  _Consulta(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
   @override
   _ConsultaState createState() => _ConsultaState(
       paciente: this.paciente,
       pacienteId: this.pacienteId,
+      moduloId: this.moduloId,
       unidadeId: this.unidadeId,
       especialidadeId: this.especialidadeId);
 }
 
-class _ConsultaState extends State<Consulta> {
+class _ConsultaState extends State<_Consulta> {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
+
   var _consultas = [];
   var _selConsulta;
   DialogState _dialogState;
@@ -60,6 +71,7 @@ class _ConsultaState extends State<Consulta> {
   _ConsultaState(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId});
   List<RadioModel> dadosConsulta = List<RadioModel>();
@@ -127,9 +139,10 @@ class _ConsultaState extends State<Consulta> {
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
                   SlideRightRouteR(
-                      builder: (_) => Passo03(
+                      builder: (_) => Especialidade(
                           pacienteId: this.pacienteId,
                           paciente: this.paciente,
+                          moduloId: this.moduloId,
                           unidadeId: this.unidadeId));
                 },
                 child: Container(
@@ -144,8 +157,7 @@ class _ConsultaState extends State<Consulta> {
                       Row(children: <Widget>[
                         Cabecalho(
                           state: DialogState.DISMISSED,
-                          textoCabecalho:
-                              'Escolha um horário.',
+                          textoCabecalho: 'Escolha um horário.',
                         ),
                       ]),
                       Row(children: <Widget>[
@@ -170,10 +182,11 @@ class _ConsultaState extends State<Consulta> {
                                           textoState: "",
                                           slideRightRouteBtnCancel:
                                               SlideRightRoute(
-                                                  builder: (_) => Passo03(
+                                                  builder: (_) => Especialidade(
                                                       pacienteId:
                                                           this.pacienteId,
                                                       paciente: this.paciente,
+                                                      moduloId: this.moduloId,
                                                       unidadeId:
                                                           this.unidadeId)),
                                           color: Color.fromRGBO(
@@ -201,7 +214,7 @@ class _ConsultaState extends State<Consulta> {
                                                                       DialogState
                                                                           .LOADING
                                                                   ? 0.06
-                                                                  : 0.37),
+                                                                  : 0.5),
                                                       child: Theme(
                                                           data: Theme.of(context).copyWith(
                                                               accentColor:
@@ -260,12 +273,14 @@ class _ConsultaState extends State<Consulta> {
                                                                     Navigator.push(
                                                                         context,
                                                                         SlideRightRoute(
-                                                                            builder: (_) => Passo05(
+                                                                            builder: (_) => Confirmacao(
                                                                                 paciente: this.paciente,
                                                                                 pacienteId: this.pacienteId,
+                                                                                moduloId: this.moduloId,
                                                                                 unidadeId: this.unidadeId,
                                                                                 especialidadeId: this.especialidadeId,
-                                                                                consultaId: this._selConsulta)));
+                                                                                consultaId: this._selConsulta,
+                                                                                filaVirtualId: "",)));
                                                                   },
                                                         elevation: 5.0,
                                                         shape:
@@ -312,7 +327,7 @@ class _ConsultaState extends State<Consulta> {
 class RadioItem extends StatelessWidget {
   final RadioModel _item;
   final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy", "pt_BR");
-  final diaSemana = DateFormat("EEEE","pt_BR");
+  final diaSemana = DateFormat("EEEE", "pt_BR");
   final hora = DateFormat("Hm", "pt_BR");
   RadioItem(this._item);
   @override

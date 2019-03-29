@@ -7,12 +7,12 @@ import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
 import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/models/insert.model.dart';
-import 'package:gti_sesa_saude/models/servico.model.dart';
+import 'package:gti_sesa_saude/models/modulo.model.dart';
+import 'package:gti_sesa_saude/models/avaliacao.model.dart';
+import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
 
 class SaudeApi {
   Client client = new Client();
-  //var url = "http://saude-api.azurewebsites.net";
-  var url = "https://localhost:3010";
 
   Future<PacienteModel> fetchPaciente(
       String documento, String dataNascimento) async {
@@ -30,14 +30,14 @@ class SaudeApi {
     Map data = {tipoDocumento: documento, "dataNascimento": dataNascimento};
 
     final response = await client
-        .post(url + "/saude/getPaciente",
+        .post("http://10.0.13.133:3010/saude/getPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
             },
             body: json.encode(data),
             encoding: Encoding.getByName("utf-8"))
-        .timeout(Duration(seconds: 5));
+        .timeout(Duration(seconds: 15));
     print(response.body.toString());
     //client.close();
     if (response.statusCode == 200) {
@@ -50,7 +50,8 @@ class SaudeApi {
   }
 
   Future<UnidadeModel> fetchUnidades() async {
-    final response = await client.get(url + "/saude/getUnidades", headers: {
+    final response = await client
+        .get("http://10.0.13.133:3010/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -74,7 +75,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post(url + "/saude/getEspecialidades",
+        .post("http://10.0.13.133:3010/saude/getEspecialidades",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -104,7 +105,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post(url + "/saude/getConsultas",
+        .post("http://10.0.13.133:3010/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -128,7 +129,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client
-        .post(url + "/saude/getConsultas",
+        .post("http://10.0.13.133:3010/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -151,7 +152,8 @@ class SaudeApi {
       String pacienteId, String consultaId) async {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
-    final response = await client.post(url + "/saude/postConsulta",
+    final response = await client.post(
+        "http://10.0.13.133:3010/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -193,7 +195,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post(url + "/saude/postPaciente",
+        .post("http://10.0.13.133:3010/saude/postPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -213,7 +215,8 @@ class SaudeApi {
   }
 
   Future<BairroModel> fetchBairros() async {
-    final response = await client.get(url + "/saude/getBairros", headers: {
+    final response = await client
+        .get("http://10.0.13.133:3010/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -228,15 +231,114 @@ class SaudeApi {
     }
   }
 
-  Future<ServicoModel> fetchServicos() async {
-    final response = await client.get(url + "/saude/getServicos", headers: {
+  Future<ModuloModel> fetchModulos() async {
+    final response = await client
+        .get("http://10.0.13.133:3010/saude/getModulos", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
     print(response.body.toString());
     //client.close();
     if (response.statusCode == 200) {
-      return ServicoModel.fromJson(json.decode(response.body));
+      return ModuloModel.fromJson(json.decode(response.body));
+    } else {
+      MensagemModel mensagem =
+          MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+    }
+  }
+
+  Future<AvaliacaoModel> fetchAvaliacoes() async {
+    final response = await client
+        .get("http://10.0.13.133:3010/saude/getAvaliacoes", headers: {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    }).timeout(Duration(seconds: 5));
+    print(response.body.toString());
+    //client.close();
+    if (response.statusCode == 200) {
+      return AvaliacaoModel.fromJson(json.decode(response.body));
+    } else {
+      MensagemModel mensagem =
+          MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+    }
+  }
+
+  Future<FilaVirtualModel> fetchFilasVirtuais(
+      String filaVirtualId,
+      String unidadeId,
+      String especialidadeId,
+      String dataInicio,
+      String dataFim) async {
+    Map data = {
+      "filaVirtualId": filaVirtualId,
+      "unidadeId": unidadeId,
+      "especialidadeId": especialidadeId,
+      "dataInicio": dataInicio,
+      "dataFim": dataFim
+    };
+
+    final response = await client
+        .post("http://10.0.13.133:3010/saude/getFilasVirtuais",
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json"
+            },
+            body: json.encode(data),
+            encoding: Encoding.getByName("utf-8"))
+        .timeout(Duration(seconds: 5));
+    print(response.body.toString());
+    //client.close();
+    if (response.statusCode == 200) {
+      return FilaVirtualModel.fromJson(json.decode(response.body));
+    } else {
+      MensagemModel mensagem =
+          MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+    }
+  }
+
+  Future<FilaVirtualModel> fetchFilaVirtual(
+      String pacienteId, String filaVirtualId) async {
+    Map data = {"pacienteId": pacienteId, "especialidadeId": filaVirtualId};
+
+    final response = await client
+        .post("http://10.0.13.133:3010/saude/getFilaVirtual",
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json"
+            },
+            body: json.encode(data),
+            encoding: Encoding.getByName("utf-8"))
+        .timeout(Duration(seconds: 5));
+    print(response.body.toString());
+    //client.close();
+    if (response.statusCode == 200) {
+      return FilaVirtualModel.fromJson(json.decode(response.body));
+    } else {
+      MensagemModel mensagem =
+          MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+    }
+  }
+
+  Future<MensagemModel> pushFilaVirtual(
+      String pacienteId, String filaVirtualId) async {
+    Map data = {"pacienteId": pacienteId, "filaVirtualId": filaVirtualId};
+
+    final response = await client.post(
+        "http://10.0.13.133:3010/saude/postFilaVirtual",
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: json.encode(data),
+        encoding: Encoding.getByName("utf-8"));
+    print(response.body.toString());
+    //client.close();
+    if (response.statusCode == 200) {
+      return MensagemModel.fromJson(json.decode(response.body));
     } else {
       MensagemModel mensagem =
           MensagemModel.fromJson(json.decode(response.body));

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/blocs/especialidade.bloc.dart';
 import 'package:gti_sesa_saude/models/especialidade.model.dart';
@@ -123,7 +123,7 @@ class _EspecialidadeState extends State<Especialidade> {
                       Row(children: <Widget>[
                         Cabecalho(
                           state: DialogState.DISMISSED,
-                          textoMensagem:
+                          textoCabecalho:
                               'Escolha a especialidade médica.',
                         ),
                       ]),

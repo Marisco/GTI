@@ -1,43 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
 import 'package:gti_sesa_saude/models/unidade.model.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
+import 'package:gti_sesa_saude/ui/identificacao.dart';
+import 'package:gti_sesa_saude/ui/especialidade.dart';
+import 'package:gti_sesa_saude/ui/avaliacao.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
-class Passo02 extends StatelessWidget {
+class Unidade extends StatelessWidget {
   final String paciente;
   final String pacienteId;
-  Passo02({@required this.paciente, @required this.pacienteId});
+  final String moduloId;
+  Unidade(
+      {@required this.paciente,
+      @required this.pacienteId,
+      @required this.moduloId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Unidade(paciente: this.paciente, pacienteId: this.pacienteId));
+        body: Unidade(
+            paciente: this.paciente,
+            pacienteId: this.pacienteId,
+            moduloId: this.moduloId));
   }
 }
 
-class Unidade extends StatefulWidget {
+class _Unidade extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
 
-  Unidade({@required this.paciente, @required this.pacienteId});
+  _Unidade(
+      {@required this.paciente,
+      @required this.pacienteId,
+      @required this.moduloId});
   @override
-  _UnidadeState createState() =>
-      _UnidadeState(paciente: this.paciente, pacienteId: this.pacienteId);
+  _UnidadeState createState() => _UnidadeState(
+      paciente: this.paciente,
+      pacienteId: this.pacienteId,
+      moduloId: this.moduloId);
 }
 
-class _UnidadeState extends State<Unidade> {
+class _UnidadeState extends State<_Unidade> {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   DialogState _dialogState;
+  SlideRightRoute _slideRightRoute;
   String _msgErro;
   String _selUnidade;
   var _unidades = [];
 
-  _UnidadeState({@required this.paciente, @required this.pacienteId});
+  _UnidadeState(
+      {@required this.paciente,
+      @required this.pacienteId,
+      @required this.moduloId});
 
   @override
   void dispose() {
@@ -50,6 +69,37 @@ class _UnidadeState extends State<Unidade> {
     _dialogState = DialogState.DISMISSED;
     _msgErro = "";
     this._getUnidades();
+    switch (this.moduloId) {
+      case "1":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) => Especialidade(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this._selUnidade));
+
+        break;
+      case "2":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) => Avaliacao(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this._selUnidade));
+
+        break;
+      case "2":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) => Especialidade(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this._selUnidade));
+
+        break;
+      default:
+    }
+
     super.initState();
   }
 
@@ -88,8 +138,8 @@ class _UnidadeState extends State<Unidade> {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 onHorizontalDragStart: (_) {
-                  Navigator.pop(context); 
-                  SlideRightRouteR(builder: (_) => Passo01());                 
+                  Navigator.pop(context);
+                  SlideRightRouteR(builder: (_) => Identificacao());
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -256,11 +306,7 @@ class _UnidadeState extends State<Unidade> {
                                                                 : () {
                                                                     Navigator.push(
                                                                         context,
-                                                                        SlideRightRoute(
-                                                                            builder: (_) => Passo03(
-                                                                                paciente: this.paciente,
-                                                                                pacienteId: this.pacienteId,
-                                                                                unidadeId: this._selUnidade)));
+                                                                        _slideRightRoute);
                                                                   },
                                                         elevation: 5.0,
                                                         shape:

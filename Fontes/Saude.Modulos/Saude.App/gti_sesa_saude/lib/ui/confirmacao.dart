@@ -2,66 +2,83 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
-import 'package:gti_sesa_saude/ui/passo04.dart';
+import 'package:gti_sesa_saude/ui/identificacao.dart';
+import 'package:gti_sesa_saude/ui/consulta.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
 import 'package:gti_sesa_saude/models/consulta.model.dart';
 import 'package:gti_sesa_saude/models/mensagem.model.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
+//import 'package:gti_sesa_saude/ui/filaVirtual.dart';
+import 'package:gti_sesa_saude/blocs/filaVirtual.bloc.dart';
+import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
 
-class Passo05 extends StatelessWidget {
+class Confirmacao extends StatelessWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
   final String consultaId;
-  Passo05(
-      {@required this.paciente,
-      @required this.pacienteId,
-      @required this.unidadeId,
-      @required this.especialidadeId,
-      this.consultaId});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Confirmacao(
-            paciente: this.paciente,
-            pacienteId: this.pacienteId,
-            unidadeId: this.unidadeId,
-            especialidadeId: this.especialidadeId,
-            consultaId: this.consultaId));
-  }
-}
-
-class Confirmacao extends StatefulWidget {
-  final String paciente;
-  final String pacienteId;
-  final String unidadeId;
-  final String especialidadeId;
-  final String consultaId;
+  final String filaVirtualId;
   Confirmacao(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId,
-      this.consultaId});
+      @required this.consultaId,
+      @required this.filaVirtualId});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: _Confirmacao(
+            paciente: this.paciente,
+            pacienteId: this.pacienteId,
+            moduloId: this.moduloId,
+            unidadeId: this.unidadeId,
+            especialidadeId: this.especialidadeId,
+            consultaId: this.consultaId,
+            filaVirtualId: this.filaVirtualId));
+  }
+}
+
+class _Confirmacao extends StatefulWidget {
+  final String paciente;
+  final String pacienteId;
+  final String moduloId;
+  final String unidadeId;
+  final String especialidadeId;
+  final String consultaId;
+  final String filaVirtualId;
+  _Confirmacao(
+      {@required this.paciente,
+      @required this.pacienteId,
+      @required this.moduloId,
+      @required this.unidadeId,
+      @required this.especialidadeId,
+      this.consultaId,
+      @required this.filaVirtualId});
 
   @override
   _ConfirmacaoState createState() => _ConfirmacaoState(
       paciente: this.paciente,
       pacienteId: this.pacienteId,
+      moduloId: this.moduloId,
       unidadeId: this.unidadeId,
       especialidadeId: this.especialidadeId,
-      consultaId: this.consultaId);
+      consultaId: this.consultaId,
+      filaVirtualId: this.filaVirtualId);
 }
 
-class _ConfirmacaoState extends State<Confirmacao> {
+class _ConfirmacaoState extends State<_Confirmacao> {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
   final String unidadeId;
   final String especialidadeId;
   final String consultaId;
+  final String filaVirtualId;
   var _consultas = [];
   var _mensagem = [];
   final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy", "pt_BR");
@@ -73,16 +90,23 @@ class _ConfirmacaoState extends State<Confirmacao> {
   _ConfirmacaoState(
       {@required this.paciente,
       @required this.pacienteId,
+      @required this.moduloId,
       @required this.unidadeId,
       @required this.especialidadeId,
-      this.consultaId});
+      this.consultaId,
+      @required this.filaVirtualId});
   @override
   void initState() {
     this._tpAcao = "Verificando";
     this._msgErro = "";
     this._dialogState = DialogState.DISMISSED;
     initializeDateFormatting("pt_BR", null);
-    this._getConsultas();
+    if (this.filaVirtualId.isEmpty) {
+      this._getConsultas();
+    } else {
+      this._getFilasVirtuais();
+    }
+
     super.initState();
   }
 
@@ -127,12 +151,50 @@ class _ConfirmacaoState extends State<Confirmacao> {
     });
 
     MensagemModel mensagemModel =
-        await consultaBloc.pushConsulta(this.pacienteId, this.consultaId).catchError((e) {
+        await consultaBloc.pushConsulta(this.pacienteId, this.consultaId);
+    var mensagem = mensagemModel.getMensagem();
+    setState(() {
+      _dialogState = DialogState.COMPLETED;
+      _mensagem = mensagem;
+    });
+  }
+
+  void _getFilasVirtuais() async {
+    setState(() => _dialogState = DialogState.LOADING);
+    FilaVirtualModel consultaModel = await filaVirtualBloc
+        .fetchFilasVirtuais(
+            this.consultaId,
+            this.unidadeId,
+            this.especialidadeId,
+            DateTime.now().add(Duration(days: 1)).toString(),
+            DateTime.now().add(Duration(days: 3)).toString())
+        .catchError((e) {
       _dialogState = DialogState.ERROR;
       _msgErro = e.message.toString().toLowerCase().contains("future")
           ? "Serviço insiponível!"
           : e.message;
     });
+    _consultas = consultaModel.getFilasVirtuais().toList();
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        if (_consultas.isNotEmpty && _consultas[0] != null) {
+          _dialogState = DialogState.DISMISSED;
+        } else {
+          _dialogState = DialogState.ERROR;
+          _msgErro = "Consulta indisponível";
+        }
+      });
+    });
+  }
+
+  void _postFilaVirtual() async {
+    setState(() {
+      _dialogState = DialogState.LOADING;
+      _tpAcao = "Registrando";
+    });
+
+    MensagemModel mensagemModel =
+        await filaVirtualBloc.pushFilaVirtual(this.pacienteId, this.consultaId);
     var mensagem = mensagemModel.getMensagem();
     setState(() {
       _dialogState = DialogState.COMPLETED;
@@ -151,14 +213,13 @@ class _ConfirmacaoState extends State<Confirmacao> {
                 },
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
-                  _dialogState == DialogState.DISMISSED
-                      ? SlideRightRouteR(
-                          builder: (_) => Passo04(
-                              paciente: this.paciente,
-                              pacienteId: this.pacienteId,
-                              unidadeId: this.unidadeId,
-                              especialidadeId: this.especialidadeId))
-                      : SlideRightRouteR(builder: (_) => Passo01());
+                  SlideRightRouteR(
+                      builder: (_) => Consulta(
+                          paciente: this.paciente,
+                          pacienteId: this.pacienteId,
+                          unidadeId: this.unidadeId,
+                          especialidadeId: this.especialidadeId,
+                          moduloId: this.moduloId));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -217,7 +278,8 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                 " agendamento no sistema...",
                                             slideRightRouteBtnOK:
                                                 SlideRightRoute(
-                                                    builder: (_) => Passo01()),
+                                                    builder: (_) =>
+                                                        Identificacao()),
                                             color: Color.fromRGBO(
                                                 146, 174, 112, 0.75),
                                           ))
@@ -242,11 +304,13 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                 textoState: "",
                                                 slideRightRouteBtnCancel:
                                                     SlideRightRoute(
-                                                        builder: (_) => Passo04(
+                                                        builder: (_) => Consulta(
                                                             paciente:
                                                                 this.paciente,
                                                             pacienteId:
                                                                 this.pacienteId,
+                                                            moduloId:
+                                                                this.moduloId,
                                                             unidadeId:
                                                                 this.unidadeId,
                                                             especialidadeId: this
@@ -321,11 +385,17 @@ class _ConfirmacaoState extends State<Confirmacao> {
                                                         Padding(
                                                             padding:
                                                                 EdgeInsets.all(
-                                                                    0),
+                                                                    60),
                                                             child: RaisedButton
                                                                 .icon(
                                                               onPressed: () {
-                                                                this._postConsulta();
+                                                                if (this
+                                                                    .filaVirtualId
+                                                                    .isEmpty) {
+                                                                  this._postConsulta();
+                                                                } else {
+                                                                  this._postFilaVirtual();
+                                                                }
                                                               },
                                                               elevation: 5.0,
                                                               shape:

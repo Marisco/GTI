@@ -1,43 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
-import 'package:gti_sesa_saude/models/unidade.model.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
+//import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:gti_sesa_saude/blocs/especialidade.bloc.dart';
+import 'package:gti_sesa_saude/models/especialidade.model.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/ui/unidade.dart';
+import 'package:gti_sesa_saude/ui/consulta.dart';
+import 'package:gti_sesa_saude/ui/filaVirtual.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
-class Passo02 extends StatelessWidget {
+class Especialidade extends StatelessWidget {
   final String paciente;
   final String pacienteId;
-  Passo02({@required this.paciente, @required this.pacienteId});
+  final String moduloId;
+  final String unidadeId;
+
+  Especialidade({
+    @required this.paciente,
+    @required this.pacienteId,
+    @required this.moduloId,
+    @required this.unidadeId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Unidade(paciente: this.paciente, pacienteId: this.pacienteId));
+        body: Especialidade(
+      paciente: this.paciente,
+      pacienteId: this.pacienteId,
+      moduloId: this.moduloId,
+      unidadeId: this.unidadeId,
+    ));
   }
 }
 
-class Unidade extends StatefulWidget {
+class _Especialidade extends StatefulWidget {
   final String paciente;
   final String pacienteId;
+  final String moduloId;
+  final String unidadeId;
 
-  Unidade({@required this.paciente, @required this.pacienteId});
+  _Especialidade({
+    @required this.paciente,
+    @required this.pacienteId,
+    @required this.moduloId,
+    @required this.unidadeId,
+  });
   @override
-  _UnidadeState createState() =>
-      _UnidadeState(paciente: this.paciente, pacienteId: this.pacienteId);
+  _EspecialidadeState createState() => _EspecialidadeState(
+      paciente: this.paciente,
+      pacienteId: this.pacienteId,
+      moduloId: this.moduloId,
+      unidadeId: this.unidadeId);
 }
 
-class _UnidadeState extends State<Unidade> {
+class _EspecialidadeState extends State<_Especialidade> {
   final String paciente;
   final String pacienteId;
-  DialogState _dialogState;
-  String _msgErro;
-  String _selUnidade;
-  var _unidades = [];
+  final String moduloId;
+  final String unidadeId;
 
-  _UnidadeState({@required this.paciente, @required this.pacienteId});
+  var _especialidades = [];
+  String _selEspecialidade;
+  String _msgErro;
+  DialogState _dialogState;
+  SlideRightRoute _slideRightRoute;
+
+  _EspecialidadeState(
+      {@required this.paciente,
+      @required this.pacienteId,
+      @required this.moduloId,
+      @required this.unidadeId});
+
+  @override
+  void initState() {
+    initializeDateFormatting("pt_BR", null);
+    this._msgErro = "";
+    _dialogState = DialogState.DISMISSED;
+    this._getEspecialidades();
+
+    switch (this.moduloId) {
+      case "1":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) => Consulta(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this.unidadeId,
+                especialidadeId: this._selEspecialidade));
+
+        break;
+      case "3":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) => FilaVirtual(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this.unidadeId,
+                especialidadeId: this._selEspecialidade));
+
+        break;
+      default:
+    }
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -45,34 +113,25 @@ class _UnidadeState extends State<Unidade> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    _dialogState = DialogState.DISMISSED;
-    _msgErro = "";
-    this._getUnidades();
-    super.initState();
-  }
-
-  void _getUnidades() async {
+  void _getEspecialidades() async {
     setState(() => _dialogState = DialogState.LOADING);
-    UnidadeModel unidadeModel =
-        await unidadeBloc.fetchUnidades().catchError((e) {
-      setState(() {
-        _dialogState = DialogState.ERROR;
-        _msgErro = e.message.toString().toLowerCase().contains("future")
-            ? "Serviço insiponível!"
-            : e.message;
-      });
+    EspecialidadeModel especialidadeModel = await especialidadeBloc
+        .fetchEspecialidades(this.unidadeId, DateTime.now().toString(),
+            DateTime.now().add(Duration(days: 4)).toString())
+        .catchError((e) {
+      _dialogState = DialogState.ERROR;
+      _msgErro = e.message.toString().toLowerCase().contains("future")
+          ? "Serviço insiponível!"
+          : e.message;
     });
-
     Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {
-        _unidades = unidadeModel.getUnidades().toList();
-        if (_unidades.isNotEmpty && _unidades[0] != null) {
+        _especialidades = especialidadeModel.getEspecialidades().toList();
+        if (_especialidades.isNotEmpty && _especialidades[0] != null) {
           _dialogState = DialogState.COMPLETED;
         } else {
           _dialogState = DialogState.ERROR;
-          _msgErro = "Unidades indisponíveis";
+          _msgErro = "Especialidade indisponível";
         }
       });
     });
@@ -88,14 +147,18 @@ class _UnidadeState extends State<Unidade> {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 onHorizontalDragStart: (_) {
-                  Navigator.pop(context); 
-                  SlideRightRouteR(builder: (_) => Passo01());                 
+                  Navigator.pop(context);
+                  SlideRightRouteR(
+                      builder: (_) => Unidade(
+                          paciente: this.paciente,
+                          pacienteId: this.pacienteId,
+                          moduloId: this.moduloId));
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("img/passo02.jpg"),
+                        image: AssetImage("img/passo03.jpg"),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -103,10 +166,7 @@ class _UnidadeState extends State<Unidade> {
                       Row(children: <Widget>[
                         Cabecalho(
                           state: DialogState.DISMISSED,
-                          textoCabecalho: this
-                                  .paciente
-                                  .substring(0, this.paciente.indexOf(" ")) +
-                              ', escolha uma unidade de saúde.',
+                          textoCabecalho: 'Escolha a especialidade médica.',
                         ),
                       ]),
                       Row(children: <Widget>[
@@ -119,7 +179,10 @@ class _UnidadeState extends State<Unidade> {
                                     ? SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.55,
+                                                0.5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
                                         child: MensagemDialog(
                                           state: _dialogState,
                                           paciente: "",
@@ -129,19 +192,23 @@ class _UnidadeState extends State<Unidade> {
                                           textoBtnOK: "",
                                           textoBtnCancel: "Voltar",
                                           textoState: "",
-                                          slideRightRouteBtnCancel: null,
-                                          //     SlideRightRoute(
-                                          //         builder: (_) => Passo01()),
-                                          // color: Color.fromRGBO(
-                                          //     125, 108, 187, 0.75),
+                                          slideRightRouteBtnCancel:
+                                              SlideRightRoute(
+                                                  builder: (_) => Unidade(
+                                                      paciente: this.paciente,
+                                                      pacienteId:
+                                                          this.pacienteId,
+                                                      moduloId: this.moduloId)),
+                                          color: Color.fromRGBO(
+                                              63, 157, 184, 0.75),
                                         ))
                                     : SizedBox(
                                         child: Theme(
                                         data: Theme.of(context).copyWith(
                                             accentColor: Color.fromRGBO(
-                                                125, 108, 187, 0.75),
+                                                63, 157, 184, 0.75),
                                             canvasColor: Color.fromRGBO(
-                                                125, 108, 187, 0.75)),
+                                                63, 157, 184, 0.75)),
                                         child: Container(
                                             margin: EdgeInsets.all(40),
                                             child: Column(
@@ -187,8 +254,9 @@ class _UnidadeState extends State<Unidade> {
                                                               ],
                                                             ),
                                                           ),
-                                                          value: _selUnidade,
-                                                          items: _unidades
+                                                          value:
+                                                              _selEspecialidade,
+                                                          items: _especialidades
                                                               .map((unidade) {
                                                             return DropdownMenuItem(
                                                               value: unidade
@@ -227,12 +295,11 @@ class _UnidadeState extends State<Unidade> {
                                                           }).toList(),
                                                           onChanged: (newVal) {
                                                             setState(() {
-                                                              _selUnidade =
+                                                              _selEspecialidade =
                                                                   newVal;
                                                             });
                                                           },
                                                           style: TextStyle(
-                                                            //color: Colors.black,
                                                             fontSize: 20,
                                                           ),
                                                           isExpanded: true,
@@ -256,11 +323,7 @@ class _UnidadeState extends State<Unidade> {
                                                                 : () {
                                                                     Navigator.push(
                                                                         context,
-                                                                        SlideRightRoute(
-                                                                            builder: (_) => Passo03(
-                                                                                paciente: this.paciente,
-                                                                                pacienteId: this.pacienteId,
-                                                                                unidadeId: this._selUnidade)));
+                                                                        _slideRightRoute);
                                                                   },
                                                         elevation: 5.0,
                                                         shape:
@@ -276,11 +339,8 @@ class _UnidadeState extends State<Unidade> {
                                                             ? Colors.grey
                                                                 .withOpacity(
                                                                     0.75)
-                                                            : Color.fromRGBO(
-                                                                125,
-                                                                108,
-                                                                187,
-                                                                0.75), //Color.fromRGBO(41, 84, 142, 1),
+                                                            : Color.fromRGBO(63,
+                                                                157, 184, 0.75),
                                                         icon: Icon(
                                                             Icons.play_arrow,
                                                             color:
@@ -294,7 +354,7 @@ class _UnidadeState extends State<Unidade> {
                                                               color:
                                                                   Colors.white),
                                                         ),
-                                                      ))
+                                                      )),
                                                 ])),
                                       ))
                               ],

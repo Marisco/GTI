@@ -41,8 +41,9 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   uses-material-design: true
-  assets:        
+  assets:            
     - img/logo_icon.png
+    - img/background.png
     - img/splash.jpg
     - img/passo01.jpg
     - img/passo02.jpg
@@ -54,8 +55,6 @@ flutter:
     - img/ic_passo03.png
     - img/ic_passo04.png
     - img/ic_passo05.png
-
-    
     
   #  - images/a_dot_ham.jpeg
 

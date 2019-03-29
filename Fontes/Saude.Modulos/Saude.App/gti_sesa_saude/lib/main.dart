@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/ui/passo01.dart';
+//import 'package:gti_sesa_saude/ui/identificacao.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
-import 'package:intl/date_symbol_data_local.dart';
-//final Locale myLocale = new Locale("pt", "PT");
+//import 'package:intl/date_symbol_data_local.dart';
 
 void main() => runApp(GtiSesaSaude());
 
@@ -20,8 +19,8 @@ class GtiSesaSaude extends StatelessWidget {
     ));
 
     return MaterialApp(
-      title: 'APP.Saúde.SESA',
-      //supportedLocales:[myLocale],    
+      title: 'APP.Saúde.SESA',      
+      //supportedLocales:[const Locale('pt', 'BR')],    
       onGenerateRoute: (RouteSettings settings) {
         new TransicaoTela(builder: (_) => GtiSesaSaude());
       },
@@ -29,7 +28,10 @@ class GtiSesaSaude extends StatelessWidget {
           primarySwatch: Colors.blue,
           backgroundColor: Color.fromRGBO(41, 84, 142, 1)          
           ),
-      home: new Principal(),
-    );
+      home: new Principal()
+      
+      );
+    
   }
 }
+

@@ -6,12 +6,12 @@ var obterPaciente = function (req, res) {
     var validarCampos = objValidacao.validarCampos(req.body);    
     var models = objModels.ObjPaciente;
     
-    models.validarPaciente(objModels.dbMysql, req.body, (e, data) => {
-        if (e) {
-            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível validar o usuário:" + e }] })
-        }        
-        var consultasPaciente = data[0].qtd;
-        if (validarCampos == "" && consultasPaciente == 0) {
+    // models.validarPaciente(objModels.dbMysql, req.body, (e, data) => {
+    //     if (e) {
+    //         res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível validar o usuário:" + e }] })
+    //     }        
+    //     var consultasPaciente = data[0].qtd;
+    //     if (validarCampos == "" && consultasPaciente == 0) {
 
             models.obterPaciente(objModels.dbMysql, req.body, (e, data) => {
                 if (e) {
@@ -20,10 +20,10 @@ var obterPaciente = function (req, res) {
                     res.json({ paciente: data })
                 }
             })
-        } else {
-            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: validarCampos !== "" ? validarCampos : "Você já possui "+ consultasPaciente +" consulta(s) agendada(s)."}] })
-        }
-    })
+        // } else {
+        //     res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: validarCampos !== "" ? validarCampos : "Você já possui "+ consultasPaciente +" consulta(s) agendada(s)."}] })
+        // }
+    //})
 
     
 };
@@ -100,20 +100,49 @@ var inserirPaciente = function (req, res) {
     }
 };
 
-var obterServicos = function (req, res) {
-    var models = objModels. ObjBairro;
-    models.obterBairros(objModels.dbMysql, (e, data) => {
+var obterModulos = function (req, res) {
+    var models = objModels.ObjModulo;
+    models.obterModulos(objModels.dbMysql, (e, data) => {
         if (e) {
             res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
         } else {
-            res.json({ bairros: data })
+            res.json({ modulos: data })
+        }
+    })
+};
+
+var obterAvaliacoes = function (req, res) {
+    var models = objModels.ObjAvaliacao;
+    models.obterAvaliacaos(objModels.dbMysql, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+        } else {
+            res.json({ modulos: data })
         }
     })
 };
 
 
-
-
+var obterFilasVirtuais = function (req, res) {
+    var models = objModels.ObjFilaVirtual;
+    models.obterFilaVirtuais(objModels.dbMysql, req.body, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+        } else {
+            res.json({ consultas: data })
+        }
+    })
+};
+var agendarFilaVirtual = function (req, res) {
+    var models = objModels.ObjFilaVirtual;
+    models.agendarFilaVirtual(objModels.dbMysql, req.body, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] })
+        } else {
+            res.json({ mensagens: [{ tipoMensagem: "Sucesso", mensagem: "Operação realizada com sucesso." }] })
+        }
+    })
+};
 
 module.exports = {
     obterPaciente,
@@ -122,7 +151,10 @@ module.exports = {
     obterConsultas,
     agendarConsulta,
     inserirPaciente,
-    obterBairros
+    obterBairros,
+    obterModulos,
+    obterAvaliacoes,
+    obterFilasVirtuais
 }
 
 

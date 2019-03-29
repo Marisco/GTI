@@ -166,7 +166,7 @@ class _CadPacienteState extends State<_CadPaciente> {
                     ),
                     child: Column(children: <Widget>[
                       Cabecalho(
-                          textoMensagem:
+                          textoCabecalho:
                               'Não o encotramos  em nossa base de dados. Preencha o formulário abaixo.',
                           state: _dialogState),
                       Row(children: [

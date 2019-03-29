@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/ui/cadPaciente.dart';
+import 'package:gti_sesa_saude/ui/cadastro.dart';
 import 'package:gti_sesa_saude/models/paciente.model.dart';
 import 'package:gti_sesa_saude/blocs/paciente.bloc.dart';
 import 'package:gti_sesa_saude/src/formatacao.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
-import 'package:gti_sesa_saude/ui/passo02.dart';
+import 'package:gti_sesa_saude/ui/modulo.dart';
 
-class Passo01 extends StatelessWidget {
+class Identificacao extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,16 +20,16 @@ class Passo01 extends StatelessWidget {
           backgroundColor: Color.fromARGB(1, 41, 84, 142),
           hintColor: Colors.white,
         ),
-        home: Paciente());
+        home: _Identificacao());
   }
 }
 
-class Paciente extends StatefulWidget {
+class _Identificacao extends StatefulWidget {
   @override
-  _PacienteState createState() => _PacienteState();
+  _IdentificacaoState createState() => _IdentificacaoState();
 }
 
-class _PacienteState extends State<Paciente> {
+class _IdentificacaoState extends State<_Identificacao> {
   final _documento = TextEditingController();
   final _dataNascimento = TextEditingController();
   final focus = FocusNode();
@@ -41,7 +41,7 @@ class _PacienteState extends State<Paciente> {
   String _dsDocumento;
   String _msgErro = "";
   DialogState _dialogState = DialogState.DISMISSED;
-  _PacienteState();
+  _IdentificacaoState();
 
   @override
   void initState() {
@@ -75,6 +75,7 @@ class _PacienteState extends State<Paciente> {
 
   void _getPaciente() async {
     setState(() => _dialogState = DialogState.LOADING);
+    
     PacienteModel pacienteModel = await pacienteBloc
         .fetchPaciente(this._documento.text, this._dataNascimento.text)
         .catchError((e) {
@@ -93,10 +94,11 @@ class _PacienteState extends State<Paciente> {
         paciente = _paciente[0].nome;
         pacienteId = _paciente[0].numero.toString();
       } else {        
+        Navigator.pop(context);
         Navigator.push(
             context,
             SlideRightRoute(
-                builder: (_) => CadPaciente(
+                builder: (_) => Cadastro(
                     documento: this._documento.text,
                     dataNascimento: this._dataNascimento.text)));
       }
@@ -330,7 +332,7 @@ class _PacienteState extends State<Paciente> {
                                             textoState: "",
                                             slideRightRouteBtnCancel:
                                                 SlideRightRoute(
-                                                    builder: (_) => Passo01()),
+                                                    builder: (_) => Identificacao()),
                                             color: Color.fromRGBO(
                                                 41, 84, 142, 0.5),
                                           ))
@@ -364,13 +366,13 @@ class _PacienteState extends State<Paciente> {
                                                 "",
                                             slideRightRouteBtnOK:
                                                 SlideRightRoute(
-                                                    builder: (_) => Passo02(
+                                                    builder: (_) => Modulos(
                                                         paciente: this.paciente,
                                                         pacienteId:
                                                             this.pacienteId)),
                                             slideRightRouteBtnCancel:
                                                 SlideRightRoute(
-                                                    builder: (_) => Passo01()),
+                                                    builder: (_) => Identificacao()),
                                             color: this.paciente == null
                                                 ? Colors.transparent
                                                 : Color.fromRGBO(

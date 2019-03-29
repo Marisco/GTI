@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../ui/app.dart';
-import '../ui/passo01.dart';
-import '../ui/passo02.dart';
-import '../ui/passo03.dart';
-import '../ui/passo04.dart';
-import '../ui/passo05.dart';
+import '../ui/identificacao.dart';
+import '../ui/unidade.dart';
+import '../ui/especialidade.dart';
+import '../ui/consulta.dart';
+import '../ui/confirmacao.dart';
 
 class MenuLateral extends StatelessWidget {
   @override
@@ -69,7 +69,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(60)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo01()));
+                    context, new TransicaoTela(builder: (_) => Identificacao()));
                 _changeButton(1);
               }),
           OutlineButton(
@@ -81,7 +81,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(360)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo02(paciente:"", pacienteId: "")));
+                    context, new TransicaoTela(builder: (_) => Unidade(paciente:"", pacienteId: "",moduloId: "")));
                 _changeButton(2);
               }),
           OutlineButton(
@@ -93,7 +93,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(360)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo03(paciente:"", pacienteId: "",unidadeId: "" )));
+                    context, new TransicaoTela(builder: (_) => Especialidade(paciente:"", pacienteId: "",unidadeId: "", moduloId: "" )));
                 _changeButton(3);
               }),
           OutlineButton(
@@ -105,7 +105,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(360)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo04(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "")));
+                    context, new TransicaoTela(builder: (_) => Consulta(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "", moduloId: "")));
                 _changeButton(4);
               }),
           OutlineButton(
@@ -118,7 +118,7 @@ class _BotoesState extends State<Botoes> {
                   borderRadius: new BorderRadius.circular(360)),
               onPressed: () {
                 Navigator.push(
-                    context, new TransicaoTela(builder: (_) => Passo05(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "",consultaId: "",)));
+                    context, new TransicaoTela(builder: (_) => Confirmacao(paciente:"", pacienteId: "",unidadeId: "",especialidadeId: "",consultaId: "", moduloId: "", filaVirtualId: "")));
                 _changeButton(5);
               }),
         ]),

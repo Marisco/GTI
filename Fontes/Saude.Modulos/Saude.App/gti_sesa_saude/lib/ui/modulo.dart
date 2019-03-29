@@ -1,75 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/ui/app.dart';
-import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';
-import 'package:gti_sesa_saude/models/consulta.model.dart';
-import 'package:gti_sesa_saude/ui/passo03.dart';
-import 'package:gti_sesa_saude/ui/passo05.dart';
+import 'package:gti_sesa_saude/blocs/modulo.bloc.dart';
+import 'package:gti_sesa_saude/models/modulo.model.dart';
+import 'package:gti_sesa_saude/ui/identificacao.dart';
+import 'package:gti_sesa_saude/ui/unidade.dart';
+import 'package:gti_sesa_saude/ui/avaliacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
-class Passo04 extends StatelessWidget {
+class Modulos extends StatelessWidget {
   final String paciente;
   final String pacienteId;
-  final String unidadeId;
-  final String especialidadeId;
-  Passo04(
-      {@required this.paciente,
-      @required this.pacienteId,
-      @required this.unidadeId,
-      @required this.especialidadeId});
+  Modulos({@required this.paciente, @required this.pacienteId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consulta(
-            paciente: this.paciente,
-            pacienteId: this.pacienteId,
-            unidadeId: this.unidadeId,
-            especialidadeId: this.especialidadeId));
+        body: Modulos(paciente: this.paciente, pacienteId: this.pacienteId));
   }
 }
 
-class Consulta extends StatefulWidget {
+class _Modulos extends StatefulWidget {
   final String paciente;
   final String pacienteId;
-  final String unidadeId;
-  final String especialidadeId;
-  Consulta(
-      {@required this.paciente,
-      @required this.pacienteId,
-      @required this.unidadeId,
-      @required this.especialidadeId});
+  _Modulos({@required this.paciente, @required this.pacienteId});
   @override
-  _ConsultaState createState() => _ConsultaState(
-      paciente: this.paciente,
-      pacienteId: this.pacienteId,
-      unidadeId: this.unidadeId,
-      especialidadeId: this.especialidadeId);
+  _ModulosState createState() => _ModulosState(
+        paciente: this.paciente,
+        pacienteId: this.pacienteId,
+      );
 }
 
-class _ConsultaState extends State<Consulta> {
+class _ModulosState extends State<_Modulos> {
   final String paciente;
   final String pacienteId;
-  final String unidadeId;
-  final String especialidadeId;
-  var _consultas = [];
-  var _selConsulta;
+  var _modulos = [];
+  var _selModulos;
   DialogState _dialogState;
   String _msgErro;
-  _ConsultaState(
-      {@required this.paciente,
-      @required this.pacienteId,
-      @required this.unidadeId,
-      @required this.especialidadeId});
-  List<RadioModel> dadosConsulta = List<RadioModel>();
+  _ModulosState({@required this.paciente, @required this.pacienteId});
+  List<RadioModel> dadosModulos = List<RadioModel>();
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR", null);
     this._msgErro = "";
     _dialogState = DialogState.DISMISSED;
-    this._getConsultas();
+    this._getModuloss();
     super.initState();
   }
 
@@ -79,37 +57,24 @@ class _ConsultaState extends State<Consulta> {
     super.dispose();
   }
 
-  void _getConsultas() async {
+  void _getModuloss() async {
     setState(() => _dialogState = DialogState.LOADING);
-    ConsultaModel consultaModel = await consultaBloc
-        .fetchConsultas(
-            "0",
-            this.unidadeId,
-            this.especialidadeId,
-            DateTime.now().add(Duration(days: 1)).toString(),
-            DateTime.now().add(Duration(days: 7)).toString())
-        .catchError((e) {
+    ModuloModel moduloModel = await moduloBloc.fetchModulos().catchError((e) {
       _dialogState = DialogState.ERROR;
       _msgErro = e.message.toString().toLowerCase().contains("future")
           ? "Serviço insiponível!"
           : e.message;
     });
-    _consultas = consultaModel.getConsultas().toList();
+    _modulos = moduloModel.getModulos().toList();
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
-        if (_consultas.isNotEmpty && _consultas[0] != null) {
+        if (_modulos.isNotEmpty && _modulos[0] != null) {
           _dialogState = DialogState.COMPLETED;
-          _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
-              false,
-              consulta.numero,
-              consulta.consultorio,
-              consulta.especialidade,
-              consulta.medico,
-              consulta.dataInicio,
-              consulta.dataFim)));
+          _modulos.forEach((modulo) => dadosModulos
+              .add(RadioModel(false, modulo.numero, modulo.nomeModulo)));
         } else {
           _dialogState = DialogState.ERROR;
-          _msgErro = "Consulta indisponível";
+          _msgErro = "Módulos indisponíveis";
         }
       });
     });
@@ -126,11 +91,7 @@ class _ConsultaState extends State<Consulta> {
                 },
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
-                  SlideRightRouteR(
-                      builder: (_) => Passo03(
-                          pacienteId: this.pacienteId,
-                          paciente: this.paciente,
-                          unidadeId: this.unidadeId));
+                  SlideRightRouteR(builder: (_) => Identificacao());
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -144,8 +105,7 @@ class _ConsultaState extends State<Consulta> {
                       Row(children: <Widget>[
                         Cabecalho(
                           state: DialogState.DISMISSED,
-                          textoCabecalho:
-                              'Escolha um horário.',
+                          textoCabecalho: 'Escolha o serviço.',
                         ),
                       ]),
                       Row(children: <Widget>[
@@ -170,12 +130,8 @@ class _ConsultaState extends State<Consulta> {
                                           textoState: "",
                                           slideRightRouteBtnCancel:
                                               SlideRightRoute(
-                                                  builder: (_) => Passo03(
-                                                      pacienteId:
-                                                          this.pacienteId,
-                                                      paciente: this.paciente,
-                                                      unidadeId:
-                                                          this.unidadeId)),
+                                                  builder: (_) =>
+                                                      Identificacao()),
                                           color: Color.fromRGBO(
                                               125, 108, 187, 0.75),
                                         ))
@@ -201,7 +157,7 @@ class _ConsultaState extends State<Consulta> {
                                                                       DialogState
                                                                           .LOADING
                                                                   ? 0.06
-                                                                  : 0.37),
+                                                                  : 0.5),
                                                       child: Theme(
                                                           data: Theme.of(context).copyWith(
                                                               accentColor:
@@ -219,7 +175,7 @@ class _ConsultaState extends State<Consulta> {
                                                                   ? ListView
                                                                       .builder(
                                                                       itemCount:
-                                                                          dadosConsulta
+                                                                          dadosModulos
                                                                               .length,
                                                                       itemBuilder:
                                                                           (BuildContext context,
@@ -233,13 +189,13 @@ class _ConsultaState extends State<Consulta> {
                                                                           onTap:
                                                                               () {
                                                                             setState(() {
-                                                                              _selConsulta = dadosConsulta[index].numero;
-                                                                              dadosConsulta.forEach((element) => element.isSelected = false);
-                                                                              dadosConsulta[index].isSelected = true;
+                                                                              _selModulos = dadosModulos[index].numero;
+                                                                              dadosModulos.forEach((element) => element.isSelected = false);
+                                                                              dadosModulos[index].isSelected = true;
                                                                             });
                                                                           },
                                                                           child:
-                                                                              RadioItem(dadosConsulta[index]),
+                                                                              RadioItem(dadosModulos[index]),
                                                                         );
                                                                       },
                                                                     )
@@ -257,16 +213,27 @@ class _ConsultaState extends State<Consulta> {
                                                                         .LOADING
                                                                 ? null
                                                                 : () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        SlideRightRoute(
-                                                                            builder: (_) => Passo05(
-                                                                                paciente: this.paciente,
-                                                                                pacienteId: this.pacienteId,
-                                                                                unidadeId: this.unidadeId,
-                                                                                especialidadeId: this.especialidadeId,
-                                                                                consultaId: this._selConsulta)));
+                                                                    // if (this._selModulos !=
+                                                                    //     "1") {
+                                                                    //   Navigator.push(
+                                                                    //       context,
+                                                                    //       SlideRightRoute(
+                                                                    //           builder: (_) => Unidade(paciente: this.paciente, pacienteId: this.pacienteId, moduloId: this._selModulos)));
+                                                                    // } else {
+                                                                    //   Navigator.push(
+                                                                    //       context,
+                                                                    //       SlideRightRoute(
+                                                                    //           builder: (_) => Avaliacao(
+                                                                    //                 paciente: this.paciente,
+                                                                    //                 pacienteId: this.pacienteId,
+                                                                    //                 moduloId: this._selModulos,
+                                                                    //                 unidadeId: "",
+                                                                    //               )));
+                                                                    // }
+                                                                    SlideRightRoute(
+                                                                               builder: (_) => Unidade(paciente: this.paciente, pacienteId: this.pacienteId, moduloId: this._selModulos));
                                                                   },
+
                                                         elevation: 5.0,
                                                         shape:
                                                             RoundedRectangleBorder(
@@ -312,7 +279,7 @@ class _ConsultaState extends State<Consulta> {
 class RadioItem extends StatelessWidget {
   final RadioModel _item;
   final diaMesAno = DateFormat("d 'de' MMMM 'de' yyyy", "pt_BR");
-  final diaSemana = DateFormat("EEEE","pt_BR");
+  final diaSemana = DateFormat("EEEE", "pt_BR");
   final hora = DateFormat("Hm", "pt_BR");
   RadioItem(this._item);
   @override
@@ -328,7 +295,7 @@ class RadioItem extends StatelessWidget {
             width: 100.0,
             margin: EdgeInsets.only(left: 0.0),
             child: Center(
-              child: Text(hora.format(DateTime.parse(_item.dataInicio)),
+              child: Text(_item.numero,
                   style: TextStyle(
                       fontFamily: 'Humanist',
                       color: _item.isSelected ? Colors.white : Colors.black,
@@ -351,22 +318,7 @@ class RadioItem extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  diaSemana
-                          .format(DateTime.parse(_item.dataInicio))
-                          .toString()
-                          .toUpperCase() +
-                      "\n" +
-                      diaMesAno.format(DateTime.parse(_item.dataInicio)) +
-                      "." +
-                      "\nSala: " +
-                      _item.consultorio +
-                      "." +
-                      "\nDr(a): " +
-                      _item.medico +
-                      "." +
-                      "\nEsp.: " +
-                      _item.especialidade +
-                      ".",
+                  _item.nomeModulo + ".",
                   style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Humanist',
@@ -395,12 +347,7 @@ class RadioItem extends StatelessWidget {
 class RadioModel {
   bool isSelected;
   final String numero;
-  final String consultorio;
-  final String especialidade;
-  final String medico;
-  final String dataInicio;
-  final String dataFim;
+  final String nomeModulo;
 
-  RadioModel(this.isSelected, this.numero, this.consultorio, this.especialidade,
-      this.medico, this.dataInicio, this.dataFim);
+  RadioModel(this.isSelected, this.numero, this.nomeModulo);
 }
