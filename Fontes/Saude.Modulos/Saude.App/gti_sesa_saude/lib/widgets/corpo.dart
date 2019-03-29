@@ -29,7 +29,7 @@ class Corpo extends StatelessWidget {
               this.textoCorpo,
               style: TextStyle(
                 fontFamily: 'Humanist',
-                color: Colors.white,
+                color: Colors.red,
                 fontSize: 30,
               ),
               textAlign: TextAlign.center,

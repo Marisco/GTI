@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 
-class BarraInferior extends StatelessWidget {
-  final String textoBarraInferior;
+class BarraAcao extends StatelessWidget {
+  final String textoBarraAcao;
   final DialogState state;
-  BarraInferior({
+  BarraAcao({
     this.state,
-    this.textoBarraInferior,
+    this.textoBarraAcao,
   });
   @override
-  Widget build(BuildContext context) {
-    return Row(children: [
+  Widget build(BuildContext context) {    
+    return Row(
+      children: [
       Container(
-        //color: Colors.orange,
-        height: MediaQuery.of(context).size.height * 0.03,
+        //color: Colors.green,
+        height: MediaQuery.of(context).size.height * 0.07,
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(
         //     top: margemTop,
@@ -21,12 +22,12 @@ class BarraInferior extends StatelessWidget {
         //     right: margemRight,
         //     bottom: margemBottom),
         child: Center(
-            child: Text(
-          this.textoBarraInferior,
+            child:Text(
+          this.textoBarraAcao,
           style: TextStyle(
             fontFamily: 'Humanist',
             color: Colors.red,
-            fontSize: 20,
+            fontSize: 30,
           ),
           textAlign: TextAlign.center,
         )),

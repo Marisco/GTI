@@ -17,22 +17,23 @@ class Rodape extends StatelessWidget {
     return Row(children: [
       Container(
         //color: Colors.blue,
-        height: MediaQuery.of(context).size.height * 0.15,
+        height: MediaQuery.of(context).size.height * 0.10,
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(
         //     top: margemTop,
         //     left: margemLeft,
         //     right: margemRight,
         //     bottom: margemBottom),
-        child: Text(
+        child: Center(
+            child: Text(
           this.textoRodape,
           style: TextStyle(
             fontFamily: 'Humanist',
-            color: Colors.white,
+            color: Colors.red,
             fontSize: 30,
           ),
           textAlign: TextAlign.center,
-        ),
+        )),
       ),
     ]);
   }

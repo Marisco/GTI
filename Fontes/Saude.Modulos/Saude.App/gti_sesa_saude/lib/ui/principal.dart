@@ -5,6 +5,7 @@ import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/widgets/rodape.dart';
 import 'package:gti_sesa_saude/widgets/corpo.dart';
+import 'package:gti_sesa_saude/widgets/barraAcao.dart';
 import 'package:gti_sesa_saude/widgets/barraInferior.dart';
 
 
@@ -62,7 +63,12 @@ class _PrincipalState extends State<_Principal> {
               Rodape(
                 state: DialogState.DISMISSED,
                 textoRodape: 'Rodapé',
-              )
+              ),
+              BarraAcao(
+                state: DialogState.DISMISSED,
+                textoBarraAcao: 'Barra de Ação',
+              ),
+              
             ])),
             bottomNavigationBar: BottomAppBar(
               child: BarraInferior(
