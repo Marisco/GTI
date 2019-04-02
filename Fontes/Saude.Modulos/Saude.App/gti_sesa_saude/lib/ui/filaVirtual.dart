@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/blocs/filaVirtual.bloc.dart';
 import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
 import 'package:gti_sesa_saude/ui/unidade.dart';

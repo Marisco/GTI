@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 
 class BarraAcao extends StatelessWidget {
   final String textoBarraAcao;
@@ -16,11 +16,6 @@ class BarraAcao extends StatelessWidget {
         //color: Colors.green,
         height: MediaQuery.of(context).size.height * 0.07,
         width: MediaQuery.of(context).size.width,
-        // padding: EdgeInsets.only(
-        //     top: margemTop,
-        //     left: margemLeft,
-        //     right: margemRight,
-        //     bottom: margemBottom),
         child: Center(
             child:Text(
           this.textoBarraAcao,

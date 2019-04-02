@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 
 class Corpo extends StatelessWidget {
   final String textoCorpo;
@@ -10,20 +10,11 @@ class Corpo extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    var margemTop = MediaQuery.of(context).size.height * 0.05;
-    var margemLeft = MediaQuery.of(context).size.width * 0.05;
-    var margemRight = MediaQuery.of(context).size.width * 0.05;
-    var margemBottom = MediaQuery.of(context).size.height * 0.05;
     return Row(children: [
       Container(
           //color: Colors.yellow,
           height: MediaQuery.of(context).size.height * 0.60,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(
-              top: margemTop,
-              left: margemLeft,
-              right: margemRight,
-              bottom: margemBottom),
           child: Center(
             child: Text(
               this.textoCorpo,

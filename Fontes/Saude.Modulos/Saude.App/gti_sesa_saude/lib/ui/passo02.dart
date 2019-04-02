@@ -3,7 +3,8 @@ import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
 import 'package:gti_sesa_saude/models/unidade.model.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo03.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 

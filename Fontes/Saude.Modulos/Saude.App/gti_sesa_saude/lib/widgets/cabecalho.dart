@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 
 class Cabecalho extends StatelessWidget {
   final String textoCabecalho;
@@ -10,21 +10,12 @@ class Cabecalho extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    var margemTop = MediaQuery.of(context).size.height * 0.05;
-    var margemLeft = MediaQuery.of(context).size.width * 0.05;
-    var margemRight = MediaQuery.of(context).size.width * 0.05;
-    var margemBottom = MediaQuery.of(context).size.height * 0.05;
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Expanded(
           child: Container(
               //color: Colors.red,
               height: MediaQuery.of(context).size.height * 0.20,
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(
-                  top: margemTop,
-                  left: margemLeft,
-                  right: margemRight,
-                  bottom: margemBottom),
               child: Center(
                 child: Text(
                   this.textoCabecalho,

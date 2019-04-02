@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 
 class Rodape extends StatelessWidget {
   final String textoRodape;
@@ -10,20 +10,11 @@ class Rodape extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    var margemTop = MediaQuery.of(context).size.height * 0.20;
-    var margemLeft = MediaQuery.of(context).size.width * 0.05;
-    var margemRight = MediaQuery.of(context).size.width * 0.05;
-    var margemBottom = 0.0;
     return Row(children: [
       Container(
         //color: Colors.blue,
         height: MediaQuery.of(context).size.height * 0.10,
         width: MediaQuery.of(context).size.width,
-        // padding: EdgeInsets.only(
-        //     top: margemTop,
-        //     left: margemLeft,
-        //     right: margemRight,
-        //     bottom: margemBottom),
         child: Center(
             child: Text(
           this.textoRodape,

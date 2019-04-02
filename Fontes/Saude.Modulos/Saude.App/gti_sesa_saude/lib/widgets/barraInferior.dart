@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 
 class BarraInferior extends StatelessWidget {
   final String textoBarraInferior;
@@ -15,11 +15,6 @@ class BarraInferior extends StatelessWidget {
         //color: Colors.orange,
         height: MediaQuery.of(context).size.height * 0.03,
         width: MediaQuery.of(context).size.width,
-        // padding: EdgeInsets.only(
-        //     top: margemTop,
-        //     left: margemLeft,
-        //     right: margemRight,
-        //     bottom: margemBottom),
         child: Center(
             child: Text(
           this.textoBarraInferior,

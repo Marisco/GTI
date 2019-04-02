@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
-//import 'package:gti_sesa_saude/ui/identificacao.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/ui/identificacao.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
 //import 'package:intl/date_symbol_data_local.dart';
 
@@ -18,19 +18,21 @@ class GtiSesaSaude extends StatelessWidget {
       systemNavigationBarColor: Color.fromRGBO(41, 84, 142, 1),
     ));
 
-    return MaterialApp(
+    return Principal(
+      child:
+    MaterialApp(
       title: 'APP.Saúde.SESA',      
       //supportedLocales:[const Locale('pt', 'BR')],    
       onGenerateRoute: (RouteSettings settings) {
-        new TransicaoTela(builder: (_) => GtiSesaSaude());
+        TransicaoTela(builder: (_) => GtiSesaSaude());
       },
       theme: ThemeData(
           primarySwatch: Colors.blue,
           backgroundColor: Color.fromRGBO(41, 84, 142, 1)          
           ),
-      home: new Principal()
+      home: Identificacao()
       
-      );
+      ));
     
   }
 }

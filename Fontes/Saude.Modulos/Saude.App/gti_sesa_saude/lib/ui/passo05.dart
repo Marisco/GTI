@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/ui/passo01.dart';
 import 'package:gti_sesa_saude/ui/passo04.dart';
 import 'package:gti_sesa_saude/blocs/consulta.bloc.dart';

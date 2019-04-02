@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ui/app.dart';
+import '../src/app.dart';
 import '../ui/identificacao.dart';
 import '../ui/unidade.dart';
 import '../ui/especialidade.dart';

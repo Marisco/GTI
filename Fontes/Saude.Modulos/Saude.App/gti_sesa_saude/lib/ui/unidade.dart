@@ -4,7 +4,8 @@ import 'package:gti_sesa_saude/models/unidade.model.dart';
 import 'package:gti_sesa_saude/ui/identificacao.dart';
 import 'package:gti_sesa_saude/ui/especialidade.dart';
 import 'package:gti_sesa_saude/ui/avaliacao.dart';
-import 'package:gti_sesa_saude/ui/app.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
