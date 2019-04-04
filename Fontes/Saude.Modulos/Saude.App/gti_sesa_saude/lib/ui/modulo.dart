@@ -8,7 +8,7 @@ import 'package:gti_sesa_saude/ui/unidade.dart';
 import 'package:gti_sesa_saude/ui/avaliacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/mensagemDialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
 class Modulos extends StatelessWidget {
@@ -92,7 +92,7 @@ class _ModulosState extends State<_Modulos> {
                 },
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
-                  SlideRightRouteR(builder: (_) => Identificacao());
+                  SlideLeftRoute(builder: (_) => Identificacao());
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -104,8 +104,7 @@ class _ModulosState extends State<_Modulos> {
                     ),
                     child: Column(children: <Widget>[
                       Row(children: <Widget>[
-                        Cabecalho(
-                          state: DialogState.DISMISSED,
+                        Cabecalho(                          
                           textoCabecalho: 'Escolha o serviço.',
                         ),
                       ]),
@@ -120,22 +119,23 @@ class _ModulosState extends State<_Modulos> {
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.55,
-                                        child: MensagemDialog(
-                                          state: _dialogState,
-                                          paciente: "",
-                                          pacienteId: "",
-                                          textoTitle: "Desculpe!",
-                                          textoMensagem: _msgErro,
-                                          textoBtnOK: "",
-                                          textoBtnCancel: "Voltar",
-                                          textoState: "",
-                                          slideRightRouteBtnCancel:
-                                              SlideRightRoute(
-                                                  builder: (_) =>
-                                                      Identificacao()),
-                                          color: Color.fromRGBO(
-                                              125, 108, 187, 0.75),
-                                        ))
+                                        // child: MensagemDialog(
+                                        //   state: _dialogState,
+                                        //   paciente: "",
+                                        //   pacienteId: "",
+                                        //   textoTitle: "Desculpe!",
+                                        //   textoMensagem: _msgErro,
+                                        //   textoBtnOK: "",
+                                        //   textoBtnCancel: "Voltar",
+                                        //   textoState: "",
+                                        //   slideRightRouteBtnCancel:
+                                        //       SlideRightRoute(
+                                        //           builder: (_) =>
+                                        //               Identificacao()),
+                                        //   color: Color.fromRGBO(
+                                        //       125, 108, 187, 0.75),
+                                        // )
+                                        )
                                     : SizedBox(
                                         child: Theme(
                                         data: Theme.of(context).copyWith(

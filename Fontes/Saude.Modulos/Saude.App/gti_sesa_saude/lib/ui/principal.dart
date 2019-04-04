@@ -1,105 +1,123 @@
 import 'package:flutter/material.dart';
 //import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
-import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/widgets/rodape.dart';
 import 'package:gti_sesa_saude/widgets/corpo.dart';
 import 'package:gti_sesa_saude/widgets/barraAcao.dart';
 import 'package:gti_sesa_saude/widgets/barraInferior.dart';
+import 'package:gti_sesa_saude/src/enun.dart';
+import 'package:gti_sesa_saude/src/app.dart';
+import 'package:gti_sesa_saude/widgets/mensagemDialog.dart';
 
-class Principal extends InheritedWidget {
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(body: _Principal());
-  // }
-  //final Principal data;
+class Principal extends StatefulWidget {
+  final Widget child;
 
-  Principal({
-    Key key,
-    //@required this.data,
-    @required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  bool updateShouldNotify(Principal old) => true;
+  Principal({@required this.child});
 
   static _PrincipalState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_PrincipalState)
-        as _PrincipalState);
+    return (context.inheritFromWidgetOfExactType(_InheritedPrincipalState)
+            as _InheritedPrincipalState)
+        .principalState;
   }
-}
 
-class _Principal extends StatefulWidget {
   @override
-  _PrincipalState createState() => _PrincipalState();
+  _PrincipalState createState() => new _PrincipalState();
 }
 
-class _PrincipalState extends State<_Principal> {
-  DialogState _dialogState;
-  String _msgErro;
+class _PrincipalState extends State<Principal> {
+  AssetImage imagemFundo;
+  String msgErro;
+  String textoCabecalho;
+  String textoCorpo;
+  String textoRodape;
+  String textoBarraAcao;
+  String textoBarraInferior;
+  String paciente;
+  String pacienteId;
+  Widget widgetCorpo;
+  Widget widgetRodape;
+  Widget widgetBarrraAcao;
+  DialogState dialogState;
+  Color dialogColor;
+  String dialogTxtLoading;
+  String dialogTxtTitulo;
+  String dialogTxtMensagem;
+  String dialogTxtBtnOK;
+  String dialogTxtBtnCancel;
+  SlideRightRoute dialogSlideRightBtnOK;
+  SlideRightRoute dialogSlideRightBtnCancel;
+
+  _PrincipalState();
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR", null);
-    this._msgErro = "";
-    _dialogState = DialogState.ERROR;
     super.initState();
   }
 
   @override
   void dispose() {
-    _dialogState = DialogState.DISMISSED;
+    dialogState = DialogState.DISMISSED;
     super.dispose();
   }
 
-  @override
   Widget build(BuildContext context) {
+    return new _InheritedPrincipalState(
+        principalState: this, child: widget.child);
+  }
+
+  Widget getPrincipal() {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
-          height: MediaQuery.of(context).size.height,
+          height: height,
           decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("img/background.png"), fit: BoxFit.cover),
+            image: DecorationImage(image: imagemFundo, fit: BoxFit.cover),
           ),
-          child: Column(children: <Widget>[
-            Cabecalho(
-              state: DialogState.DISMISSED,
-              textoCabecalho: 'Cabeçalho',
-            ),
-            _dialogState == DialogState.DISMISSED
-                ? Corpo(
-                    state: DialogState.DISMISSED,
-                    textoCorpo: 'Corpo',
-                  )
-                : MensagemDialog(
-                    state: _dialogState,
-                    paciente: "",
-                    pacienteId: "",
-                    textoTitle: "Desculpe!",
-                    textoMensagem: _msgErro,
-                    textoBtnOK: "OK",
-                    textoBtnCancel: "Voltar",
-                    textoState: "",
-                    slideRightRouteBtnCancel: null,
-                    color: Color.fromRGBO(41, 84, 142, 0.5),
+          child: this.dialogState == DialogState.DISMISSED
+              ? Column(children: <Widget>[
+                  Cabecalho(
+                    textoCabecalho: this.textoCabecalho,
                   ),
-            Rodape(
-              state: DialogState.DISMISSED,
-              textoRodape: 'Rodapé',
-            ),
-            BarraAcao(
-              state: DialogState.DISMISSED,
-              textoBarraAcao: 'Barra de Ação',
-            ),
-          ])),
+                  Corpo(
+                    textoCorpo: this.textoCorpo,
+                    widgetCorpo: widgetCorpo,
+                  ),
+                  Rodape(
+                      textoRodape: this.textoRodape,
+                      widgetRodape: widgetRodape),
+                  BarraAcao(
+                      textoBarraAcao: this.textoBarraAcao,
+                      widgetBarrraAcao: widgetBarrraAcao),
+                ])
+              : Container(
+                padding: EdgeInsets.only(top: height * 0.15, bottom: height *0.15),
+                child: 
+              MensagemDialog(
+                  dialogState: this.dialogState,
+                  dialogTxtTitulo: this.dialogTxtTitulo,
+                  dialogTxtMensagem: this.dialogTxtMensagem,
+                  dialogTxtBtnOK: this.dialogTxtBtnOK,
+                  dialogTxtBtnCancel: this.dialogTxtBtnCancel,
+                  dialogTxtLoading: this.dialogTxtLoading,
+                  dialogSlideRightBtnCancel: this.dialogSlideRightBtnCancel,
+                  dialogSlideRightBtnOK: this.dialogSlideRightBtnOK,
+                  dialogColor: this.dialogColor))),
       bottomNavigationBar: BottomAppBar(
-          child: BarraInferior(
-        state: DialogState.DISMISSED,
-        textoBarraInferior: 'BarraInferior',
-      )),
+          child: BarraInferior(textoBarraInferior: this.textoBarraInferior)),
     );
   }
+}
+
+class _InheritedPrincipalState extends InheritedWidget {
+  final _PrincipalState principalState;
+
+  _InheritedPrincipalState(
+      {Key key, @required this.principalState, @required Widget child})
+      : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(_InheritedPrincipalState old) => true;
 }

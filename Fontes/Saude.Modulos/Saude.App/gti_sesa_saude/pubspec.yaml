@@ -44,6 +44,9 @@ flutter:
   assets:            
     - img/logo_icon.png
     - img/background.png
+    - img/cabecalho.png
+    - img/pms.png
+    - img/coracao.png
     - img/splash.jpg
     - img/passo01.jpg
     - img/passo02.jpg

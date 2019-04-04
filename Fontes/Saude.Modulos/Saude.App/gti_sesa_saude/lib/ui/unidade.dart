@@ -6,7 +6,7 @@ import 'package:gti_sesa_saude/ui/especialidade.dart';
 import 'package:gti_sesa_saude/ui/avaliacao.dart';
 import 'package:gti_sesa_saude/src/app.dart';
 import 'package:gti_sesa_saude/src/enun.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/mensagemDialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 
 class Unidade extends StatelessWidget {
@@ -71,34 +71,34 @@ class _UnidadeState extends State<_Unidade> {
     _msgErro = "";
     this._getUnidades();
     switch (this.moduloId) {
-      case "1":
-        _slideRightRoute = SlideRightRoute(
-            builder: (_) => Especialidade(
-                paciente: this.paciente,
-                pacienteId: this.pacienteId,
-                moduloId: this.moduloId,
-                unidadeId: this._selUnidade));
+      // case "1":
+      //   _slideRightRoute = SlideRightRoute(
+      //       builder: (_) => Especialidade(
+      //           paciente: this.paciente,
+      //           pacienteId: this.pacienteId,
+      //           moduloId: this.moduloId,
+      //           unidadeId: this._selUnidade));
 
-        break;
-      case "2":
-        _slideRightRoute = SlideRightRoute(
-            builder: (_) => Avaliacao(
-                paciente: this.paciente,
-                pacienteId: this.pacienteId,
-                moduloId: this.moduloId,
-                unidadeId: this._selUnidade));
+      //   break;
+      // case "2":
+      //   _slideRightRoute = SlideRightRoute(
+      //       builder: (_) => Avaliacao(
+      //           paciente: this.paciente,
+      //           pacienteId: this.pacienteId,
+      //           moduloId: this.moduloId,
+      //           unidadeId: this._selUnidade));
 
-        break;
-      case "2":
-        _slideRightRoute = SlideRightRoute(
-            builder: (_) => Especialidade(
-                paciente: this.paciente,
-                pacienteId: this.pacienteId,
-                moduloId: this.moduloId,
-                unidadeId: this._selUnidade));
+      //   break;
+      // case "2":
+      //   _slideRightRoute = SlideRightRoute(
+      //       builder: (_) => Especialidade(
+      //           paciente: this.paciente,
+      //           pacienteId: this.pacienteId,
+      //           moduloId: this.moduloId,
+      //           unidadeId: this._selUnidade));
 
-        break;
-      default:
+      //   break;
+      // default:
     }
 
     super.initState();
@@ -140,7 +140,7 @@ class _UnidadeState extends State<_Unidade> {
                 },
                 onHorizontalDragStart: (_) {
                   Navigator.pop(context);
-                  SlideRightRouteR(builder: (_) => Identificacao());
+                  //SlideRightRouteR(builder: (_) => Identificacao());
                 },
                 child: Container(
                     height: MediaQuery.of(context).size.height,
@@ -152,8 +152,7 @@ class _UnidadeState extends State<_Unidade> {
                     ),
                     child: Column(children: <Widget>[
                       Row(children: <Widget>[
-                        Cabecalho(
-                          state: DialogState.DISMISSED,
+                        Cabecalho(                          
                           textoCabecalho: this
                                   .paciente
                                   .substring(0, this.paciente.indexOf(" ")) +
@@ -171,21 +170,23 @@ class _UnidadeState extends State<_Unidade> {
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.55,
-                                        child: MensagemDialog(
-                                          state: _dialogState,
-                                          paciente: "",
-                                          pacienteId: "",
-                                          textoTitle: "Desculpe!",
-                                          textoMensagem: _msgErro,
-                                          textoBtnOK: "",
-                                          textoBtnCancel: "Voltar",
-                                          textoState: "",
-                                          slideRightRouteBtnCancel: null,
-                                          //     SlideRightRoute(
-                                          //         builder: (_) => Passo01()),
-                                          // color: Color.fromRGBO(
-                                          //     125, 108, 187, 0.75),
-                                        ))
+                                        // child: 
+                                        // MensagemDialog(
+                                        //   state: _dialogState,
+                                        //   paciente: "",
+                                        //   pacienteId: "",
+                                        //   textoTitle: "Desculpe!",
+                                        //   textoMensagem: _msgErro,
+                                        //   textoBtnOK: "",
+                                        //   textoBtnCancel: "Voltar",
+                                        //   textoState: "",
+                                        //   slideRightRouteBtnCancel: null,
+                                        //   //     SlideRightRoute(
+                                        //   //         builder: (_) => Passo01()),
+                                        //   // color: Color.fromRGBO(
+                                        //   //     125, 108, 187, 0.75),
+                                        // )
+                                        )
                                     : SizedBox(
                                         child: Theme(
                                         data: Theme.of(context).copyWith(

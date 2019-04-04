@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:gti_sesa_saude/src/enun.dart';
 
 class Cabecalho extends StatelessWidget {
-  final String textoCabecalho;
-  final DialogState state;
+  final String textoCabecalho;  
   Cabecalho({
-    this.state,
     this.textoCabecalho,
   });
   @override
   Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      Expanded(
-          child: Container(
-              //color: Colors.red,
-              height: MediaQuery.of(context).size.height * 0.20,
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  this.textoCabecalho,
-                  style: TextStyle(
-                    fontFamily: 'Humanist',
-                    color: Colors.red,
-                    fontSize: 30,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ))),
-      
-    ]);
+    double height= MediaQuery.of(context).size.height * 0.20;
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+        color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
+        height: height,
+        width: width,
+        child: Stack(          
+          children: [
+            Positioned(
+              top: height * 0.3,              
+              left: width * 0.02,
+              child: 
+            Image.asset('img/pms.png', height: height * 0.55, )),             
+            Positioned(
+              top: height * 0.24,              
+              left: width * 0.7,
+              child: Image.asset('img/coracao.png', height: height * 0.75))
+
+          
+        ]));
   }
 }

@@ -8,7 +8,7 @@ import 'package:gti_sesa_saude/models/insert.model.dart';
 import 'package:gti_sesa_saude/blocs/bairro.bloc.dart';
 import 'package:gti_sesa_saude/models/bairro.model.dart';
 import 'package:gti_sesa_saude/src/formatacao.dart';
-import 'package:gti_sesa_saude/widgets/mensagem.dialog.dart';
+import 'package:gti_sesa_saude/widgets/mensagemDialog.dart';
 import 'package:gti_sesa_saude/widgets/cabecalho.dart';
 import 'package:gti_sesa_saude/ui/identificacao.dart';
 import 'package:gti_sesa_saude/ui/modulo.dart';
@@ -169,7 +169,7 @@ class _CadastroState extends State<_Cadastro> {
                       Cabecalho(
                           textoCabecalho:
                               'Não o encotramos  em nossa base de dados. Preencha o formulário abaixo.',
-                          state: _dialogState),
+                          ),
                       Row(children: [
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
@@ -188,63 +188,64 @@ class _CadastroState extends State<_Cadastro> {
                               children: <Widget>[
                                 _dialogState != DialogState.DISMISSED
                                     ? MensagemDialog(
-                                        state: _dialogState,
-                                        paciente: this.paciente == null
-                                            ? ""
-                                            : this.paciente,
-                                        pacienteId: this.pacienteId == null
-                                            ? ""
-                                            : this.pacienteId,
-                                        textoTitle: this.pacienteId == null
-                                            ? " Aguarde..."
-                                            : " Olá " +
-                                                this
-                                                    .paciente
-                                                    .toString()
-                                                    .substring(
-                                                        0,
-                                                        this
-                                                            .paciente
-                                                            .toString()
-                                                            .indexOf(" ")) +
-                                                "!",
-                                        textoMensagem:
-                                            "Cadastro realizado com sucesso!\nDeseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES?",
-                                        textoBtnOK: "Sim",
-                                        textoBtnCancel: "Não",
-                                        textoState:
-                                            "Registrando usuário no sistema...\n" +
-                                                // " Nome:\n " + this._nome.text +
-                                                " Cpf: " +
-                                                this._cpf.text,
-                                        slideRightRouteBtnOK: SlideRightRoute(
-                                            builder: (_) => Modulos(
-                                                  paciente: this.paciente,
-                                                  pacienteId: this.pacienteId,
-                                                )),
-                                        slideRightRouteBtnCancel:
-                                            SlideRightRoute(
-                                                builder: (_) => Identificacao()),
-                                        color: Colors.transparent)
+                                        // state: _dialogState,
+                                        // paciente: this.paciente == null
+                                        //     ? ""
+                                        //     : this.paciente,
+                                        // pacienteId: this.pacienteId == null
+                                        //     ? ""
+                                        //     : this.pacienteId,
+                                        // textoTitle: this.pacienteId == null
+                                        //     ? " Aguarde..."
+                                        //     : " Olá " +
+                                        //         this
+                                        //             .paciente
+                                        //             .toString()
+                                        //             .substring(
+                                        //                 0,
+                                        //                 this
+                                        //                     .paciente
+                                        //                     .toString()
+                                        //                     .indexOf(" ")) +
+                                        //         "!",
+                                        // textoMensagem:
+                                        //     "Cadastro realizado com sucesso!\nDeseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES?",
+                                        // textoBtnOK: "Sim",
+                                        // textoBtnCancel: "Não",
+                                        // textoState:
+                                        //     "Registrando usuário no sistema...\n" +
+                                        //         // " Nome:\n " + this._nome.text +
+                                        //         " Cpf: " +
+                                        //         this._cpf.text,
+                                        // slideRightRouteBtnOK: SlideRightRoute(
+                                        //     builder: (_) => Modulos(
+                                        //           paciente: this.paciente,
+                                        //           pacienteId: this.pacienteId,
+                                        //         )),
+                                        // slideRightRouteBtnCancel:
+                                        //     SlideRightRoute(
+                                        //         builder: (_) => Identificacao()),
+                                        // color: Colors.transparent
+                                        )
                                     : _dialogState == DialogState.ERROR
                                         ? MensagemDialog(
-                                            state: _dialogState,
-                                            paciente: "",
-                                            pacienteId: "",
-                                            textoTitle: "Desculpe!",
-                                            textoMensagem: _dsErro,
-                                            textoBtnOK: "",
-                                            textoBtnCancel: "Voltar",
-                                            textoState: "",
-                                            slideRightRouteBtnCancel:
-                                                SlideRightRoute(
-                                                    builder: (_) => Cadastro(
-                                                        dataNascimento:
-                                                            this.dataNascimento,
-                                                        documento:
-                                                            this.paciente)),
-                                            color: Color.fromRGBO(
-                                                41, 84, 142, 0.5),
+                                            // state: _dialogState,
+                                            // paciente: "",
+                                            // pacienteId: "",
+                                            // textoTitle: "Desculpe!",
+                                            // textoMensagem: _dsErro,
+                                            // textoBtnOK: "",
+                                            // textoBtnCancel: "Voltar",
+                                            // textoState: "",
+                                            // slideRightRouteBtnCancel:
+                                            //     SlideRightRoute(
+                                            //         builder: (_) => Cadastro(
+                                            //             dataNascimento:
+                                            //                 this.dataNascimento,
+                                            //             documento:
+                                            //                 this.paciente)),
+                                            // color: Color.fromRGBO(
+                                            //     41, 84, 142, 0.5),
                                           )
                                         : SizedBox(
                                             height: MediaQuery.of(context)
