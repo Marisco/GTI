@@ -236,7 +236,7 @@ class SaudeApi {
         .get("http://10.0.13.133:3010/saude/getModulos", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
-    }).timeout(Duration(seconds: 5));
+    }).timeout(Duration(seconds: 15));
     print(response.body.toString());
     //client.close();
     if (response.statusCode == 200) {

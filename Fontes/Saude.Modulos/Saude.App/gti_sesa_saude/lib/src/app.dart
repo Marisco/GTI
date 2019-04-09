@@ -220,6 +220,24 @@ class AppTextStyle {
             fontSize: 20,
             letterSpacing: 2.5);
         break;
+        case TipoTexto.DROPDOWN:
+        return TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Humanist',
+                        fontSize: 20,
+                        letterSpacing: 2.5,
+                        shadows: <Shadow>[
+                          // Shadow(
+                          //     offset: Offset(1.0, 1.0),
+                          //     blurRadius: 1.0,
+                          //     color: Colors.black.withOpacity(0.7)),
+                          // Shadow(
+                          //     offset: Offset(2.0, 2.0),
+                          //     blurRadius: 2.0,
+                          //     color: Colors.black.withOpacity(0.7)),
+                         ],
+                      );
+        break;
       default:
         return TextStyle(
             color: Colors.white,

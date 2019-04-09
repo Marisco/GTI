@@ -28,18 +28,20 @@ class Principal extends StatefulWidget {
 class _PrincipalState extends State<Principal> {
   AssetImage imagemFundo;
   String msgErro;
-  String textoCabecalho;
-  String textoCorpo;
-  String textoRodape;
-  String textoBarraAcao;
-  String textoBarraInferior;
-  String paciente;
-  String pacienteId;
+  String txtCabecalho;
+  String txtCorpo;
+  double alturaVariada;
+  String txtRodape;
+  String txtBarraAcao;
+  String txtBarraInferior;
+  String nomePaciente;
+  String idPacienteId;
   Widget widgetCorpo;
   Widget widgetRodape;
   Widget widgetBarrraAcao;
   DialogState dialogState;
   Color dialogColor;
+  Color rodapeColor;
   String dialogTxtLoading;
   String dialogTxtTitulo;
   String dialogTxtMensagem;
@@ -52,8 +54,12 @@ class _PrincipalState extends State<Principal> {
 
   @override
   void initState() {
-    initializeDateFormatting("pt_BR", null);
     super.initState();
+  }
+
+  void didChangeDependecies() {
+    super.didChangeDependencies();
+    initializeDateFormatting("pt_BR", null);
   }
 
   @override
@@ -67,7 +73,7 @@ class _PrincipalState extends State<Principal> {
         principalState: this, child: widget.child);
   }
 
-  Widget getPrincipal() {
+  Widget setPrincipal() {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -79,34 +85,39 @@ class _PrincipalState extends State<Principal> {
           child: this.dialogState == DialogState.DISMISSED
               ? Column(children: <Widget>[
                   Cabecalho(
-                    textoCabecalho: this.textoCabecalho,
+                    txtCabecalho: this.txtCabecalho,
                   ),
                   Corpo(
-                    textoCorpo: this.textoCorpo,
-                    widgetCorpo: widgetCorpo,
+                    txtCorpo: this.txtCorpo,
+                    widgetCorpo: this.widgetCorpo,
+                    alturaVariada: this.alturaVariada,
                   ),
-                  Rodape(
-                      textoRodape: this.textoRodape,
-                      widgetRodape: widgetRodape),
+                  this.widgetRodape != null
+                      ? Rodape(
+                          txtRodape: this.txtRodape,
+                          widgetRodape: widgetRodape,
+                          rodapeColor: this.rodapeColor,
+                        )
+                      : Container(),
                   BarraAcao(
-                      textoBarraAcao: this.textoBarraAcao,
+                      txtBarraAcao: this.txtBarraAcao,
                       widgetBarrraAcao: widgetBarrraAcao),
                 ])
               : Container(
-                padding: EdgeInsets.only(top: height * 0.15, bottom: height *0.15),
-                child: 
-              MensagemDialog(
-                  dialogState: this.dialogState,
-                  dialogTxtTitulo: this.dialogTxtTitulo,
-                  dialogTxtMensagem: this.dialogTxtMensagem,
-                  dialogTxtBtnOK: this.dialogTxtBtnOK,
-                  dialogTxtBtnCancel: this.dialogTxtBtnCancel,
-                  dialogTxtLoading: this.dialogTxtLoading,
-                  dialogSlideRightBtnCancel: this.dialogSlideRightBtnCancel,
-                  dialogSlideRightBtnOK: this.dialogSlideRightBtnOK,
-                  dialogColor: this.dialogColor))),
+                  padding: EdgeInsets.only(
+                      top: height * 0.15, bottom: height * 0.15),
+                  child: MensagemDialog(
+                      dialogState: this.dialogState,
+                      dialogTxtTitulo: this.dialogTxtTitulo,
+                      dialogTxtMensagem: this.dialogTxtMensagem,
+                      dialogTxtBtnOK: this.dialogTxtBtnOK,
+                      dialogTxtBtnCancel: this.dialogTxtBtnCancel,
+                      dialogTxtLoading: this.dialogTxtLoading,
+                      dialogSlideRightBtnCancel: this.dialogSlideRightBtnCancel,
+                      dialogSlideRightBtnOK: this.dialogSlideRightBtnOK,
+                      dialogColor: this.dialogColor))),
       bottomNavigationBar: BottomAppBar(
-          child: BarraInferior(textoBarraInferior: this.textoBarraInferior)),
+          child: BarraInferior(txtBarraInferior: this.txtBarraInferior)),
     );
   }
 }

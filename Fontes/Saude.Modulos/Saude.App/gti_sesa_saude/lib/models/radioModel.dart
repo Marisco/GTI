@@ -4,9 +4,9 @@ import 'package:intl/intl.dart';
 class RadioModel {
   bool isSelected;
   final String numero;
-  final String nomeModulo;
+  final String descricao;
 
-  RadioModel(this.isSelected, this.numero, this.nomeModulo);
+  RadioModel(this.isSelected, this.numero, this.descricao);
 }
 
 class RadioItem extends StatelessWidget {
@@ -51,7 +51,7 @@ class RadioItem extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  _item.nomeModulo + ".",
+                  _item.descricao + ".",
                   style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Humanist',

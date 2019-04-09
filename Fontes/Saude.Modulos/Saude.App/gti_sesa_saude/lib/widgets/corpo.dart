@@ -3,26 +3,27 @@ import 'package:gti_sesa_saude/src/enun.dart';
 import 'package:gti_sesa_saude/src/app.dart';
 
 class Corpo extends StatelessWidget {
-  final String textoCorpo;
+  final String txtCorpo;
   final Widget widgetCorpo;
+  final double alturaVariada;
   Corpo({
-    this.textoCorpo,
+    this.txtCorpo,
     this.widgetCorpo,
+    this.alturaVariada = 1
   });
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Container(
-          //color: Colors.yellow,
-          height: MediaQuery.of(context).size.height * 0.6,
+      Container(          
+          height: MediaQuery.of(context).size.height * alturaVariada,
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,            
             children: <Widget>[
-              this.textoCorpo != ""
+              this.txtCorpo != ""
                   ? Text(
-                      this.textoCorpo,
+                      this.txtCorpo,
                       style: AppTextStyle().getEstiloTexto(TipoTexto.CORPO),
                       textAlign: TextAlign.center,
                     )

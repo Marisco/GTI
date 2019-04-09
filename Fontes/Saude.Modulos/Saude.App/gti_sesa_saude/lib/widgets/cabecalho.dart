@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Cabecalho extends StatelessWidget {
-  final String textoCabecalho;  
+  final String txtCabecalho;  
   Cabecalho({
-    this.textoCabecalho,
+    this.txtCabecalho,
   });
   @override
   Widget build(BuildContext context) {

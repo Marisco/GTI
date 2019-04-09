@@ -3,21 +3,23 @@ import 'package:gti_sesa_saude/src/app.dart';
 import 'package:gti_sesa_saude/src/enun.dart';
 
 class BarraAcao extends StatelessWidget {
-  final String textoBarraAcao;
+  final String txtBarraAcao;
   final Widget widgetBarrraAcao;
-  BarraAcao({this.textoBarraAcao, this.widgetBarrraAcao});
+  BarraAcao({this.txtBarraAcao, this.widgetBarrraAcao});
   @override
   Widget build(BuildContext context) {
-    double height= MediaQuery.of(context).size.height * 0.07;
+    double height = MediaQuery.of(context).size.height * 0.07;
     double width = MediaQuery.of(context).size.width;
     return Container(
         color: Colors.white.withOpacity(0.55),
         height: height,
         width: width,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text(this.textoBarraAcao,
-              textAlign: TextAlign.center,
-              style: AppTextStyle().getEstiloTexto(TipoTexto.TITULO)),
+          this.txtBarraAcao != null
+              ? Text(this.txtBarraAcao,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyle().getEstiloTexto(TipoTexto.TITULO))
+              : Container(),
           Expanded(
               child: ListView(
             scrollDirection: Axis.horizontal,
@@ -37,7 +39,8 @@ class BarraAcao extends StatelessWidget {
                   width: width * .30,
                   child: Column(
                     children: <Widget>[
-                      Icon(Icons.location_on, color: Colors.black, size: height * 0.6),
+                      Icon(Icons.location_on,
+                          color: Colors.black, size: height * 0.6),
                       Text(
                         "Localização",
                         style: AppTextStyle().getEstiloTexto(TipoTexto.ACAO),
@@ -48,7 +51,8 @@ class BarraAcao extends StatelessWidget {
                   width: width * .30,
                   child: Column(
                     children: <Widget>[
-                      Icon(Icons.phone_in_talk, color: Colors.black, size: height * 0.6),
+                      Icon(Icons.phone_in_talk,
+                          color: Colors.black, size: height * 0.6),
                       Text(
                         "Ouvidoria",
                         style: AppTextStyle().getEstiloTexto(TipoTexto.ACAO),
@@ -59,7 +63,8 @@ class BarraAcao extends StatelessWidget {
                   width: width * .30,
                   child: Column(
                     children: <Widget>[
-                      Icon(Icons.notifications, color: Colors.black, size: height * 0.6),
+                      Icon(Icons.notifications,
+                          color: Colors.black, size: height * 0.6),
                       Text(
                         "Notificação",
                         style: AppTextStyle().getEstiloTexto(TipoTexto.ACAO),

@@ -68,7 +68,7 @@ class MensagemDialog extends StatelessWidget {
                                   style: AppTextStyle()
                                       .getEstiloTexto(TipoTexto.BTNCANCEL)),
                               onPressed: () {
-                                Navigator.pop(context);
+                                //Navigator.pop(context);
                                 Navigator.push(
                                     context, dialogSlideRightBtnCancel);
                               })),
@@ -82,27 +82,30 @@ class MensagemDialog extends StatelessWidget {
                     ]
                   : [],
             ),
-            Positioned(
-                top: 16,
-                right: 32,
-                child: SizedBox(
-                    width: 30.0,
-                    height: 30.0,
-                    child: FloatingActionButton(
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                        backgroundColor: Colors.white.withOpacity(
-                            .9), // fromRGBO(41, 84, 142, 1).withOpacity(0.85),
-                        //Colors.transparent,
-                        //this.dialogColor,
-                        elevation: 0,
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(context, dialogSlideRightBtnCancel);
-                        }))),
+            dialogState == DialogState.LOADING
+                ? Container()
+                : Positioned(
+                    top: 16,
+                    right: 32,
+                    child: SizedBox(
+                        width: 30.0,
+                        height: 30.0,
+                        child: FloatingActionButton(
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            backgroundColor: Colors.white.withOpacity(
+                                .9), // fromRGBO(41, 84, 142, 1).withOpacity(0.85),
+                            //Colors.transparent,
+                            //this.dialogColor,
+                            elevation: 0,
+                            onPressed: () {
+                              //Navigator.pop(context);
+                              Navigator.push(
+                                  context, dialogSlideRightBtnCancel);
+                            }))),
           ]);
   }
 }

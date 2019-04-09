@@ -58,6 +58,10 @@ flutter:
     - img/ic_passo03.png
     - img/ic_passo04.png
     - img/ic_passo05.png
+    - img/ic_agendamento.png
+    - img/ic_fila.png
+    - img/ic_avaliacao.png
+    - img/unidade.png
     
   #  - images/a_dot_ham.jpeg
 

@@ -167,8 +167,8 @@ class _CadastroState extends State<_Cadastro> {
                     ),
                     child: Column(children: <Widget>[
                       Cabecalho(
-                          textoCabecalho:
-                              'Não o encotramos  em nossa base de dados. Preencha o formulário abaixo.',
+                          txtCabecalho:
+                              'Não o encotramos em nossa base de dados. Preencha o formulário abaixo.',
                           ),
                       Row(children: [
                         Container(
