@@ -6,43 +6,29 @@ class cFilavirtual {
         this.modFilavirtual = new objFilavirtual.modFilavirtual(Data);
     }
 }
-function obterFilasVirtuais(db, callback) {
-    
-    var qry = sqlFilavirtual.sqlListar;
-    if (body.filaVirtualId == "0") {
-        qry = qry +
-            " AND e.numero =   " + body.especialidadeId +
-            " AND co.unidade = " + body.unidadeId
-            
+function obterFilasVirtuais(db, body, callback) {
 
-    } else {
-        qry = qry +
-            " AND c.numero =   " + body.filaVirtualId;
-    }
+    var numero =  body.filaVirtualId == "0" ?  " AND u.numero = " + body.unidadeId : " AND f.numero =   " + body.filaVirtualId;   
+    
+    var qry = sqlFilavirtual.sqlListar + numero; 
 
     return db.client.query(qry, callback)
 }
 
-function agendarFilaVirtual(db, body  , callback) {
-    var qry = 
-    " UPDATE consulta                           " +
-    "    SET estado = 'A',                      " +
-    "        paciente = "+body.pacienteId+",     " +
-    "        usuario = ( SELECT numero          " +
-    "                      FROM usuario         " +
-    "                     WHERE sistema = 'S'   " +
-    "                     LIMIT 1)              " +
-    "  WHERE numero = "+body.filaVirtualId+"    " +
-    "    AND estado = 'D'                       " +
-    "    AND paciente IS NULL                   " +
-    "    AND ativo = 'S'                        "
-    
-    return db.client.query(qry, callback)
+function inserirFilaVirtual(db, body  , callback) {
+    var qry = sqlFilavirtual.sqlInserir
+    return db.client.query(qry, [body.pacienteId, body.filaVirtualId ], callback);    
+}
+
+function obterItemFilaVirtual(db, filaVirtualId  , callback) {
+    var qry = sqlFilavirtual.slqItemFilaVirtual
+    return db.client.query(qry, [filaVirtualId], callback);    
 }
 
 
 module.exports = {
     cFilavirtual,
     obterFilasVirtuais, 
-    agendarFilaVirtual
+    inserirFilaVirtual,
+    obterItemFilaVirtual
 };

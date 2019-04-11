@@ -130,7 +130,7 @@ class _ModulosState extends State<_Modulos> {
       case "2":
         return SlideRightRoute(
             builder: (_) => Principal(
-                child: Unidade(
+                child: Avalicacao(
                     pacienteId: this.pacienteId,
                     paciente: this.paciente,
                     moduloId: modulo)));

@@ -8,11 +8,17 @@ class cEspecialidade {
 }
 
 function obterEspecialidades(db, body, callback) {
-
-    var qry = sqlEspecialidade.sqlListar;
-    qry = qry +
+    var qry;
+    if (body.moduloId == "1"){
+        qry = sqlEspecialidade.sqlEspecialidadeConsulta;
+        qry = qry +
         " AND co.unidade =   " + body.unidadeId +
         " AND c.data_inicio BETWEEN  DATE('" + body.dataInicio + "') AND DATE('" + body.dataFim + "')";
+    }else{
+        qry = sqlEspecialidade.sqlEspecialidadeFilaVirtual;
+        qry = qry +" AND f.unidade =   " + body.unidadeId
+    }
+
     return db.client.query(qry, callback)
 }
 

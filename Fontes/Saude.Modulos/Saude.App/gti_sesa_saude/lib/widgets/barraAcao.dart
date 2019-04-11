@@ -25,8 +25,10 @@ class BarraAcao extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               Container(
-                  width: width * .30,
+                  width: width * .30,                  
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.home, color: Colors.black, size: height * 0.6),
                       Text(
@@ -38,6 +40,8 @@ class BarraAcao extends StatelessWidget {
               Container(
                   width: width * .30,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.location_on,
                           color: Colors.black, size: height * 0.6),
@@ -50,6 +54,8 @@ class BarraAcao extends StatelessWidget {
               Container(
                   width: width * .30,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.phone_in_talk,
                           color: Colors.black, size: height * 0.6),
@@ -62,6 +68,8 @@ class BarraAcao extends StatelessWidget {
               Container(
                   width: width * .30,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.notifications,
                           color: Colors.black, size: height * 0.6),
@@ -74,6 +82,8 @@ class BarraAcao extends StatelessWidget {
               Container(
                   width: width * .30,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.web, color: Colors.black, size: height * 0.6),
                       Text(

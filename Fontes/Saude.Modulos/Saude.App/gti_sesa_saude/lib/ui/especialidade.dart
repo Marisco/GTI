@@ -92,16 +92,16 @@ class _EspecialidadeState extends State<_Especialidade> {
                     especialidadeId: this._selEspecialidade)));
 
         break;
-      // case "3":
-      //   _slideRightRoute = SlideRightRoute(
-      //       builder: (_) => FilaVirtual(
-      //           paciente: this.paciente,
-      //           pacienteId: this.pacienteId,
-      //           moduloId: this.moduloId,
-      //           unidadeId: this.unidadeId,
-      //           especialidadeId: this._selEspecialidade));
+      case "3":
+        _slideRightRoute = SlideRightRoute(
+            builder: (_) =>  Principal(child: FilaVirtual(
+                paciente: this.paciente,
+                pacienteId: this.pacienteId,
+                moduloId: this.moduloId,
+                unidadeId: this.unidadeId,
+                )));
 
-      //   break;
+        break;
       default:
         _slideRightRoute = SlideRightRoute(
             builder: (_) => Principal(
@@ -125,7 +125,7 @@ class _EspecialidadeState extends State<_Especialidade> {
   void _getEspecialidades() async {
     setState(() => _dialogState = DialogState.LOADING);
     EspecialidadeModel especialidadeModel = await especialidadeBloc
-        .fetchEspecialidades(this.unidadeId, DateTime.now().toString(),
+        .fetchEspecialidades(this.moduloId, this.unidadeId, DateTime.now().toString(),
             DateTime.now().add(Duration(days: 4)).toString())
         .catchError((e) {
       setState(() {
@@ -209,7 +209,7 @@ class _EspecialidadeState extends State<_Especialidade> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
-    principal.imagemFundo = AssetImage("img/unidade.png");
+    principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "Selecione a especialidade."

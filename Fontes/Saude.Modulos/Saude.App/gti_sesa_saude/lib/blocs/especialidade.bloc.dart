@@ -9,8 +9,8 @@
           Observable<EspecialidadeModel> get especialidade => _especialidadeFetcher.stream;
 
           
-          Future<EspecialidadeModel> fetchEspecialidades( String unidade, String dataInicio, String dataFim) async {
-            EspecialidadeModel especialidade = await _repository.fetchEspecialidades(unidade, dataInicio, dataFim);
+          Future<EspecialidadeModel> fetchEspecialidades( String moduloId, unidade,  dataInicio, dataFim) async {
+            EspecialidadeModel especialidade = await _repository.fetchEspecialidades(moduloId, unidade, dataInicio, dataFim);
             _especialidadeFetcher.sink.add(especialidade);
             return especialidade;
           }  

@@ -22,11 +22,12 @@ class Corpo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,            
             children: <Widget>[
               this.txtCorpo != ""
-                  ? Text(
+                  ? Container( 
+                    child: Text(
                       this.txtCorpo,
                       style: AppTextStyle().getEstiloTexto(TipoTexto.CORPO),
                       textAlign: TextAlign.center,
-                    )
+                    ))
                   : Container(),
               Flexible(child: widgetCorpo)
             ],

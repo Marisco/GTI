@@ -22,6 +22,13 @@ app.post('/saude/getPaciente', function(req, res) {
   srvController.obterPaciente(req, res)  
 
 })
+
+app.post('/saude/getDadosPaciente', function(req, res) {
+  
+  srvController.obterDadosPaciente(req, res)  
+
+})
+
  app.get('/saude/getPacienteCadSus', function(req, res) {
   
    cadSusService.consultarCadSus(req, res)  
@@ -78,25 +85,31 @@ app.get('/saude/getModulos', function(req, res) {
 
 })
 
-app.get('/saude/postFilaVirtual', function(req, res) {
+app.post('/saude/postFilaVirtual', function(req, res) {
   
-  srvController.obterModulos(req, res)  
+  srvController.inserirFilaVirtual(req, res)  
 
 })
 
 app.get('/saude/getFilaVirtual', function(req, res) {
   
-  srvController.obterModulos(req, res)  
+  srvController.obterModulos(req, res)    
 
 })
-app.get('/saude/getFilasVirtuais', function(req, res) {
+app.post('/saude/getFilasVirtuais', function(req, res) {
   
-  srvController.obterModulos(req, res)  
+  srvController.obterFilasVirtuais(req, res)
 
 })
-app.get('/saude/getAvaliacoes', function(req, res) {
+app.post('/saude/getAvaliacoes', function(req, res) {
   
-  srvController.obterModulos(req, res)  
+  srvController.obterAvaliacoes(req, res)  
+
+})
+
+app.post('/saude/postAvaliacao', function(req, res) {
+  
+  srvController.inserirAvaliacao(req, res)  
 
 })
 

@@ -10,56 +10,50 @@ import 'package:gti_sesa_saude/models/modulo.model.dart';
 import 'package:gti_sesa_saude/models/avaliacao.model.dart';
 import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
 
-
 class Repository {
   final saudeApi = SaudeApi();
 
-  Future<PacienteModel> fetchPaciente(
-          String documento, String dataNascimento) =>
+  Future<PacienteModel> fetchPaciente(String documento, dataNascimento) =>
       saudeApi.fetchPaciente(documento, dataNascimento);
 
   Future<UnidadeModel> fetchUnidades() => saudeApi.fetchUnidades();
 
   Future<EspecialidadeModel> fetchEspecialidades(
-          String unidadeId, String dataInicio, String dataFim) =>
-      saudeApi.fetchEspecialidades(unidadeId, dataInicio, dataFim);
+          String moduloId, unidadeId, dataInicio, dataFim) =>
+      saudeApi.fetchEspecialidades(moduloId, unidadeId, dataInicio, dataFim);
 
-  Future<ConsultaModel> fetchConsultas(String consultaId, String unidadeId,
-          String especialidadeId, String dataInicio, String dataFim) =>
+  Future<ConsultaModel> fetchConsultas(
+          String consultaId, unidadeId, especialidadeId, dataInicio, dataFim) =>
       saudeApi.fetchConsultas(
           consultaId, unidadeId, especialidadeId, dataInicio, dataFim);
 
-  Future<ConsultaModel> fetchConsulta(String paciente, String especialidade) =>
+  Future<ConsultaModel> fetchConsulta(String paciente, especialidade) =>
       saudeApi.fetchConsulta(paciente, especialidade);
 
-  Future<MensagemModel> pushConsulta(String pacienteId, String consultaId) =>
+  Future<MensagemModel> pushConsulta(String pacienteId, consultaId) =>
       saudeApi.pushConsulta(pacienteId, consultaId);
 
-  Future<InsertModel> pushPaciente(String nome, String cpf, String cartaoSus,
-          String dataNascimento, String sexo, String telefone, String bairro) =>
+  Future<InsertModel> pushPaciente(String nome, cpf, cartaoSus, dataNascimento,
+          sexo, telefone, bairro) =>
       saudeApi.pushPaciente(
           nome, cpf, cartaoSus, dataNascimento, sexo, telefone, bairro);
 
   Future<BairroModel> fetchBairros() => saudeApi.fetchBairros();
 
   Future<ModuloModel> fetchModulos() => saudeApi.fetchModulos();
-  Future<AvaliacaoModel> fetchAvaliacoes() => saudeApi.fetchAvaliacoes();
 
-  Future<MensagemModel> pushFilaVirtual(
-          String pacienteId, String filaVirtualId) =>
+  Future<AvaliacaoModel> fetchAvaliacoes(String pacienteId) =>
+      saudeApi.fetchAvaliacoes(pacienteId);
+
+  Future<MensagemModel> pushAvaliacao(String pacienteId, tipoAvaliacao,
+          dataAtendimento, nota, texto, celular, numeroAtendimento) =>
+      saudeApi.pushAvaliacao(pacienteId, tipoAvaliacao, dataAtendimento, nota,
+          texto, celular, numeroAtendimento);
+
+  Future<MensagemModel> pushFilaVirtual(String pacienteId, filaVirtualId) =>
       saudeApi.pushFilaVirtual(pacienteId, filaVirtualId);
 
-  Future<FilaVirtualModel> fetchFilaVirtual(
-          String paciente, String especialidade) =>
-      saudeApi.fetchFilaVirtual(paciente, especialidade);
-
   Future<FilaVirtualModel> fetchFilasVirtuais(
-          String filaVirtualId,
-          String unidadeId,
-          String especialidadeId,
-          String dataInicio,
-          String dataFim) =>
-      saudeApi.fetchFilasVirtuais(
-          filaVirtualId, unidadeId, especialidadeId, dataInicio, dataFim);
-          
+          String filaVirtualId, unidadeId) =>
+      saudeApi.fetchFilasVirtuais(filaVirtualId, unidadeId);
 }

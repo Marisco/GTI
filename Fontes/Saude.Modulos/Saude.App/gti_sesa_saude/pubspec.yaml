@@ -47,7 +47,8 @@ flutter:
     - img/cabecalho.png
     - img/pms.png
     - img/coracao.png
-    - img/splash.jpg
+    - img/unidade.png
+    - img/splash.png
     - img/passo01.jpg
     - img/passo02.jpg
     - img/passo03.jpg
@@ -61,7 +62,14 @@ flutter:
     - img/ic_agendamento.png
     - img/ic_fila.png
     - img/ic_avaliacao.png
-    - img/unidade.png
+    - img/ic_bom.png
+    - img/ic_otimo.png
+    - img/ic_pessimo.png
+    - img/ic_regular.png
+    - img/ic_ruim.png
+
+    
+
     
   #  - images/a_dot_ham.jpeg
 

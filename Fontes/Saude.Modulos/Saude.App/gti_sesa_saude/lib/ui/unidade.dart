@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/blocs/unidade.bloc.dart';
 import 'package:gti_sesa_saude/models/unidade.model.dart';
-import 'package:gti_sesa_saude/ui/identificacao.dart';
 import 'package:gti_sesa_saude/ui/modulo.dart';
 import 'package:gti_sesa_saude/ui/especialidade.dart';
-import 'package:gti_sesa_saude/ui/avaliacao.dart';
+import 'package:gti_sesa_saude/ui/filaVirtual.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
 import 'package:gti_sesa_saude/src/app.dart';
 import 'package:gti_sesa_saude/src/enun.dart';
@@ -87,10 +86,10 @@ class _UnidadeState extends State<_Unidade> {
       //           unidadeId: this._selUnidade));
 
       //   break;
-      case "2":
+      case "3":
        _slideRightRoute = SlideRightRoute(
             builder: (_) => Principal(
-                child: Especialidade(
+                child: FilaVirtual(
                     paciente: this.paciente,
                     pacienteId: this.pacienteId,
                     moduloId: this.moduloId,
@@ -197,7 +196,7 @@ class _UnidadeState extends State<_Unidade> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
-    principal.imagemFundo = AssetImage("img/unidade.png");
+    principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "Selecione a unidade de saúde."

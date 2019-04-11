@@ -8,24 +8,23 @@ class FilaVirtualBloc {
   final _filaVirtualFetcher = PublishSubject<FilaVirtualModel>();
   Observable<FilaVirtualModel> get filaVirtual => _filaVirtualFetcher.stream;
 
-  Future<FilaVirtualModel> fetchFilasVirtuais(String filaVirtual, String unidade,
-      String especialidade, String dataInicio, String dataFim) async {
+  Future<FilaVirtualModel> fetchFilasVirtuais(String filaVirtual, unidade) async {
     FilaVirtualModel filaVirtualModel = await _repository.fetchFilasVirtuais(
-        filaVirtual, unidade, especialidade, dataInicio, dataFim);
+        filaVirtual, unidade);
     _filaVirtualFetcher.sink.add(filaVirtualModel);
     return filaVirtualModel;
   }
 
-  Future<FilaVirtualModel> fetchFilaVirtual(
-      String paciente, String especialidade) async {
-    FilaVirtualModel filaVirtualModel =
-        await _repository.fetchFilaVirtual(paciente, especialidade);
-    _filaVirtualFetcher.sink.add(filaVirtualModel);
-    return filaVirtualModel;
-  }
+  // Future<FilaVirtualModel> fetchFilaVirtual(String consulta, unidade,
+  //     dataInicio, dataFim) async {
+  //   FilaVirtualModel filaVirtualModel =
+  //       await _repository.fetchFilaVirtual(consulta, unidade, dataInicio, dataFim);
+  //   _filaVirtualFetcher.sink.add(filaVirtualModel);
+  //   return filaVirtualModel;
+  // }
 
   Future<MensagemModel> pushFilaVirtual(
-      String pacienteId, String filaVirtualId) async {
+      String pacienteId, filaVirtualId) async {
     MensagemModel mensagem =
         await _repository.pushFilaVirtual(pacienteId, filaVirtualId);
     return mensagem;

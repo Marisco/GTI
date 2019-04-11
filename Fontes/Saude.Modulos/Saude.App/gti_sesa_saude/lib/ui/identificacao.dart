@@ -166,7 +166,7 @@ class _IdentificacaoState extends State<_Identificacao> {
               TextField(
                   controller: _dataNascimento,
                   focusNode: focusDataNascimento,
-                  textInputAction: TextInputAction.search,
+                  textInputAction: TextInputAction.done,
                   onSubmitted: (_) {
                     focusDataNascimento.unfocus();
                   },
@@ -209,7 +209,7 @@ class _IdentificacaoState extends State<_Identificacao> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
-    principal.imagemFundo = AssetImage("img/unidade.png");
+    principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "Olá! Seja bem vindo ao Aplicativo Saúde-Serra."

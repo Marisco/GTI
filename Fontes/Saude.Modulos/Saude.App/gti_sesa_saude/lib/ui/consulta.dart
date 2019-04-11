@@ -180,7 +180,7 @@ class _ConsultaState extends State<_Consulta> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
-    principal.imagemFundo = AssetImage("img/unidade.png");
+    principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo =
         _dialogState == DialogState.DISMISSED ? "Selecione o horário." : "";
