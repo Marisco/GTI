@@ -48,6 +48,7 @@ class _CadastroState extends State<_Cadastro> {
   final _telefone = TextEditingController();
   final String documento;
   final String dataNascimento;
+  final focusNome = FocusNode();
   final focusCpf = FocusNode();
   final focusCns = FocusNode();
   final focusNasc = FocusNode();
@@ -56,7 +57,7 @@ class _CadastroState extends State<_Cadastro> {
   var pacienteId;
   var _paciente = [];
   var _bairros = [];
-  String _selBairro;  
+  String _selBairro;
   String _dialogTxtMensagem = "";
   String _dialogTxtTitulo = "";
 
@@ -124,7 +125,7 @@ class _CadastroState extends State<_Cadastro> {
             _selBairro)
         .catchError((e) {
       setState(() {
-       _dialogState = DialogState.ERROR;
+        _dialogState = DialogState.ERROR;
         this._dialogTxtTitulo = "Desculpe!";
         this._dialogTxtMensagem = e.message
                 .toString()
@@ -136,12 +137,15 @@ class _CadastroState extends State<_Cadastro> {
     });
 
     _paciente = pacienteModel.getInsertId();
-    setState(() {
-      _dialogState = DialogState.COMPLETED;
-      if (_paciente.isNotEmpty) {
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        this._dialogState = DialogState.COMPLETED;
         paciente = this._nome.text;
         pacienteId = _paciente[0].numero.toString();
-      }
+        this._dialogTxtTitulo = " Olá " + this.paciente + "!";
+        this._dialogTxtMensagem =
+            "Cadastro realizado com sucesso!\nDeseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES?";
+      });
     });
   }
 
@@ -191,33 +195,36 @@ class _CadastroState extends State<_Cadastro> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        DropdownButton(
-                            iconSize: 36,
-                            isDense: false,
-                            hint: Text('Bairro onde mora:',
-                                style: AppTextStyle()
-                                    .getEstiloTexto(TipoTexto.DROPDOWN)),
-                            value: _selBairro,
-                            items: _bairros.map((bairro) {
-                              return DropdownMenuItem(
-                                  value: bairro.numero,
-                                  child: Text(bairro.nome,
-                                      style: AppTextStyle()
-                                          .getEstiloTexto(TipoTexto.DROPDOWN)));
-                            }).toList(),
-                            onChanged: (newVal) {
-                              setState(() {
-                                _selBairro = newVal;
-                              });
-                            },
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                            isExpanded: true,
-                            elevation: 24),
+                        Container(
+                            //padding: EdgeInsets.fromLTRB(0, 80, 10, 100),
+                            child: DropdownButton(
+                                iconSize: 36,
+                                isDense: false,
+                                hint: Text('Bairro onde mora:',
+                                    style: AppTextStyle()
+                                        .getEstiloTexto(TipoTexto.DROPDOWN)),
+                                value: _selBairro,
+                                items: _bairros.map((bairro) {
+                                  return DropdownMenuItem(
+                                      value: bairro.numero,
+                                      child: Text(bairro.nome,
+                                          style: AppTextStyle().getEstiloTexto(
+                                              TipoTexto.DROPDOWN)));
+                                }).toList(),
+                                onChanged: (newVal) {
+                                  setState(() {
+                                    _selBairro = newVal;
+                                  });
+                                },
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                                isExpanded: true,
+                                elevation: 24)),
                         TextField(
                           controller: _nome,
+                          focusNode: focusNome,
                           textInputAction: TextInputAction.next,
                           onSubmitted: (v) {
                             FocusScope.of(context).requestFocus(focusCpf);
@@ -304,6 +311,11 @@ class _CadastroState extends State<_Cadastro> {
                               _postPaciente();
                             },
                             maxLength: 15,
+                            onChanged: (_) {
+                              if (_telefone.text.length == 15) {
+                                focusTel.unfocus();
+                              }
+                            },
                             decoration: InputDecoration(
                                 counterText: '',
                                 labelText: "Telefone com DDD:",
@@ -320,7 +332,7 @@ class _CadastroState extends State<_Cadastro> {
             ])));
   }
 
-   Widget _getRodapeCadastro() {
+  Widget _getRodapeCadastro() {
     return Expanded(
         child: FlatButton(
       onPressed: () {
@@ -342,7 +354,7 @@ class _CadastroState extends State<_Cadastro> {
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
-        ? "Não o encotramos  em nossa base de dados. Preencha o formulário abaixo."
+        ? "Não o encotramos em nossa base de dados. Preencha o formulário abaixo."
         : "";
     principal.txtRodape = "";
     principal.txtBarraAcao = "";
@@ -365,7 +377,7 @@ class _CadastroState extends State<_Cadastro> {
               paciente: this.paciente,
               pacienteId: this.pacienteId,
             )));
-    principal.dialogTxtLoading = "Localizando " ;
+    principal.dialogTxtLoading = "Localizando ";
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
 

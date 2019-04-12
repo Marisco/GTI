@@ -171,8 +171,7 @@ class _EspecialidadeState extends State<_Especialidade> {
                   return DropdownMenuItem(
                     value: unidade.numero,
                     child: Text(unidade.nome,
-                        style:
-                            AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN)),
+                        style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN)),
                   );
                 }).toList(),
                 onChanged: (newVal) {

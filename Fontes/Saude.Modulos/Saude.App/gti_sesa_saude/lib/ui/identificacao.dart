@@ -32,6 +32,7 @@ class _IdentificacaoState extends State<_Identificacao> {
   var paciente;
   var pacienteId;
   var _paciente = [];
+  var _maxLength;
   DateTime selectedDate = DateTime.now();
   String _dsDocumento = "";
   String _dialogTxtMensagem = "";
@@ -57,6 +58,7 @@ class _IdentificacaoState extends State<_Identificacao> {
     setState(() {
       _documento.text = "";
       _tpDocumento = value;
+      _maxLength = _tpDocumento == 0 ? 14 : 18;
       switch (_tpDocumento) {
         case 0:
           _dsDocumento = "CPF:";
@@ -141,11 +143,13 @@ class _IdentificacaoState extends State<_Identificacao> {
               ]),
               TextField(
                   controller: _documento,
-                  textInputAction: TextInputAction.next,
-                  onSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(focusDataNascimento);
+                  textInputAction: TextInputAction.next,                  
+                  onChanged: (_){
+                    if(_documento.text.length == _maxLength){
+                      FocusScope.of(context).requestFocus(focusDataNascimento);
+                    }
                   },
-                  maxLength: _tpDocumento == 0 ? 14 : 18,
+                  maxLength: _maxLength,
                   decoration: InputDecoration(
                     counterText: '',
                     labelText: "Digite o nº do " + _dsDocumento,
@@ -167,8 +171,10 @@ class _IdentificacaoState extends State<_Identificacao> {
                   controller: _dataNascimento,
                   focusNode: focusDataNascimento,
                   textInputAction: TextInputAction.done,
-                  onSubmitted: (_) {
-                    focusDataNascimento.unfocus();
+                   onChanged: (_){
+                    if(_dataNascimento.text.length == 10){
+                      focusDataNascimento.unfocus();
+                    }
                   },
                   maxLength: 10,
                   decoration: InputDecoration(

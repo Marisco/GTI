@@ -17,7 +17,7 @@ class Corpo extends StatelessWidget {
       Container(          
           height: MediaQuery.of(context).size.height * alturaVariada,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,            
             children: <Widget>[
