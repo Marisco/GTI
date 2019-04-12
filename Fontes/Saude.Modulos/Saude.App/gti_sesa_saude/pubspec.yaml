@@ -19,7 +19,8 @@ dependencies:
   rxdart: ^0.20.0
   #geocoder: ^0.1.2
   intl: ^0.15.7
-  back_button_interceptor: ^2.0.0  
+  back_button_interceptor: ^2.0.0 
+  google_maps_flutter: ^0.5.7 
 
   flutter:
     sdk: flutter

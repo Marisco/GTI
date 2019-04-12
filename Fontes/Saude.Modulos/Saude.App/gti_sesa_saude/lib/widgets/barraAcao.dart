@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gti_sesa_saude/src/app.dart';
 import 'package:gti_sesa_saude/src/enun.dart';
+import 'package:gti_sesa_saude/ui/principal.dart';
+import 'package:gti_sesa_saude/ui/identificacao.dart';
+import 'package:gti_sesa_saude/ui/localizacao.dart';
 
 class BarraAcao extends StatelessWidget {
   final String txtBarraAcao;
@@ -25,12 +28,22 @@ class BarraAcao extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               Container(
-                  width: width * .30,                  
+                  width: width * .30,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(Icons.home, color: Colors.black, size: height * 0.6),
+                      Expanded(
+                          child: FlatButton(
+                              onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        SlideRightRoute(
+                                            builder: (_) => Principal(
+                                                child: Identificacao())))
+                                  },
+                              child: Icon(Icons.home,
+                                  color: Colors.black, size: height * 0.6))),
                       Text(
                         "Home",
                         style: AppTextStyle().getEstiloTexto(TipoTexto.ACAO),
@@ -43,8 +56,18 @@ class BarraAcao extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Expanded(
+                          child: FlatButton(
+                              onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        SlideRightRoute(
+                                            builder: (_) => Principal(
+                                                child: Localizacao())))
+                                  },
+                              child:
                       Icon(Icons.location_on,
-                          color: Colors.black, size: height * 0.6),
+                          color: Colors.black, size: height * 0.6))),
                       Text(
                         "Localização",
                         style: AppTextStyle().getEstiloTexto(TipoTexto.ACAO),
