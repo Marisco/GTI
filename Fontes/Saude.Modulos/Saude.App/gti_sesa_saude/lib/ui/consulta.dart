@@ -165,7 +165,9 @@ class _ConsultaState extends State<_Consulta> {
                     unidadeId:this.unidadeId,
                     especialidadeId: this.especialidadeId,
                     consultaId: this._selConsulta,
-                    filaVirtualId: ""))));
+                    filaVirtualId: "",
+                    especialidadeNome: "",
+                    unidadeNome: "",))));
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5.0),
