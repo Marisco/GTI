@@ -41,13 +41,13 @@ const sqlListar =
 "   WHERE p.numero = ?                                                                                                                                                                                                  "+
 "     AND r.numero > (SELECT IFNULL(MAX(numero_atendimento),0) AS numero FROM avaliacao WHERE tipo_avaliacao = 5)                                                                                                       "+
 "   ORDER BY data_requisicao DESC                                                                                                                                                                                       "+
-"   LIMIT 1); "
+"   LIMIT 1); ";
 
 const sqlInserir = 
 " INSERT INTO avaliacao (paciente, tipo_avaliacao, data_atendimento, nota, texto, celular ,numero_atendimento) " +    
-" VALUES (?, ?, ?, ?, ?, ?, ?); "
+" VALUES (?, ?, ?, ?, ?, ?, ?); ";
 
 module.exports = {
-    sqlListar,
-    sqlInserir
+    sqlListar: sqlListar,
+    sqlInserir: sqlInserir
 };

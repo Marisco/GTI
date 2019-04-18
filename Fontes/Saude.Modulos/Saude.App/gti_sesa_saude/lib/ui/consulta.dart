@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
 
-
 class Consulta extends StatelessWidget {
   final String paciente;
   final String pacienteId;
@@ -114,7 +113,7 @@ class _ConsultaState extends State<_Consulta> {
     });
     _consultas = consultaModel.getConsultas().toList();
     Future.delayed(Duration(milliseconds: 500), () {
-      setState(() {        
+      setState(() {
         if (_consultas.isNotEmpty && _consultas[0] != null) {
           _dialogState = DialogState.DISMISSED;
           _consultas.forEach((consulta) => dadosConsulta.add(RadioModel(
@@ -139,7 +138,7 @@ class _ConsultaState extends State<_Consulta> {
         itemCount: dadosConsulta.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
-            splashColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45),
+            splashColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.55),
             onTap: () {
               setState(() {
                 _selConsulta = dadosConsulta[index].numero;
@@ -156,18 +155,21 @@ class _ConsultaState extends State<_Consulta> {
     return Expanded(
         child: FlatButton(
       onPressed: () {
-        Navigator.push(context, SlideRightRoute(
-            builder: (_) => Principal(
-                child: Confirmacao(
-                    paciente: this.paciente,
-                    pacienteId: this.pacienteId,
-                    moduloId: this.moduloId,
-                    unidadeId:this.unidadeId,
-                    especialidadeId: this.especialidadeId,
-                    consultaId: this._selConsulta,
-                    filaVirtualId: "",
-                    especialidadeNome: "",
-                    unidadeNome: "",))));
+        Navigator.push(
+            context,
+            SlideRightRoute(
+                builder: (_) => Principal(
+                        child: Confirmacao(
+                      paciente: this.paciente,
+                      pacienteId: this.pacienteId,
+                      moduloId: this.moduloId,
+                      unidadeId: this.unidadeId,
+                      especialidadeId: this.especialidadeId,
+                      consultaId: this._selConsulta,
+                      filaVirtualId: "",
+                      especialidadeNome: "",
+                      unidadeNome: "",
+                    ))));
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5.0),
@@ -182,6 +184,7 @@ class _ConsultaState extends State<_Consulta> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo =
@@ -196,7 +199,7 @@ class _ConsultaState extends State<_Consulta> {
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Voltar";
-    principal.dialogSlideRightBtnCancel = SlideRightRoute(
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(
         builder: (_) => Principal(
             child: Especialidade(
                 pacienteId: this.pacienteId,
@@ -220,7 +223,7 @@ class RadioItem extends StatelessWidget {
   final hora = DateFormat("Hm", "pt_BR");
   RadioItem(this._item);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.all(5.0),
@@ -228,8 +231,8 @@ class RadioItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Container(
-            height: 100.0,
-            width: 100.0,
+            height: MediaQuery.of(context).size.height * .12,// 86.0,
+            width:  MediaQuery.of(context).size.height * .12,// 86.0,
             margin: EdgeInsets.only(left: 0.0),
             child: Center(
               child: Text(hora.format(DateTime.parse(_item.dataInicio)),
@@ -252,8 +255,12 @@ class RadioItem extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Padding(
+            child: Container(
                 padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.2),                  
+                ),
                 child: Text(
                   diaSemana
                           .format(DateTime.parse(_item.dataInicio))
@@ -265,14 +272,14 @@ class RadioItem extends StatelessWidget {
                       "\nSala: " +
                       _item.consultorio +
                       "." +
-                      "\nDr(a): " +
-                      _item.medico +
-                      "." +
+                      //"\nDr(a): " +
+                      //_item.medico +
+                      //"." +
                       "\nEsp.: " +
                       _item.especialidade +
                       ".",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black, // Color.fromRGBO(41, 84, 142, 1),
                     fontFamily: 'Humanist',
                     fontSize: 16,
                     shadows: _item.isSelected
@@ -283,7 +290,7 @@ class RadioItem extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.7)),
                             Shadow(
                                 offset: Offset(1.0, 1.0),
-                                blurRadius: 8.0,
+                                blurRadius: 10.0,
                                 color: Colors.white.withOpacity(0.7)),
                           ]
                         : [],

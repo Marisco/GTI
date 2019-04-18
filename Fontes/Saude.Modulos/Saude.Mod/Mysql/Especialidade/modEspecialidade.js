@@ -4,8 +4,8 @@ class modEspespecialidade {
         this.numero = Data.numero;
         this.nome = Data.nome;
     };
-}
+};
 
 module.exports = {
-    modEspespecialidade
-}
+    modEspespecialidade : modEspespecialidade
+};

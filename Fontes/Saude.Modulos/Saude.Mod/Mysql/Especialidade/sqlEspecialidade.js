@@ -17,6 +17,6 @@ const sqlEspecialidadeConsulta =
 
 
 module.exports = {
-    sqlEspecialidadeConsulta,
-    sqlEspecialidadeFilaVirtual
+    sqlEspecialidadeConsulta: sqlEspecialidadeConsulta,
+    sqlEspecialidadeFilaVirtual: sqlEspecialidadeFilaVirtual
 };

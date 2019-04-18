@@ -90,7 +90,7 @@ class _AvalicacaoState extends State<_Avalicacao> {
   void _getAvaliacoes() async {
     setState(() {
       _dialogState = DialogState.LOADING;
-      this._dialogTxtTitulo = "Aguarde!";     
+      this._dialogTxtTitulo = "Aguarde...";     
       _dialogTxtLoading =  "Estamos localizando seus últimos atendimentos";            
     });
     AvaliacaoModel avaliacaoModel =
@@ -304,6 +304,7 @@ class _AvalicacaoState extends State<_Avalicacao> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = this._txtCorpo;
@@ -317,7 +318,7 @@ class _AvalicacaoState extends State<_Avalicacao> {
     principal.dialogState = this._dialogState;
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
     principal.dialogTxtBtnCancel = _dialogState == DialogState.ERROR ? "" : "";
-    principal.dialogSlideRightBtnCancel = SlideRightRoute(
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(
         builder: (_) => Principal(
             child:
                 Modulos(pacienteId: this.pacienteId, paciente: this.paciente)));

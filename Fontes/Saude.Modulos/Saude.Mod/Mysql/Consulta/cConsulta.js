@@ -7,7 +7,7 @@ class cConsulta {
     }
 }
 
-function obterConsultas(db, body, callback) {
+var obterConsultas = function(db, body, callback) {
     var qry = sqlConsulta.sqlListar;
     if (body.consultaId == "0") {
         qry = qry +
@@ -20,10 +20,10 @@ function obterConsultas(db, body, callback) {
             " AND c.numero =   " + body.consultaId;
     }
 
-    return db.client.query(qry, callback)
-}
+    return db.client.query(qry, callback);
+};
 
-function agendarConsulta(db, body  , callback) {
+var agendarConsulta = function(db, body  , callback) {
     var qry = 
     " UPDATE consulta                           " +
     "    SET estado = 'A',                      " +
@@ -35,13 +35,13 @@ function agendarConsulta(db, body  , callback) {
     "  WHERE numero = "+body.consultaId+"       " +
     "    AND estado = 'D'                       " +
     "    AND paciente IS NULL                   " +
-    "    AND ativo = 'S'                        "
+    "    AND ativo = 'S'                        ";
     
-    return db.client.query(qry, callback)
+    return db.client.query(qry, callback);
 }
 
 module.exports = {
-    cConsulta,
-    obterConsultas,    
-    agendarConsulta    
+    cConsulta: cConsulta,
+    obterConsultas: obterConsultas,    
+    agendarConsulta: agendarConsulta
 };

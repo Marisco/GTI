@@ -368,8 +368,7 @@ class _CadastroState extends State<_Cadastro> {
     principal.rodapeColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Não";
-    principal.dialogSlideRightBtnCancel =
-        SlideRightRoute(builder: (_) => Principal(child: Identificacao()));
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Sim";
     principal.dialogSlideRightBtnOK = SlideRightRoute(
         builder: (_) => Principal(
@@ -377,7 +376,7 @@ class _CadastroState extends State<_Cadastro> {
               paciente: this.paciente,
               pacienteId: this.pacienteId,
             )));
-    principal.dialogTxtLoading = "Localizando ";
+    principal.dialogTxtLoading = "Registrando...";
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
 

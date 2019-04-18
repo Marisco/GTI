@@ -35,17 +35,20 @@ class _Modulos extends StatefulWidget {
 class _ModulosState extends State<_Modulos> {
   final String paciente;
   final String pacienteId;
-  var _modulos = [];  
-  String _dialogTxtMensagem = "";
-  String _dialogTxtTitulo = "";
-  DialogState _dialogState = DialogState.DISMISSED;
+  var _modulos = [];
+  String _dialogTxtMensagem;
+  String _dialogTxtTitulo;
+  DialogState _dialogState;
 
   _ModulosState({@required this.paciente, @required this.pacienteId});
   List<RadioModel> dadosModulos = List<RadioModel>();
 
   @override
   void initState() {
-    initializeDateFormatting("pt_BR", null);    
+    initializeDateFormatting("pt_BR", null);
+    _dialogState = DialogState.DISMISSED;
+    _dialogTxtTitulo = "";
+    _dialogTxtMensagem = "";
     this._getModuloss();
     super.initState();
   }
@@ -155,8 +158,7 @@ class _ModulosState extends State<_Modulos> {
 
   Widget makeListTile(BuildContext context, int index) {
     return ListTile(
-        onTap: () {  
-          //Navigator.pop(context);        
+        onTap: () {
           Navigator.push(context, getRotaModulo(dadosModulos[index].numero));
         },
         contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -200,6 +202,7 @@ class _ModulosState extends State<_Modulos> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED ? "" : "";
@@ -211,8 +214,8 @@ class _ModulosState extends State<_Modulos> {
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Voltar";
-    principal.dialogSlideRightBtnCancel =
-        SlideRightRoute(builder: (_) => Principal(child: Identificacao()));
+    principal.dialogSlideLeftBtnCancel =
+        SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Sim";
     principal.dialogSlideRightBtnOK = SlideRightRoute(
         builder: (_) => Principal(

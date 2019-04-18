@@ -59,7 +59,7 @@ class _LocalizacaoState extends State<_Localizacao> {
   
 @override
   Widget build(BuildContext context) {
-    var principal = Principal.of(context);
+    var principal = Principal.of(context);    
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
@@ -77,8 +77,7 @@ class _LocalizacaoState extends State<_Localizacao> {
     principal.rodapeColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Não";
-    principal.dialogSlideRightBtnCancel =
-        SlideRightRoute(builder: (_) => Principal(child: Identificacao()));
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Sim";
     principal.dialogSlideRightBtnOK = SlideRightRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtLoading = "Localizando ";

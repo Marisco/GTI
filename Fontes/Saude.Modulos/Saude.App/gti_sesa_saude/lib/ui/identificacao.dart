@@ -34,15 +34,18 @@ class _IdentificacaoState extends State<_Identificacao> {
   var _paciente = [];
   var _maxLength;
   DateTime selectedDate = DateTime.now();
-  String _dsDocumento = "";
-  String _dialogTxtMensagem = "";
-  String _dialogTxtTitulo = "";
-  DialogState _dialogState = DialogState.DISMISSED;
+  String _dsDocumento;
+  String _dialogTxtMensagem;
+  String _dialogTxtTitulo;
+  DialogState _dialogState;
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR", null);
-    _tpDocumentoChange(0);
+    _tpDocumentoChange(0);    
+    this._dialogState = DialogState.DISMISSED;        
+    _dialogTxtTitulo = "";
+    _dialogTxtMensagem = "";    
     super.initState();
   }
 
@@ -97,7 +100,8 @@ class _IdentificacaoState extends State<_Identificacao> {
           this._dialogTxtTitulo = " Olá " + this.paciente + "!";
           this._dialogTxtMensagem =
               "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!";
-        } else {
+        } else {  
+          this._dialogState = DialogState.DISMISSED;        
           Navigator.push(
               context,
               SlideRightRoute(
@@ -215,9 +219,10 @@ class _IdentificacaoState extends State<_Identificacao> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
-    principal.txtCorpo = _dialogState == DialogState.DISMISSED
+    principal.txtCorpo = this._dialogState == DialogState.DISMISSED
         ? "Olá! Seja bem vindo ao Aplicativo Saúde-Serra."
         : "";
     principal.txtRodape = "";
@@ -232,8 +237,8 @@ class _IdentificacaoState extends State<_Identificacao> {
     principal.rodapeColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Não";
-    principal.dialogSlideRightBtnCancel =
-        SlideRightRoute(builder: (_) => Principal(child: Identificacao()));
+    principal.dialogSlideLeftBtnCancel =
+        SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Sim";
     principal.dialogSlideRightBtnOK = SlideRightRoute(
         builder: (_) => Principal(

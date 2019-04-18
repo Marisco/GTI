@@ -49,7 +49,7 @@ class _UnidadeState extends State<_Unidade> {
   String _dialogTxtMensagem = "";
   String _dialogTxtTitulo = "";
   DialogState _dialogState = DialogState.DISMISSED;
-  SlideRightRoute _slideRightRoute;  
+  SlideRightRoute _slideRightRoute;
   String _selUnidade;
   var _unidades = [];
 
@@ -59,12 +59,12 @@ class _UnidadeState extends State<_Unidade> {
       @required this.moduloId});
 
   @override
-  void dispose() {    
+  void dispose() {
     super.dispose();
   }
 
   @override
-  void initState() {    
+  void initState() {
     this._getUnidades();
     switch (this.moduloId) {
       case "1":
@@ -87,7 +87,7 @@ class _UnidadeState extends State<_Unidade> {
 
       //   break;
       case "3":
-       _slideRightRoute = SlideRightRoute(
+        _slideRightRoute = SlideRightRoute(
             builder: (_) => Principal(
                 child: FilaVirtual(
                     paciente: this.paciente,
@@ -97,7 +97,7 @@ class _UnidadeState extends State<_Unidade> {
 
         break;
       default:
-       _slideRightRoute = SlideRightRoute(
+        _slideRightRoute = SlideRightRoute(
             builder: (_) => Principal(
                 child: Especialidade(
                     paciente: this.paciente,
@@ -141,9 +141,9 @@ class _UnidadeState extends State<_Unidade> {
 
   Widget _getCorpoUnidade() {
     return Theme(
-        data: Theme.of(context).copyWith(                        
-            accentColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45),
-            canvasColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
+        data: Theme.of(context).copyWith(
+            accentColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
+            canvasColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85)),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -196,6 +196,7 @@ class _UnidadeState extends State<_Unidade> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
@@ -211,7 +212,7 @@ class _UnidadeState extends State<_Unidade> {
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Voltar";
-    principal.dialogSlideRightBtnCancel = SlideRightRoute(
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(
         builder: (_) => Principal(
             child:
                 Modulos(pacienteId: this.pacienteId, paciente: this.paciente)));

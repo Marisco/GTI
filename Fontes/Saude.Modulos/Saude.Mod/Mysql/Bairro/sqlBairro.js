@@ -3,5 +3,5 @@ const sqlListar =
     "  FROM bairro        " 
 
 module.exports = {
-    sqlListar
+    sqlListar: sqlListar
 };

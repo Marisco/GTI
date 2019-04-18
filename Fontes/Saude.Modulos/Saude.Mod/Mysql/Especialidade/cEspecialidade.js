@@ -5,9 +5,9 @@ class cEspecialidade {
     constructor(Data) {
         this.modEspecialidade = new objEspespecialidade.modEspespecialidade(Data);
     }
-}
+};
 
-function obterEspecialidades(db, body, callback) {
+var obterEspecialidades = function(db, body, callback) {
     var qry;
     if (body.moduloId == "1"){
         qry = sqlEspecialidade.sqlEspecialidadeConsulta;
@@ -19,10 +19,10 @@ function obterEspecialidades(db, body, callback) {
         qry = qry +" AND f.unidade =   " + body.unidadeId
     }
 
-    return db.client.query(qry, callback)
-}
+    return db.client.query(qry, callback);
+};
 
 module.exports = {
-    cEspecialidade,
-    obterEspecialidades    
+    cEspecialidade: cEspecialidade,
+    obterEspecialidades: obterEspecialidades    
 };

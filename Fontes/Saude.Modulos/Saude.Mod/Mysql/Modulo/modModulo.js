@@ -11,5 +11,5 @@ class modModulo {
 }
 
 module.exports ={
-    modModulo
-    }
+    modModulo: modModulo
+    };

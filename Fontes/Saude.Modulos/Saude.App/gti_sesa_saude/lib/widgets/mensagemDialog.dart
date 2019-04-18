@@ -11,7 +11,7 @@ class MensagemDialog extends StatelessWidget {
   final String dialogTxtBtnOK;
   final String dialogTxtBtnCancel;
   final SlideRightRoute dialogSlideRightBtnOK;
-  final SlideRightRoute dialogSlideRightBtnCancel;
+  final SlideLeftRoute dialogSlideLeftBtnCancel;
 
   MensagemDialog(
       {this.dialogState,
@@ -22,14 +22,14 @@ class MensagemDialog extends StatelessWidget {
       this.dialogTxtBtnOK,
       this.dialogTxtBtnCancel,
       this.dialogSlideRightBtnOK,
-      this.dialogSlideRightBtnCancel});
+      this.dialogSlideLeftBtnCancel});
   @override
   Widget build(BuildContext context) {
     return dialogState == DialogState.DISMISSED
         ? Container()
         : Stack(children: <Widget>[
             AlertDialog(
-              backgroundColor: this.dialogColor,
+              backgroundColor: this.dialogState == DialogState.LOADING ? Colors.transparent: this.dialogColor,
               contentPadding: EdgeInsets.all(15),
               elevation: 0,
               title: Text(this.dialogTxtTitulo,
@@ -67,10 +67,9 @@ class MensagemDialog extends StatelessWidget {
                               child: Text(this.dialogTxtBtnCancel,
                                   style: AppTextStyle()
                                       .getEstiloTexto(TipoTexto.BTNCANCEL)),
-                              onPressed: () {
-                                //Navigator.pop(context);
+                              onPressed: () {                                
                                 Navigator.push(
-                                    context, dialogSlideRightBtnCancel);
+                                    context, dialogSlideLeftBtnCancel);
                               })),
                       FlatButton(
                           child: Text(this.dialogTxtBtnOK,
@@ -104,7 +103,7 @@ class MensagemDialog extends StatelessWidget {
                             onPressed: () {
                               //Navigator.pop(context);
                               Navigator.push(
-                                  context, dialogSlideRightBtnCancel);
+                                  context, dialogSlideLeftBtnCancel);
                             }))),
           ]);
   }

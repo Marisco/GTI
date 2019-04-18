@@ -12,5 +12,5 @@ const sqlListar =
 
 
 module.exports = {
-        sqlListar    
+        sqlListar: sqlListar
 };

@@ -9,8 +9,8 @@ class modConsulta {
         this.dataInicio = Data.data_inicio
         this.dataFim = Data.data_fim
     };
-}
+};
 
 module.exports = {
-    modConsulta
-}
+    modConsulta: modConsulta
+};

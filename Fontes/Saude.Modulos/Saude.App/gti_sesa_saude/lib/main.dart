@@ -15,24 +15,22 @@ class GtiSesaSaude extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.blue[900] //Color.fromRGBO(41, 84, 142, 1),
-    ));
+        systemNavigationBarColor:
+            Colors.blue[900] //Color.fromRGBO(41, 84, 142, 1),
+        ));
 
-    return 
-    MaterialApp(
-      title: 'APP.Saúde.SESA',      
-      //supportedLocales:[const Locale('pt', 'BR')],    
+    return MaterialApp(
+      title: 'Serra-Saúde',
+      //supportedLocales:[const Locale('pt', 'BR')],
       onGenerateRoute: (RouteSettings settings) {
         TransicaoTela(builder: (_) => GtiSesaSaude());
       },
       theme: ThemeData(
           primarySwatch: Colors.blue,
-          backgroundColor: Color.fromRGBO(41, 84, 142, 1)     ,
+          backgroundColor: Color.fromRGBO(41, 84, 142, 1),
           disabledColor: Colors.white,
-          unselectedWidgetColor: Colors.white.withOpacity(0.7)           
-          ),
-      home: Principal(child:Identificacao()));
-    
+          unselectedWidgetColor: Colors.white.withOpacity(0.75)),
+      home: Principal(child: Identificacao())      
+    );
   }
 }
-

@@ -1,4 +1,4 @@
-class modUnidade {
+class modServico {
     
     constructor(Data) {
         this.numero = Data.numero;
@@ -8,5 +8,5 @@ class modUnidade {
 }
 
 module.exports ={
-    modUnidade
+    modServico: modServico
     }

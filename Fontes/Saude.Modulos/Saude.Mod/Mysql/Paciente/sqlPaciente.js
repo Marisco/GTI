@@ -13,7 +13,7 @@ const sqlValidar =
     "   FROM paciente pa, consulta co  " +
     "  WHERE pa.numero = co.paciente   " +
     "    AND estado = 'A'              " +    
-    "    AND ativo = 'S'               "
+    "    AND ativo = 'S'               ";
 
 const sqlDados = 
 " SELECT 'Consultas' AS descricao, e.nome AS especialidade,  count(*) AS quantidade     "+
@@ -30,12 +30,12 @@ const sqlDados =
 "   JOIN fila_virtual f ON(f.numero = i.fila_virtual)                                   "+
 "   JOIN especialidade e ON (e.numero = f.especialidade)                                "+
 "    AND p.numero = ?																	"+
-"  GROUP BY fila_virtual;                                                               "
+"  GROUP BY fila_virtual;                                                               ";
 
 
 module.exports = {
-    sqlListar,
-    sqlInserir,
-    sqlValidar,
-    sqlDados    
+    sqlListar: sqlListar,
+    sqlInserir: sqlInserir,
+    sqlValidar: sqlValidar,
+    sqlDados: sqlDados    
 };

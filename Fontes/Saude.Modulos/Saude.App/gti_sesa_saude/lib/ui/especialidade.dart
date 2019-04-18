@@ -208,6 +208,7 @@ class _EspecialidadeState extends State<_Especialidade> {
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
+    principal.idPacienteId = this.pacienteId;
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
@@ -223,7 +224,7 @@ class _EspecialidadeState extends State<_Especialidade> {
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Voltar";
-    principal.dialogSlideRightBtnCancel = SlideRightRoute(
+    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(
         builder: (_) => Principal(
             child: Unidade(
                 pacienteId: this.pacienteId,

@@ -4,18 +4,18 @@ const sqlListar =
     "   JOIN especialidade e ON (f.especialidade = e.numero)                                        " +
     "   JOIN unidade u ON (f.unidade = u.numero)                                                    " +
     "  WHERE f.data_inicio <= NOW()                                                                 " +
-    "    AND (f.data_fim IS NULL OR data_fim > NOW() )                                              "
+    "    AND (f.data_fim IS NULL OR data_fim > NOW() )                                              ";
 
 const sqlInserir = 
     " INSERT INTO item_fila_virtual (paciente, fila_virtual )                                       "+
-    " VALUES(?, ?)                                                                                  "    
+    " VALUES(?, ?)                                                                                  ";    
 
 const slqItemFilaVirtual     =
-    " SELECT  * FROM item_fila_virtual WHERE  fila_virtual = ? ORDER BY numero"
+    " SELECT  * FROM item_fila_virtual WHERE  fila_virtual = ? ORDER BY numero";
 
 
 module.exports = {
-    sqlListar,
-    sqlInserir,
-    slqItemFilaVirtual
+    sqlListar: sqlListar,
+    sqlInserir: sqlInserir,
+    slqItemFilaVirtual: slqItemFilaVirtual
 };

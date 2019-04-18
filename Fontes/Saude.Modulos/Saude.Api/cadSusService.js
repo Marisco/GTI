@@ -1,16 +1,16 @@
 
-var soap = require('soap');
-var crypto = require('crypto');
-var moment = require('moment')
+const soap = require('soap');
+const crypto = require('crypto');
+const moment = require('moment');
 require('ssl-root-cas/latest').inject();
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-var url = 'https://servicos.saude.gov.br/cadsus/CadsusService/v5r0?wsdl';
+const url = 'https://servicos.saude.gov.br/cadsus/CadsusService/v5r0?wsdl';
 //var url = 'http://16-253398-w10:8088/mockCadsusServiceSOAP11Binding?wsdl';
 
 // ok 01 02
 //var url = 'https://servicos.saude.gov.br/cadsus/PesquisaUsuarioSUSService/v5r0?wsdl'
 // ok 03
-var wsSecurity = new soap.WSSecurity("CADSUS.ESUSAB", "#ESUSAB!0091", {
+const wsSecurity = new soap.WSSecurity("CADSUS.ESUSAB", "#ESUSAB!0091", {
     hasNonce: true,
     hasTokenCreated: true,
     passwordType: 'PasswordText',
@@ -138,6 +138,6 @@ var consultarCadSus = function (req, res) {
         });
 
     });
-}
+};
 
-module.exports = { consultarCadSus }
+module.exports = { consultarCadSus: consultarCadSus };

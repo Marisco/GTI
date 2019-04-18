@@ -21,4 +21,4 @@ class modPaciente {
 
 module.exports = {
     modPaciente
-}
+};

@@ -48,18 +48,25 @@ class _PrincipalState extends State<Principal> {
   String dialogTxtBtnOK;
   String dialogTxtBtnCancel;
   SlideRightRoute dialogSlideRightBtnOK;
-  SlideRightRoute dialogSlideRightBtnCancel;
+  SlideLeftRoute dialogSlideLeftBtnCancel;
 
   _PrincipalState();
 
   @override
   void initState() {
+    dialogState = DialogState.DISMISSED;
+    dialogTxtLoading = "";
+    dialogTxtTitulo = "";
+    dialogTxtMensagem = "";
+    dialogTxtBtnOK = "";
+    dialogTxtBtnCancel = "";
     super.initState();
   }
 
   void didChangeDependecies() {
-    super.didChangeDependencies();
+    this.dialogState = DialogState.DISMISSED;
     initializeDateFormatting("pt_BR", null);
+    super.didChangeDependencies();
   }
 
   @override
@@ -75,50 +82,69 @@ class _PrincipalState extends State<Principal> {
 
   Widget setPrincipal() {
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-          height: height,
-          decoration: BoxDecoration(
-            image: DecorationImage(image: imagemFundo, fit: BoxFit.cover),
-          ),
-          child: this.dialogState == DialogState.DISMISSED
-              ? Column(children: <Widget>[
-                  Cabecalho(
-                    txtCabecalho: this.txtCabecalho,
+    return WillPopScope(
+        onWillPop: () {
+          setState(() {
+            this.dialogState = DialogState.DISMISSED;
+            Navigator.push(context, this.dialogSlideLeftBtnCancel);
+          });
+        },
+        child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            onHorizontalDragStart: (_) {
+              this.dialogState = DialogState.DISMISSED;
+              Navigator.push(context, this.dialogSlideLeftBtnCancel);
+            },
+            child: Scaffold(
+              resizeToAvoidBottomPadding: false,
+              body: Container(
+                  height: height,
+                  decoration: BoxDecoration(
+                    image:
+                        DecorationImage(image: AssetImage("img/unidade.png"), fit: BoxFit.cover),
                   ),
-                  Corpo(
-                    txtCorpo: this.txtCorpo,
-                    widgetCorpo: this.widgetCorpo,
-                    alturaVariada: this.alturaVariada,
-                  ),
-                  this.widgetRodape != null
-                      ? Rodape(
-                          txtRodape: this.txtRodape,
-                          widgetRodape: widgetRodape,
-                          rodapeColor: this.rodapeColor,
-                        )
-                      : Container(),
-                  BarraAcao(
-                      txtBarraAcao: this.txtBarraAcao,
-                      widgetBarrraAcao: widgetBarrraAcao),
-                ])
-              : Container(
-                  padding: EdgeInsets.only(
-                      top: height * 0.15, bottom: height * 0.15),
-                  child: MensagemDialog(
-                      dialogState: this.dialogState,
-                      dialogTxtTitulo: this.dialogTxtTitulo,
-                      dialogTxtMensagem: this.dialogTxtMensagem,
-                      dialogTxtBtnOK: this.dialogTxtBtnOK,
-                      dialogTxtBtnCancel: this.dialogTxtBtnCancel,
-                      dialogTxtLoading: this.dialogTxtLoading,
-                      dialogSlideRightBtnCancel: this.dialogSlideRightBtnCancel,
-                      dialogSlideRightBtnOK: this.dialogSlideRightBtnOK,
-                      dialogColor: this.dialogColor))),
-      bottomNavigationBar: BottomAppBar(
-          child: BarraInferior(txtBarraInferior: this.txtBarraInferior)),
-    );
+                  child: this.dialogState == DialogState.DISMISSED
+                      ? Column(children: <Widget>[
+                          Cabecalho(
+                            txtCabecalho: this.txtCabecalho,
+                            setaLVisible: this.idPacienteId != null,
+                          ),
+                          Corpo(
+                            txtCorpo: this.txtCorpo,
+                            widgetCorpo: this.widgetCorpo,
+                            alturaVariada: this.alturaVariada,
+                          ),
+                          this.widgetRodape != null
+                              ? Rodape(
+                                  txtRodape: this.txtRodape,
+                                  widgetRodape: widgetRodape,
+                                  rodapeColor: this.rodapeColor,
+                                )
+                              : Container(),
+                          BarraAcao(
+                              txtBarraAcao: this.txtBarraAcao,
+                              widgetBarrraAcao: widgetBarrraAcao),
+                        ])
+                      : Container(
+                          padding: EdgeInsets.only(
+                              top: height * 0.15, bottom: height * 0.15),
+                          child: MensagemDialog(
+                              dialogState: this.dialogState,
+                              dialogTxtTitulo: this.dialogTxtTitulo,
+                              dialogTxtMensagem: this.dialogTxtMensagem,
+                              dialogTxtBtnOK: this.dialogTxtBtnOK,
+                              dialogTxtBtnCancel: this.dialogTxtBtnCancel,
+                              dialogTxtLoading: this.dialogTxtLoading,
+                              dialogSlideLeftBtnCancel:
+                                  this.dialogSlideLeftBtnCancel,
+                              dialogSlideRightBtnOK: this.dialogSlideRightBtnOK,
+                              dialogColor: this.dialogColor))),
+              bottomNavigationBar: BottomAppBar(
+                  child:
+                      BarraInferior(txtBarraInferior: this.txtBarraInferior)),
+            )));
   }
 }
 

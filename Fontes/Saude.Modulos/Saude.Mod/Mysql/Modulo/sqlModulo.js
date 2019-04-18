@@ -4,9 +4,9 @@ const sqlListar =
     "   JOIN modulo_aplicativo ma on(ap.numero = ma.aplicativo)                             " +
     "  WHERE ap.numero =1                                                                  " +
     "    AND ma.data_inicio <= NOW()                                                        " +
-    "    AND (ma.data_fim IS NULL OR data_fim < NOW() )                                      "
-    
+    "    AND (ma.data_fim IS NULL OR data_fim < NOW() )                                      ";
+
 
 module.exports = {
-    sqlListar
+    sqlListar: sqlListar
 };

@@ -8,5 +8,5 @@ class modBairro {
 }
 
 module.exports ={
-    modBairro
-    }
+    modBairro: modBairro
+    };

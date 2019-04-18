@@ -6,7 +6,7 @@ class cUnidade {
         this.modUnidade = new objUnidade.modUnidade(Data);
     }
 }
-function obterUnidades(db, callback) {
+var obterUnidades = function(db, callback) {
 
     var qry = sqlUnidade.sqlListar;        
     return db.client.query(qry, callback)
@@ -14,6 +14,6 @@ function obterUnidades(db, callback) {
 
 
 module.exports = {
-    cUnidade,
-    obterUnidades, 
+    cUnidade: cUnidade,
+    obterUnidades: obterUnidades, 
 };

@@ -5,15 +5,15 @@ class cModulo {
     constructor(Data) {
         this.modModulo = new objModulo.modModulo(Data);
     }
-}
-function obterModulos(db, callback) {
+};
+var obterModulos = function(db, callback) {
     
     var qry = sqlModulo.sqlListar;        
-    return db.client.query(qry, callback)
-}
+    return db.client.query(qry, callback);
+};
 
 
 module.exports = {
-    cModulo,
-    obterModulos, 
+    cModulo: cModulo,
+    obterModulos: obterModulos, 
 };

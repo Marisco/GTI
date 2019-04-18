@@ -5,15 +5,15 @@ class cBairro {
     constructor(Data) {
         this.modBairro = new objBairro.modBairro(Data);
     }
-}
-function obterBairros(db, callback) {
+};
+var obterBairros = function(db, callback) {
 
     var qry = sqlBairro.sqlListar;        
-    return db.client.query(qry, callback)
-}
+    return db.client.query(qry, callback);
+};
 
 
 module.exports = {
-    cBairro,
-    obterBairros, 
+    cBairro: cBairro,
+    obterBairros: obterBairros, 
 };
