@@ -10,6 +10,7 @@ import 'package:gti_sesa_saude/models/insert.model.dart';
 import 'package:gti_sesa_saude/models/modulo.model.dart';
 import 'package:gti_sesa_saude/models/avaliacao.model.dart';
 import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
+import 'package:gti_sesa_saude/models/disponibilidade.model.dart';
 
 class SaudeApi {
   Client client = new Client();
@@ -29,7 +30,7 @@ class SaudeApi {
     Map data = {tipoDocumento: documento, "dataNascimento": dataNascimento};
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getPaciente",
+        .post("http://10.0.13.133:3010/saude/getPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -50,7 +51,7 @@ class SaudeApi {
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://10.0.31.200:8084/saude/getUnidades", headers: {
+        .get("http://10.0.13.133:3010/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -75,7 +76,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getEspecialidades",
+        .post("http://10.0.13.133:3010/saude/getEspecialidades",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -105,7 +106,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getConsultas",
+        .post("http://10.0.13.133:3010/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -129,7 +130,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getConsultas",
+        .post("http://10.0.13.133:3010/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -152,7 +153,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://10.0.31.200:8084/saude/postConsulta",
+        "http://10.0.13.133:3010/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -188,7 +189,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/postPaciente",
+        .post("http://10.0.13.133:3010/saude/postPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -209,7 +210,7 @@ class SaudeApi {
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://10.0.31.200:8084/saude/getBairros", headers: {
+        .get("http://10.0.13.133:3010/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -226,7 +227,7 @@ class SaudeApi {
 
   Future<ModuloModel> fetchModulos() async {
     final response = await client
-        .get("http://10.0.31.200:8084/saude/getModulos", headers: {
+        .get("http://10.0.13.133:3010/saude/getModulos", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 15));
@@ -244,7 +245,7 @@ class SaudeApi {
   Future<AvaliacaoModel> fetchAvaliacoes(String pacienteId) async {
     Map data = {"pacienteId": pacienteId};
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getAvaliacoes",
+        .post("http://10.0.13.133:3010/saude/getAvaliacoes",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -283,7 +284,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://10.0.31.200:8084/saude/postAvaliacao",
+        "http://10.0.13.133:3010/saude/postAvaliacao",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -306,7 +307,7 @@ class SaudeApi {
     Map data = {"filaVirtualId": filaVirtualId, "unidadeId": unidadeId};
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getFilasVirtuais",
+        .post("http://10.0.13.133:3010/saude/getFilasVirtuais",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -330,7 +331,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client
-        .post("http://10.0.31.200:8084/saude/getFilaVirtual",
+        .post("http://10.0.13.133:3010/saude/getFilaVirtual",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -354,7 +355,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "filaVirtualId": filaVirtualId};
 
     final response = await client.post(
-        "http://10.0.31.200:8084/saude/postFilaVirtual",
+        "http://10.0.13.133:3010/saude/postFilaVirtual",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -371,4 +372,28 @@ class SaudeApi {
       throw Exception(mensagem.getMensagem()[0].mensagem.toString());
     }
   }
+Future<DisponibilidadeModel> fetchDisponibilidades(String nomeMedicao) async {
+    Map data = {'nomeMedicao': nomeMedicao};
+    final response = await client
+        .post("http://10.0.13.133:3010/saude/getDisponibilidades",
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json"
+            },
+            body: json.encode(data),
+            encoding: Encoding.getByName("utf-8"))
+        .timeout(Duration(seconds: 30)); 
+    print(response.body.toString());    
+    if (response.statusCode == 200) {
+      return DisponibilidadeModel.fromJson(json.decode(response.body));
+    } else {
+      MensagemModel mensagem =
+          MensagemModel.fromJson(json.decode(response.body));
+      throw Exception(mensagem.getMensagem()[0].mensagem.toString());
+    }
+  }
+
+
+
+
 }

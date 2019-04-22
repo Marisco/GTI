@@ -114,6 +114,18 @@ var obterModulos = function (req, res) {
     });
 };
 
+var obterDisponibilidades = function (req, res) {
+    var models = objModels.objDisponibilidade;
+    models.obterDisponibilidades(objModels.dbMysql, req.body, (e, data) => {
+        if (e) {
+            res.status(400).send({ mensagens: [{ tipoMensagem: "Erro", mensagem: "Não foi possível localizar o registro:" + e }] });
+        } else {
+            res.json({ disponibilidades: data });
+        };
+    });
+};
+
+
 var obterAvaliacoes = function (req, res) {
     var models = objModels.ObjAvaliacao;
     models.obterAvaliacoes(objModels.dbMysql, req.body, (e, data) => {
@@ -195,5 +207,6 @@ module.exports = {
     obterFilasVirtuais: obterFilasVirtuais,
     inserirAvaliacao: inserirAvaliacao,
     inserirFilaVirtual: inserirFilaVirtual,
-    obterDadosPaciente: obterDadosPaciente
+    obterDadosPaciente: obterDadosPaciente,
+    obterDisponibilidades: obterDisponibilidades
 }

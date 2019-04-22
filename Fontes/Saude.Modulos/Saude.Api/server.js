@@ -46,6 +46,7 @@ app.post('/saude/postPaciente', function(req, res) {
   srvController.inserirPaciente(req, res)  
 
 });
+
 app.get('/saude/getUnidades', function(req, res) {
   
   srvController.obterUnidades(req, res)  
@@ -112,4 +113,11 @@ app.post('/saude/postAvaliacao', function(req, res) {
   srvController.inserirAvaliacao(req, res)  
 
 });
+
+app.post('/saude/getDisponibilidades', function(req, res) {
+  
+  srvController.obterDisponibilidades(req, res)  
+
+});
+
 

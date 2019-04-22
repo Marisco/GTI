@@ -22,7 +22,7 @@ class Principal extends StatefulWidget {
   }
 
   @override
-  _PrincipalState createState() => new _PrincipalState();
+  _PrincipalState createState() => _PrincipalState();
 }
 
 class _PrincipalState extends State<Principal> {
@@ -76,7 +76,7 @@ class _PrincipalState extends State<Principal> {
   }
 
   Widget build(BuildContext context) {
-    return new _InheritedPrincipalState(
+    return _InheritedPrincipalState(
         principalState: this, child: widget.child);
   }
 

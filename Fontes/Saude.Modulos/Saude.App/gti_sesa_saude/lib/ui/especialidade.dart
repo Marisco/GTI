@@ -9,8 +9,7 @@ import 'package:gti_sesa_saude/ui/unidade.dart';
 import 'package:gti_sesa_saude/ui/consulta.dart';
 import 'package:gti_sesa_saude/ui/filaVirtual.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
-import 'package:gti_sesa_saude/src/app.dart';
-import 'package:gti_sesa_saude/src/enun.dart';
+
 
 class Especialidade extends StatelessWidget {
   final String paciente;

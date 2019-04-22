@@ -8,6 +8,7 @@ const ObjBairro = require('./Mysql/Bairro/cBairro');
 const ObjModulo = require('./Mysql/Modulo/cModulo');
 const ObjAvaliacao = require('./Mysql/Avaliacao/cAvaliacao');
 const ObjFilaVirtual = require('./Mysql/FilaVirtual/cFilaVirtual');
+const objDisponibilidade = require('./Mysql/Disponibilidade/cDisponibilidade');
 
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
      ObjBairro: ObjBairro,
      ObjModulo: ObjModulo,
      ObjAvaliacao: ObjAvaliacao,
-     ObjFilaVirtual: ObjFilaVirtual
+     ObjFilaVirtual: ObjFilaVirtual,
+     objDisponibilidade: objDisponibilidade
 };

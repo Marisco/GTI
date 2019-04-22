@@ -9,6 +9,7 @@ import 'package:gti_sesa_saude/models/insert.model.dart';
 import 'package:gti_sesa_saude/models/modulo.model.dart';
 import 'package:gti_sesa_saude/models/avaliacao.model.dart';
 import 'package:gti_sesa_saude/models/filaVirtual.model.dart';
+import 'package:gti_sesa_saude/models/disponibilidade.model.dart';
 
 class Repository {
   final saudeApi = SaudeApi();
@@ -56,4 +57,7 @@ class Repository {
   Future<FilaVirtualModel> fetchFilasVirtuais(
           String filaVirtualId, unidadeId) =>
       saudeApi.fetchFilasVirtuais(filaVirtualId, unidadeId);
+
+  Future<DisponibilidadeModel> fetchDisponibilidades(String nomeMedicao) =>
+      saudeApi.fetchDisponibilidades(nomeMedicao);
 }

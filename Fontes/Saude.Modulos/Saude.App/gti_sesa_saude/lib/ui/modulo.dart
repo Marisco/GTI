@@ -10,6 +10,7 @@ import 'package:gti_sesa_saude/ui/avaliacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
+import 'package:gti_sesa_saude/ui/disponibilidade.dart';
 
 class Modulos extends StatelessWidget {
   final String paciente;
@@ -83,7 +84,7 @@ class _ModulosState extends State<_Modulos> {
         } else {
           this._dialogState = DialogState.ERROR;
           this._dialogTxtTitulo = "Desculpe!";
-          this._dialogTxtMensagem = "Módulos indisponíveis";
+          this._dialogTxtMensagem = "Módulos indisponí­veis";
         }
       });
     });
@@ -122,7 +123,7 @@ class _ModulosState extends State<_Modulos> {
 
   SlideRightRoute getRotaModulo(String modulo) {
     switch (modulo) {
-      case "1":
+      case  "1":
         return SlideRightRoute(
             builder: (_) => Principal(
                 child: Unidade(
@@ -142,6 +143,14 @@ class _ModulosState extends State<_Modulos> {
         return SlideRightRoute(
             builder: (_) => Principal(
                 child: Unidade(
+                    pacienteId: this.pacienteId,
+                    paciente: this.paciente,
+                    moduloId: modulo)));
+        break;
+        case "4":
+        return SlideRightRoute(
+            builder: (_) => Principal(
+                child: Disponibilidade(
                     pacienteId: this.pacienteId,
                     paciente: this.paciente,
                     moduloId: modulo)));
