@@ -40,7 +40,7 @@ class MensagemDialog extends StatelessWidget {
                   Radius.circular(25.0),
                 ),
               ),
-              content: dialogState == DialogState.LOADING
+              content: (dialogState == DialogState.LOADING) 
                   ? Column(children: [
                       CircularProgressIndicator(
                           valueColor:

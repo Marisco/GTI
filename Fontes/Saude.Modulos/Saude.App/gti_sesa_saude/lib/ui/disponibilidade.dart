@@ -50,8 +50,7 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
   final focusMedicacao = FocusNode();
   final focusPesquisar = FocusNode();
   var disponibilidade;
-  var _disponibilidade = [];
-  DateTime selectedDate = DateTime.now();
+  var _disponibilidade = [];  
   String _dialogTxtMensagem;
   String _dialogTxtTitulo;
   String _txtCorpo;
@@ -86,13 +85,13 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
   }
 
   void _getDisponibilidades() async {
-    setState(() => _dialogState = DialogState.LOADING);
+    setState(() { this._dialogState = DialogState.LOADING; } );
 
     DisponibilidadeModel disponibilidadeModel = await disponibilidadeBloc
         .fetchDisponibilidade(this._medicacao.text)
         .catchError((e) {
       setState(() {
-        _dialogState = DialogState.ERROR;
+        this._dialogState = DialogState.ERROR;
         this._dialogTxtTitulo = "Desculpe!";
         this._dialogTxtMensagem = e.message
                 .toString()
@@ -238,7 +237,7 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
               pacienteId: this.pacienteId,
             )));
     principal.dialogTxtLoading =
-        "Verificando a diponibilidade de" + this._medicacao.text + "...";
+        "Verificando a diponibilidade de " + this._medicacao.text + "...";
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
 
