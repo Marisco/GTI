@@ -252,7 +252,7 @@ class SaudeApi {
             },
             body: json.encode(data),
             encoding: Encoding.getByName("utf-8"))
-        .timeout(Duration(seconds: 30));
+        .timeout(Duration(seconds: 40));
 
     print(response.body.toString());
     //client.close();
@@ -266,7 +266,7 @@ class SaudeApi {
   }
 
   Future<MensagemModel> pushAvaliacao(String pacienteId, tipoAvaliacao,
-      dataAtendimento, nota, texto, celular, numeroAtendimento) async {
+      dataAtendimento, nota, texto, celular, atendimento) async {
     dataAtendimento = dataAtendimento = dataAtendimento.substring(6, 10) +
         "-" +
         dataAtendimento.substring(3, 5) +
@@ -280,7 +280,7 @@ class SaudeApi {
       "nota": nota,
       "texto": texto,
       "celular": celular,
-      "numeroAtendimento": numeroAtendimento
+      "atendimento": atendimento
     };
 
     final response = await client.post(

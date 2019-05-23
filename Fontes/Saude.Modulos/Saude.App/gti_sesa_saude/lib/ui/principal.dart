@@ -60,7 +60,7 @@ class _PrincipalState extends State<Principal> {
     dialogTxtMensagem = "";
     dialogTxtBtnOK = "";
     dialogTxtBtnCancel = "";
-    super.initState();
+    super.initState();   
   }
 
   void didChangeDependecies() {

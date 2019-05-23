@@ -21,9 +21,9 @@ class AvaliacaoBloc {
           nota,
           texto,          
           celular,
-          numeroAtendimento) async {
+          atendimento) async {
     MensagemModel mensagem =
-        await _repository.pushAvaliacao(pacienteId, tipoAvaliacao, dataAtendimento, nota, texto, celular, numeroAtendimento);
+        await _repository.pushAvaliacao(pacienteId, tipoAvaliacao, dataAtendimento, nota, texto, celular, atendimento);
     return mensagem;
   }
 

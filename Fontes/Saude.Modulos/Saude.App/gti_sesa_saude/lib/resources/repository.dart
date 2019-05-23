@@ -47,9 +47,9 @@ class Repository {
       saudeApi.fetchAvaliacoes(pacienteId);
 
   Future<MensagemModel> pushAvaliacao(String pacienteId, tipoAvaliacao,
-          dataAtendimento, nota, texto, celular, numeroAtendimento) =>
+          dataAtendimento, nota, texto, celular, atendimento) =>
       saudeApi.pushAvaliacao(pacienteId, tipoAvaliacao, dataAtendimento, nota,
-          texto, celular, numeroAtendimento);
+          texto, celular, atendimento);
 
   Future<MensagemModel> pushFilaVirtual(String pacienteId, filaVirtualId) =>
       saudeApi.pushFilaVirtual(pacienteId, filaVirtualId);

@@ -7,19 +7,20 @@ import 'package:gti_sesa_saude/ui/principal.dart';
 
 void main() => runApp(GtiSesaSaude());
 
-class GtiSesaSaude extends StatelessWidget {
+class GtiSesaSaude extends StatelessWidget {  
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor:
-            Colors.blue[900] //Color.fromRGBO(41, 84, 142, 1),
-        ));
+            Colors.blue[900] //Color.fromRGBO(41, 84, 142, 1),            
+        ));     
 
-    return MaterialApp(
+    return  MaterialApp(
       title: 'Serra-Saúde',
       //supportedLocales:[const Locale('pt', 'BR')],
       onGenerateRoute: (RouteSettings settings) {
@@ -30,7 +31,7 @@ class GtiSesaSaude extends StatelessWidget {
           backgroundColor: Color.fromRGBO(41, 84, 142, 1),
           disabledColor: Colors.white,
           unselectedWidgetColor: Colors.white.withOpacity(0.75)),
-      home: Principal(child: Identificacao())      
+      home:  Principal(child: Identificacao())      
     );
   }
 }

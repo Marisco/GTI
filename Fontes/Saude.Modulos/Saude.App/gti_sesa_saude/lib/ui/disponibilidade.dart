@@ -50,7 +50,7 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
   final focusMedicacao = FocusNode();
   final focusPesquisar = FocusNode();
   var disponibilidade;
-  var _disponibilidade = [];  
+  var _disponibilidade = [];
   String _dialogTxtMensagem;
   String _dialogTxtTitulo;
   String _txtCorpo;
@@ -71,10 +71,10 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
     this._arrow = Icons.keyboard_arrow_up;
     this._dialogState = DialogState.DISMISSED;
     this._dialogTxtTitulo = "";
-    this._txtCorpo = "A disponibilidade do medicamento pode variar de acordo o estoque das Unidades.";
+    this._txtCorpo =
+        "A disponibilidade do medicamento pode variar de acordo com o estoque das Unidades de Saúde.";
     this._dialogTxtMensagem = "";
     super.initState();
-    
   }
 
   @override
@@ -85,7 +85,9 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
   }
 
   void _getDisponibilidades() async {
-    setState(() { this._dialogState = DialogState.LOADING; } );
+    setState(() {
+      this._dialogState = DialogState.LOADING;
+    });
 
     DisponibilidadeModel disponibilidadeModel = await disponibilidadeBloc
         .fetchDisponibilidade(this._medicacao.text)
@@ -103,13 +105,16 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
     });
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
-        _disponibilidade = disponibilidadeModel.getDisponibilidade().toList();        
+        int cont = 0;
+        _disponibilidade = disponibilidadeModel.getDisponibilidade().toList();
         if (_disponibilidade.isNotEmpty && _disponibilidade[0] != null) {
-          _dialogState = DialogState.DISMISSED;          
+          _dialogState = DialogState.DISMISSED;
           _visible = false;
           _txtCorpo = "";
+          dadosDisponibilidade.clear();
           _disponibilidade.forEach(
               (disponibilidade) => dadosDisponibilidade.add(RadioModelD(
+                    cont++,
                     disponibilidade.unidade,
                     disponibilidade.medicacao,
                   )));
@@ -129,64 +134,65 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
                 ? MediaQuery.of(context).viewInsets.bottom * .5
                 : 0),
         child: Container(
-            margin: EdgeInsets.only(top: 20),
+            //margin: EdgeInsets.only(top: 20),
             child: ListView(children: <Widget>[
-              Visibility(
-                  visible: this._visible == null ? false : this._visible,                  
-                  child: TextField(
-                    controller: _medicacao,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      counterText: '',
-                      labelText: "Digite o nome do medicamento",
-                      labelStyle:
-                          AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
-                      border: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      filled: true,
-                      fillColor:
-                          Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),
-                    ),
-                    style: AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
-                    keyboardType: TextInputType.number,
-                  )),
-              Material(
-                  color: Colors.transparent,
+          Visibility(
+              visible: this._visible == null ? false : this._visible,
+              child: TextField(
+                controller: _medicacao,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  counterText: '',
+                  labelText: "Digite o nome do medicamento:",
+                  labelStyle:
+                      AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
+                  border: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  filled: true,
+                  fillColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),                  
+                ),
+                style: AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
+                
+                
+              )),
+          Material(
+              color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
+              child: new SizedBox(
+                  height: 30.0,                  
                   child: IconButton(
                       icon: Icon(_arrow, color: Colors.white70),
                       color: Colors.transparent,
                       onPressed: () {
                         setState(() {
                           this._visible = !this._visible;
-                          this._txtCorpo = !this._visible ? "" : "A disponibilidade do medicamento pode variar de acordo o estoque das Unidades.";
-                          _arrow = _arrow == Icons.keyboard_arrow_up
-                              ? Icons.keyboard_arrow_down
-                              : Icons.keyboard_arrow_up;
+                          this._txtCorpo = !this._visible
+                              ? ""
+                              : "A disponibilidade do medicamento pode variar de acordo com o estoque das Unidades de Saúde.";
+                          _arrow = _arrow == Icons.keyboard_arrow_down
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down;
                         });
-                      })),
-              Container(
-                  height:  MediaQuery.of(context).size.height * 0.4,
-                  padding: EdgeInsets.zero,
-                  child: ListView.builder(
-                      itemCount: dadosDisponibilidade.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        InkWell(
-                          splashColor:
-                              Color.fromRGBO(41, 84, 142, 1).withOpacity(0.55),
-                          onTap: () {
-                            setState(() {
-                              dadosDisponibilidade.forEach(
-                                  (element) => element.isSelected = false);
-                            });
-                          },
-                          child: RadioItemD( 
-                              dadosDisponibilidade[index], 
-                              index == 0
-                                  ? null
-                                  : dadosDisponibilidade[index - 1]),
-                        );
-                      }))
-            ])));
+                      }))),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              padding: EdgeInsets.zero,
+              child: ListView.builder(
+                  itemCount: dadosDisponibilidade.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      splashColor:
+                          Color.fromRGBO(41, 84, 142, 1).withOpacity(0.55),
+                      onTap: () {
+                        setState(() {
+                          // dadosDisponibilidade.forEach(
+                          //     (element) => element.isSelected = false);
+                        });
+                      },
+                      child: RadioItemD(dadosDisponibilidade[index],
+                          index == 0 ? null : dadosDisponibilidade[index - 1]),
+                    );
+                  }))
+        ])));
   }
 
   Widget _getRodapeDisponibilidade() {
@@ -245,18 +251,9 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
   }
 }
 
-class RadioModelD {
-  bool isSelected;
-  final String unidade;
-  final String medicacao;
-
-  RadioModelD(this.unidade, this.medicacao);
-}
-
 class RadioItemD extends StatelessWidget {
   final RadioModelD _medicacao;
   final RadioModelD _medicacaoAnt;
-  
   RadioItemD(this._medicacao, this._medicacaoAnt);
 
   @override
@@ -265,75 +262,74 @@ class RadioItemD extends StatelessWidget {
         (_medicacaoAnt.medicacao != _medicacao.medicacao)) {
       return Container(
         color: Colors.transparent,
-        margin: EdgeInsets.all(5.0),
+        margin: EdgeInsets.fromLTRB(0,10,0,0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
               child: Container(
-                  padding: EdgeInsets.all(5),
-                  margin: EdgeInsets.all(5),
+              padding: EdgeInsets.all(5),
+                  //margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.2),
+                    color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.2),
                   ),
-                  child: Text(
-                    _medicacao.medicacao,
-                    style: TextStyle(
-                      color: Colors.black, // Color.fromRGBO(41, 84, 142, 1),
-                      fontFamily: 'Humanist',
-                      fontSize: 16,
-                      shadows: <Shadow>[
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 3.0,
-                            color: Colors.white.withOpacity(0.7)),
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 10.0,
-                            color: Colors.white.withOpacity(0.7)),
-                      ],
-                    ),
-                  )),
+                  child: Text(_medicacao.medicacao,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color.fromRGBO(41, 84, 142, 1),
+                        fontFamily: 'Humanist',
+                        fontSize: 25,                        
+                      ))),
             )
           ],
         ),
       );
     } else {
       return Container(
-        color: Colors.red,
-        margin: EdgeInsets.all(5.0),
+        color: Colors.transparent,
+        //margin: EdgeInsets.fromLTRB(0,10,0,0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
               child: Container(
-                  padding: EdgeInsets.all(5),
-                  margin: EdgeInsets.all(5),
+              padding: EdgeInsets.all(5),
+                  //margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.2),
+                    color: _medicacao.index.isOdd
+                        ? Colors.white.withOpacity(.3)
+                        : Colors.grey.withOpacity(.3),
                   ),
-                  child: Text(
-                    _medicacao.unidade,
-                    style: TextStyle(
-                      color: Colors.black, // Color.fromRGBO(41, 84, 142, 1),
-                      fontFamily: 'Humanist',
-                      fontSize: 16,
-                      shadows: <Shadow>[
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 3.0,
-                            color: Colors.white.withOpacity(0.7)),
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 10.0,
-                            color: Colors.white.withOpacity(0.7)),
-                      ],
-                    ),
-                  )),
+                  child: Text(_medicacao.unidade,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Humanist',
+                        fontSize: 20,
+                        shadows: <Shadow>[
+                          Shadow(
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 3.0,
+                              color: Colors.white.withOpacity(0.7)),
+                          Shadow(
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 10.0,
+                              color: Colors.white.withOpacity(0.7)),
+                        ],
+                      ))),
             )
           ],
         ),
       );
     }
   }
+}
+
+class RadioModelD {
+  //bool isSelected;
+  int index;
+  final String unidade;
+  final String medicacao;
+
+  RadioModelD(this.index, this.unidade, this.medicacao);
 }
