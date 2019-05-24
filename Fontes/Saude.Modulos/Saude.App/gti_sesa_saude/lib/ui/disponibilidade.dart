@@ -71,8 +71,7 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
     this._arrow = Icons.keyboard_arrow_up;
     this._dialogState = DialogState.DISMISSED;
     this._dialogTxtTitulo = "";
-    this._txtCorpo =
-        "A disponibilidade do medicamento pode variar de acordo com o estoque das Unidades de Saúde.";
+    this._txtCorpo = "Atenção!";
     this._dialogTxtMensagem = "";
     super.initState();
   }
@@ -110,7 +109,6 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
         if (_disponibilidade.isNotEmpty && _disponibilidade[0] != null) {
           _dialogState = DialogState.DISMISSED;
           _visible = false;
-          _txtCorpo = "";
           dadosDisponibilidade.clear();
           _disponibilidade.forEach(
               (disponibilidade) => dadosDisponibilidade.add(RadioModelD(
@@ -137,7 +135,16 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
             //margin: EdgeInsets.only(top: 20),
             child: ListView(children: <Widget>[
           Visibility(
-              visible: this._visible == null ? false : this._visible,
+            visible: this._visible,
+            child: Text(
+                this.paciente.substring(0, paciente.indexOf(" ")) +
+                    ", a disponibilidade do medicamento pode variar de acordo com o estoque das Unidades de Saúde.",
+                style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN),
+                textAlign: TextAlign.left),
+          ),
+          SizedBox(height: 10),
+          Visibility(
+              visible: this._visible,
               child: TextField(
                 controller: _medicacao,
                 textInputAction: TextInputAction.done,
@@ -149,49 +156,52 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
                   border: InputBorder.none,
                   disabledBorder: InputBorder.none,
                   filled: true,
-                  fillColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),                  
+                  fillColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),
                 ),
                 style: AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
-                
-                
               )),
           Material(
               color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
               child: new SizedBox(
-                  height: 30.0,                  
+                  height: 30.0,
                   child: IconButton(
                       icon: Icon(_arrow, color: Colors.white70),
                       color: Colors.transparent,
                       onPressed: () {
                         setState(() {
                           this._visible = !this._visible;
-                          this._txtCorpo = !this._visible
-                              ? ""
-                              : "A disponibilidade do medicamento pode variar de acordo com o estoque das Unidades de Saúde.";
                           _arrow = _arrow == Icons.keyboard_arrow_down
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down;
+                          this._txtCorpo = this._visible
+                              ? "Atenção!"
+                              : "Resultado da busca:";
                         });
                       }))),
-          Container(
-              height: MediaQuery.of(context).size.height * 0.4,
-              padding: EdgeInsets.zero,
-              child: ListView.builder(
-                  itemCount: dadosDisponibilidade.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      splashColor:
-                          Color.fromRGBO(41, 84, 142, 1).withOpacity(0.55),
-                      onTap: () {
-                        setState(() {
-                          // dadosDisponibilidade.forEach(
-                          //     (element) => element.isSelected = false);
-                        });
-                      },
-                      child: RadioItemD(dadosDisponibilidade[index],
-                          index == 0 ? null : dadosDisponibilidade[index - 1]),
-                    );
-                  }))
+          Visibility(
+              visible: !this._visible,
+              child: Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  padding: EdgeInsets.zero,
+                  child: ListView.builder(
+                      itemCount: dadosDisponibilidade.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          splashColor:
+                              Color.fromRGBO(41, 84, 142, 1).withOpacity(0.55),
+                          onTap: () {
+                            setState(() {
+                              // dadosDisponibilidade.forEach(
+                              //     (element) => element.isSelected = false);
+                            });
+                          },
+                          child: RadioItemD(
+                              dadosDisponibilidade[index],
+                              index == 0
+                                  ? null
+                                  : dadosDisponibilidade[index - 1]),
+                        );
+                      })))
         ])));
   }
 
@@ -242,8 +252,9 @@ class _DisponibilidadeState extends State<_Disponibilidade> {
               paciente: this.paciente,
               pacienteId: this.pacienteId,
             )));
-    principal.dialogTxtLoading =
-        "Verificando a diponibilidade de " + this._medicacao.text + "...";
+    principal.dialogTxtLoading = "Verificando a diponibilidade de " +
+        this._medicacao.text +
+        " nas unidades de saúde...";
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
 
@@ -262,13 +273,13 @@ class RadioItemD extends StatelessWidget {
         (_medicacaoAnt.medicacao != _medicacao.medicacao)) {
       return Container(
         color: Colors.transparent,
-        margin: EdgeInsets.fromLTRB(0,10,0,0),
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
               child: Container(
-              padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(5),
                   //margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.2),
@@ -278,7 +289,7 @@ class RadioItemD extends StatelessWidget {
                       style: TextStyle(
                         color: Color.fromRGBO(41, 84, 142, 1),
                         fontFamily: 'Humanist',
-                        fontSize: 25,                        
+                        fontSize: 25,
                       ))),
             )
           ],
@@ -293,7 +304,7 @@ class RadioItemD extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Container(
-              padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(5),
                   //margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: _medicacao.index.isOdd

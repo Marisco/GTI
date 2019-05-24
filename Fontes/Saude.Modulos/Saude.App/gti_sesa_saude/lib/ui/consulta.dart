@@ -188,7 +188,7 @@ class _ConsultaState extends State<_Consulta> {
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo =
-        _dialogState == DialogState.DISMISSED ? "Selecione o horário." : "";
+        _dialogState == DialogState.DISMISSED ? "Selecione o horário" : "";
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
     principal.dialogState = this._dialogState;
     principal.widgetCorpo = _getCorpoConsulta();
@@ -223,7 +223,7 @@ class RadioItem extends StatelessWidget {
   final hora = DateFormat("Hm", "pt_BR");
   RadioItem(this._item);
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.all(5.0),
@@ -231,8 +231,8 @@ class RadioItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * .12,// 86.0,
-            width:  MediaQuery.of(context).size.height * .12,// 86.0,
+            height: MediaQuery.of(context).size.height * .12, // 86.0,
+            width: MediaQuery.of(context).size.height * .12, // 86.0,
             margin: EdgeInsets.only(left: 0.0),
             child: Center(
               child: Text(hora.format(DateTime.parse(_item.dataInicio)),
@@ -259,7 +259,9 @@ class RadioItem extends StatelessWidget {
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(.2),                  
+                  color: _item.isSelected
+                      ? Colors.white.withOpacity(.4)
+                      : Colors.white.withOpacity(.2),
                 ),
                 child: Text(
                   diaSemana

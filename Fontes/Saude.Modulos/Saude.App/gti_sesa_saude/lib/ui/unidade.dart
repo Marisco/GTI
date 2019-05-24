@@ -140,16 +140,22 @@ class _UnidadeState extends State<_Unidade> {
   }
 
   Widget _getCorpoUnidade() {
-    return Theme(
-        data: Theme.of(context).copyWith(
-            accentColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
-            canvasColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85)),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              DropdownButton(
+    return //Theme(
+        //data: Theme.of(context).copyWith(
+            //accentColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85),
+            //canvasColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85)),
+        //child: 
+        Container( 
+          padding: EdgeInsets.all(10),
+          child: Column(                    
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[              
+              SizedBox(height: 40),
+              DropdownButton(                             
                 iconSize: 36,
                 isDense: false,
+                isExpanded: true,
+                elevation: 24,
                 hint: Text('Escolha uma opção:',
                     style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN)),
                 value: _selUnidade,
@@ -170,8 +176,7 @@ class _UnidadeState extends State<_Unidade> {
                   color: Colors.black,
                   fontSize: 20,
                 ),
-                isExpanded: true,
-                elevation: 24,
+                
               )
             ]));
   }
@@ -200,7 +205,7 @@ class _UnidadeState extends State<_Unidade> {
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
-        ? "Selecione a unidade de saúde."
+        ? "\n\nSelecione a unidade de saúde"
         : "";
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
     principal.dialogState = this._dialogState;

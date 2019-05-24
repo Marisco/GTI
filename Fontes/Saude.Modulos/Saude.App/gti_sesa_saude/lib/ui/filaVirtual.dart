@@ -127,7 +127,7 @@ class _FilaVirtualState extends State<_FilaVirtual> {
   }
 
   Widget _getCorpoFilaVirtual() {
-    return ListView.builder(      
+    return ListView.builder(
         itemCount: dadosFilaVirtual.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
@@ -135,8 +135,8 @@ class _FilaVirtualState extends State<_FilaVirtual> {
             onTap: () {
               setState(() {
                 _selFilaVirtual = dadosFilaVirtual[index].numero;
-                _selUnidadeNome =  dadosFilaVirtual[index].unidade;
-                _selEspecialidadeNome =  dadosFilaVirtual[index].especialidade;
+                _selUnidadeNome = dadosFilaVirtual[index].unidade;
+                _selEspecialidadeNome = dadosFilaVirtual[index].especialidade;
                 dadosFilaVirtual
                     .forEach((element) => element.isSelected = false);
                 dadosFilaVirtual[index].isSelected = true;
@@ -163,7 +163,7 @@ class _FilaVirtualState extends State<_FilaVirtual> {
                         especialidadeId: "",
                         filaVirtualId: this._selFilaVirtual,
                         consultaId: "",
-                        unidadeNome:  _selUnidadeNome,
+                        unidadeNome: _selUnidadeNome,
                         especialidadeNome: _selEspecialidadeNome))));
       },
       shape: RoundedRectangleBorder(
@@ -226,18 +226,19 @@ class RadioItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Container(
-            height: 100.0,
-            width: 100.0,
+            height: MediaQuery.of(context).size.height * .12,
+            width: MediaQuery.of(context).size.height * .12,              
             margin: EdgeInsets.only(left: 0.0),
             child: Center(
-              child: Text("Fila #\n" + _item.numero,
-                  style: TextStyle(
-                      fontFamily: 'Humanist',
-                      color: _item.isSelected ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold,                                            
-                      fontSize: 18.0),
-                      textAlign: TextAlign.center,
-                      ),
+              child: Text(
+                "Fila #\n" + _item.numero,
+                style: TextStyle(
+                    fontFamily: 'Humanist',
+                    color: _item.isSelected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0),
+                textAlign: TextAlign.center,
+              ),
             ),
             decoration: BoxDecoration(
               color: _item.isSelected
@@ -252,11 +253,19 @@ class RadioItem extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Padding(
+            child: Container( 
+                alignment: Alignment(-1.0, 0.0),             
+                height: MediaQuery.of(context).size.height * .12,
+                width: MediaQuery.of(context).size.height * .12,              
                 padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: _item.isSelected
+                      ? Colors.white.withOpacity(.4)
+                      : Colors.white.withOpacity(.2),
+                ),
                 child: Text(
-                      _item.especialidade +
-                      ".",
+                  _item.especialidade + ".",
                   style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Humanist',
@@ -269,7 +278,7 @@ class RadioItem extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.7)),
                             Shadow(
                                 offset: Offset(1.0, 1.0),
-                                blurRadius: 8.0,
+                                blurRadius: 10.0,
                                 color: Colors.white.withOpacity(0.7)),
                           ]
                         : [],

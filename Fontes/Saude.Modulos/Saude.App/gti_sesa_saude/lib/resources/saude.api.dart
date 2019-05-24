@@ -14,6 +14,8 @@ import 'package:gti_sesa_saude/models/disponibilidade.model.dart';
 
 class SaudeApi {
   Client client = new Client();
+  String ipApi = "gti.serra.es.gov.br:8084"; // api
+  //String ipApi = "10.0.13.133:3010"; // local
 
   Future<PacienteModel> fetchPaciente(String documento, dataNascimento) async {
     documento = documento.replaceAll('.', '').replaceAll('-', '');
@@ -30,7 +32,7 @@ class SaudeApi {
     Map data = {tipoDocumento: documento, "dataNascimento": dataNascimento};
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getPaciente",
+        .post("http://"+ipApi+"/saude/getPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -51,7 +53,7 @@ class SaudeApi {
 
   Future<UnidadeModel> fetchUnidades() async {
     final response = await client
-        .get("http://10.0.13.133:3010/saude/getUnidades", headers: {
+        .get("http://"+ipApi+"/saude/getUnidades", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -76,7 +78,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getEspecialidades",
+        .post("http://"+ipApi+"/saude/getEspecialidades",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -106,7 +108,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getConsultas",
+        .post("http://"+ipApi+"/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -130,7 +132,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getConsultas",
+        .post("http://"+ipApi+"/saude/getConsultas",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -153,7 +155,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "consultaId": consultaId};
 
     final response = await client.post(
-        "http://10.0.13.133:3010/saude/postConsulta",
+        "http://"+ipApi+"/saude/postConsulta",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -189,7 +191,7 @@ class SaudeApi {
     };
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/postPaciente",
+        .post("http://"+ipApi+"/saude/postPaciente",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -210,7 +212,7 @@ class SaudeApi {
 
   Future<BairroModel> fetchBairros() async {
     final response = await client
-        .get("http://10.0.13.133:3010/saude/getBairros", headers: {
+        .get("http://"+ipApi+"/saude/getBairros", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 5));
@@ -227,7 +229,7 @@ class SaudeApi {
 
   Future<ModuloModel> fetchModulos() async {
     final response = await client
-        .get("http://10.0.13.133:3010/saude/getModulos", headers: {
+        .get("http://"+ipApi+"/saude/getModulos", headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).timeout(Duration(seconds: 15));
@@ -245,7 +247,7 @@ class SaudeApi {
   Future<AvaliacaoModel> fetchAvaliacoes(String pacienteId) async {
     Map data = {"pacienteId": pacienteId};
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getAvaliacoes",
+        .post("http://"+ipApi+"/saude/getAvaliacoes",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -284,7 +286,7 @@ class SaudeApi {
     };
 
     final response = await client.post(
-        "http://10.0.13.133:3010/saude/postAvaliacao",
+        "http://"+ipApi+"/saude/postAvaliacao",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -307,7 +309,7 @@ class SaudeApi {
     Map data = {"filaVirtualId": filaVirtualId, "unidadeId": unidadeId};
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getFilasVirtuais",
+        .post("http://"+ipApi+"/saude/getFilasVirtuais",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -331,7 +333,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "especialidadeId": especialidadeId};
 
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getFilaVirtual",
+        .post("http://"+ipApi+"/saude/getFilaVirtual",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"
@@ -355,7 +357,7 @@ class SaudeApi {
     Map data = {"pacienteId": pacienteId, "filaVirtualId": filaVirtualId};
 
     final response = await client.post(
-        "http://10.0.13.133:3010/saude/postFilaVirtual",
+        "http://"+ipApi+"/saude/postFilaVirtual",
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -375,7 +377,7 @@ class SaudeApi {
 Future<DisponibilidadeModel> fetchDisponibilidades(String nomeMedicao) async {
     Map data = {'nomeMedicao': nomeMedicao};
     final response = await client
-        .post("http://10.0.13.133:3010/saude/getDisponibilidades",
+        .post("http://"+ipApi+"/saude/getDisponibilidades",
             headers: {
               "Accept": "application/json",
               "content-type": "application/json"

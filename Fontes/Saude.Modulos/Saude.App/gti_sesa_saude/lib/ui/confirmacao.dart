@@ -204,7 +204,7 @@ class _ConfirmacaoState extends State<_Confirmacao> {
         padding: EdgeInsets.only(top: 10),
         child: Text(
             (this._consultas.isEmpty
-                ? "Paciente: " +
+                ? "\nPaciente: " +
                     this.paciente +
                     ".\nUnidade: " +
                     this.unidadeNome +
@@ -212,7 +212,7 @@ class _ConfirmacaoState extends State<_Confirmacao> {
                     this.filaVirtualId +
                     ".\nEspecialidade: " +
                     this.especialidadeNome
-                : "Paciente: " +
+                : "\nPaciente: " +
                     this.paciente +
                     ".\nData: " +
                     diaSemana
@@ -234,16 +234,17 @@ class _ConfirmacaoState extends State<_Confirmacao> {
                 color: Colors.white,
                 fontFamily: 'Humanist',
                 fontSize: 20,
-                shadows: <Shadow>[
-                  Shadow(
-                      offset: Offset(2.0, 2.0),
-                      blurRadius: 3.0,
-                      color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
-                  Shadow(
-                      offset: Offset(2.0, 2.0),
-                      blurRadius: 8.0,
-                      color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
-                ]),
+                // shadows: <Shadow>[
+                //   Shadow(
+                //       offset: Offset(2.0, 2.0),
+                //       blurRadius: 3.0,
+                //       color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
+                //   Shadow(
+                //       offset: Offset(2.0, 2.0),
+                //       blurRadius: 8.0,
+                //       color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
+                // ]
+                ),
             textAlign: TextAlign.left),
       )
     ]);
@@ -277,7 +278,7 @@ class _ConfirmacaoState extends State<_Confirmacao> {
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? this.paciente.substring(0, this.paciente.indexOf(" ")) +
-            ", confira com atenção todos os dados antes de confirmar!"
+            ", confira com atenção seus dados antes de confirmar!"
         : "";
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
     principal.dialogState = this._dialogState;

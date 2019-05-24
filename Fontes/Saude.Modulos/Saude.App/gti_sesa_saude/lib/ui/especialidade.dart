@@ -157,9 +157,12 @@ class _EspecialidadeState extends State<_Especialidade> {
         data: Theme.of(context).copyWith(            
             accentColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45),
             canvasColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: Container( 
+          padding: EdgeInsets.all(10),
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 40),
               DropdownButton(
                 iconSize: 36,
                 isDense: false,
@@ -185,7 +188,7 @@ class _EspecialidadeState extends State<_Especialidade> {
                 isExpanded: true,
                 elevation: 24,
               )
-            ]));
+            ])));
   }
 
   Widget _getRodapeEspecialidade() {
@@ -211,7 +214,7 @@ class _EspecialidadeState extends State<_Especialidade> {
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
-        ? "Selecione a especialidade."
+        ? "\nSelecione a especialidade"
         : "";
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
     principal.dialogState = this._dialogState;
