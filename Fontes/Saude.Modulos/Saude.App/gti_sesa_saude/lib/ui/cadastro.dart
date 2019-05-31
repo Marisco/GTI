@@ -140,8 +140,8 @@ class _CadastroState extends State<_Cadastro> {
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
         this._dialogState = DialogState.COMPLETED;
-        paciente = this._nome.text;
-        pacienteId = _paciente[0].numero.toString();
+        this.paciente = this._nome.text;
+        this.pacienteId = _paciente[0].numero.toString();
         this._dialogTxtTitulo = " Olá " + this.paciente + "!";
         this._dialogTxtMensagem =
             "Cadastro realizado com sucesso!\nDeseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES?";
@@ -160,10 +160,15 @@ class _CadastroState extends State<_Cadastro> {
         padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height < 600
                 ? MediaQuery.of(context).viewInsets.bottom * .5
-                : 0),
+                : MediaQuery.of(context).viewInsets.bottom * .3),
         child: Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.fromLTRB(10,0,10,0),
             child: ListView(children: <Widget>[
+              Text(
+                  "Para fazer o seu primeiro acesso preencha o formulário abaixo.",
+                  style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN),
+                  textAlign: TextAlign.left),
+              SizedBox(height: 10),
               Row(children: <Widget>[
                 Expanded(
                     flex: 0,
@@ -193,7 +198,7 @@ class _CadastroState extends State<_Cadastro> {
                       canvasColor:
                           Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Container(
                             //padding: EdgeInsets.fromLTRB(0, 80, 10, 100),
@@ -354,7 +359,7 @@ class _CadastroState extends State<_Cadastro> {
     principal.imagemFundo = AssetImage("img/background.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
-        ? "Não o encotramos em nossa base de dados. Preencha o formulário abaixo."
+        ? "Usuário não cadatrado"
         : "";
     principal.txtRodape = "";
     principal.txtBarraAcao = "";
@@ -368,7 +373,8 @@ class _CadastroState extends State<_Cadastro> {
     principal.rodapeColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
     principal.dialogTxtBtnCancel =
         _dialogState == DialogState.ERROR ? "" : "Não";
-    principal.dialogSlideLeftBtnCancel = SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
+    principal.dialogSlideLeftBtnCancel =
+        SlideLeftRoute(builder: (_) => Principal(child: Identificacao()));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Sim";
     principal.dialogSlideRightBtnOK = SlideRightRoute(
         builder: (_) => Principal(

@@ -125,7 +125,7 @@ class _EspecialidadeState extends State<_Especialidade> {
     setState(() => _dialogState = DialogState.LOADING);
     EspecialidadeModel especialidadeModel = await especialidadeBloc
         .fetchEspecialidades(this.moduloId, this.unidadeId, DateTime.now().toString(),
-            DateTime.now().add(Duration(days: 4)).toString())
+            DateTime.now().add(Duration(days: 7)).toString())
         .catchError((e) {
       setState(() {
         _dialogState = DialogState.ERROR;
