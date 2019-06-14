@@ -185,7 +185,7 @@ class _ConsultaState extends State<_Consulta> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/mestreAlvaro2.png");
     principal.txtCabecalho = "";
     principal.txtCorpo =
         _dialogState == DialogState.DISMISSED ? "Selecione o horário" : "";

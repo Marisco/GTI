@@ -14,8 +14,8 @@ import 'package:gti_sesa_saude/models/disponibilidade.model.dart';
 
 class SaudeApi {
   Client client = new Client();
-  String ipApi = "gti.serra.es.gov.br:8084"; // api
-  //String ipApi = "10.0.13.133:3010"; // local
+  //String ipApi = "gti.serra.es.gov.br:8084"; // api
+  String ipApi = "10.0.13.133:3010"; // local
 
   Future<PacienteModel> fetchPaciente(String documento, dataNascimento) async {
     documento = documento.replaceAll('.', '').replaceAll('-', '');

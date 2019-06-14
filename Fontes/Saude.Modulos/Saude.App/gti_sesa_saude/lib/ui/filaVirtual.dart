@@ -180,7 +180,7 @@ class _FilaVirtualState extends State<_FilaVirtual> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/parqueCidade.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "Filas disponbíveis na " + _txtCorpo + "."

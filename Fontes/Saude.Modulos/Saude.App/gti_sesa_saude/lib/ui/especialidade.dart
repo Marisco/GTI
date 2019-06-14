@@ -211,7 +211,7 @@ class _EspecialidadeState extends State<_Especialidade> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/encontrodasAguas.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "\nSelecione a especialidade"

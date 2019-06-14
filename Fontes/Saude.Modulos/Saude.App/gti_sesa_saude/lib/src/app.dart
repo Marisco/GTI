@@ -114,6 +114,23 @@ class AppTextStyle {
           // ]
         );
         break;
+      case TipoTexto.SELECTED:
+        return TextStyle(
+          color: Colors.yellow,
+          //fontFamily: 'Humanist',
+          fontSize: 18,
+          // shadows: <Shadow>[
+          //   Shadow(
+          //       offset: Offset(1.0, 1.0),
+          //       blurRadius: 3.0,
+          //       color: Colors.black.withOpacity(0.7)),
+          //   Shadow(
+          //       offset: Offset(1.0, 1.0),
+          //       blurRadius: 5.0,
+          //       color: Colors.black.withOpacity(0.7)),
+          // ]
+        );
+        break;
       case TipoTexto.ACAO:
         return TextStyle(
           color: Colors.black,
@@ -201,16 +218,17 @@ class AppTextStyle {
           fontFamily: 'Humanist',
           color: Colors.white,
           fontSize: 20,
-          shadows: <Shadow>[
-            Shadow(
-                offset: Offset(1.0, 1.0),
-                blurRadius: 3.0,
-                color: Color.fromRGBO(41, 84, 142, 9.9)),
-            Shadow(
-                offset: Offset(2.0, 2.0),
-                blurRadius: 3.0,
-                color: Color.fromRGBO(41, 84, 142, 9.9)),
-          ],
+          letterSpacing: 2.5
+          // shadows: <Shadow>[
+          //   Shadow(
+          //       offset: Offset(1.0, 1.0),
+          //       blurRadius: 3.0,
+          //       color: Color.fromRGBO(41, 84, 142, 9.9)),
+          //   Shadow(
+          //       offset: Offset(2.0, 2.0),
+          //       blurRadius: 3.0,
+          //       color: Color.fromRGBO(41, 84, 142, 9.9)),
+          // ],
         );
         break;
       case TipoTexto.PLACEHOLDER:
@@ -220,23 +238,23 @@ class AppTextStyle {
             fontSize: 20,
             letterSpacing: 2.5);
         break;
-        case TipoTexto.DROPDOWN:
+      case TipoTexto.DROPDOWN:
         return TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Humanist',
-                        fontSize: 20,
-                        letterSpacing: 2.5,
-                        shadows: <Shadow>[
-                          // Shadow(
-                          //     offset: Offset(1.0, 1.0),
-                          //     blurRadius: 1.0,
-                          //     color: Colors.black.withOpacity(0.7)),
-                          // Shadow(
-                          //     offset: Offset(2.0, 2.0),
-                          //     blurRadius: 2.0,
-                          //     color: Colors.black.withOpacity(0.7)),
-                         ],
-                      );
+          color: Colors.white,
+          fontFamily: 'Humanist',
+          fontSize: 20,
+          letterSpacing: 2.5,
+          shadows: <Shadow>[
+            // Shadow(
+            //     offset: Offset(1.0, 1.0),
+            //     blurRadius: 1.0,
+            //     color: Colors.black.withOpacity(0.7)),
+            // Shadow(
+            //     offset: Offset(2.0, 2.0),
+            //     blurRadius: 2.0,
+            //     color: Colors.black.withOpacity(0.7)),
+          ],
+        );
         break;
       default:
         return TextStyle(

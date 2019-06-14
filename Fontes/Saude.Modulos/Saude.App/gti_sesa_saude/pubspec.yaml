@@ -21,6 +21,7 @@ dependencies:
   intl: ^0.15.7
   back_button_interceptor: ^2.0.0 
   google_maps_flutter: ^0.5.7 
+  shared_preferences: ^0.5.3
 
   flutter:
     sdk: flutter
@@ -51,16 +52,16 @@ flutter:
     - img/coracao.png
     - img/unidade.png
     - img/splash.png
-    - img/passo01.jpg
-    - img/passo02.jpg
-    - img/passo03.jpg
-    - img/passo04.jpg
-    - img/passo05.jpg
-    - img/ic_passo01.png
-    - img/ic_passo02.png
-    - img/ic_passo03.png
-    - img/ic_passo04.png
-    - img/ic_passo05.png
+    # - img/passo01.jpg
+    # - img/passo02.jpg
+    # - img/passo03.jpg
+    # - img/passo04.jpg
+    # - img/passo05.jpg
+    # - img/ic_passo01.png
+    # - img/ic_passo02.png
+    # - img/ic_passo03.png
+    # - img/ic_passo04.png
+    # - img/ic_passo05.png
     - img/ic_agendamento.png
     - img/ic_fila.png
     - img/ic_avaliacao.png
@@ -69,9 +70,24 @@ flutter:
     - img/ic_pessimo.png
     - img/ic_regular.png
     - img/ic_ruim.png
-
+    - img/modelo01.png
+    - img/modelo02.png
+    - img/modelo03.png
+    - img/modelo04.png
+    - img/modelo05.png
+    - img/modelo06.png
+    - img/encontrodasAguas.png
+    - img/igrejaMatriz.png
+    - img/manguinhos.png
+    - img/mestreAlvaro.png
+    - img/mestreAlvaro2.png
+    - img/parqueCidade.png
+    - img/reisMagos.png
+    - img/reisMagos2.png
     
-
+    
+    
+    
     
   #  - images/a_dot_ham.jpeg
 

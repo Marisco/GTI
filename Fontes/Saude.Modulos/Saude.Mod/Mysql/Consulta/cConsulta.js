@@ -26,7 +26,7 @@ var obterConsultas = function(db, body, callback) {
 var agendarConsulta = function(db, body  , callback) {
     var qry = 
     " UPDATE consulta                           " +
-    "    SET estado = 'A',                      " +
+    "    SET estado = 'F',                      " +
     "        paciente = "+body.pacienteId+",     " +
     "        usuario = ( SELECT numero          " +
     "                      FROM usuario         " +

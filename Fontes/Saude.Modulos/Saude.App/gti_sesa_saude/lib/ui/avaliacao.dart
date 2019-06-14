@@ -58,11 +58,22 @@ class _AvalicacaoState extends State<_Avalicacao> {
   final hora = DateFormat("Hm", "pt_BR");
   int _index;
   String _tpAcao;
-  String _nota;
+  int _nota = 4;
+  Image _image;
+  bool _isSelected = false;
+  String _nomeImagem;
+  var _imagens = [
+    "img/ic_pessimo.png",
+    "img/ic_ruim.png",
+    "img/ic_regular.png",
+    "img/ic_bom.png",
+    "img/ic_otimo.png"
+  ];
+  double _height;
   SlideRightRoute _slideRightRoute;
   String _dialogTxtMensagem = "";
   String _dialogTxtTitulo = "";
-  String _dialogTxtLoading = "";  
+  String _dialogTxtLoading = "";
   String _txtCorpo = "";
   DialogState _dialogState = DialogState.DISMISSED;
   final _focusTexto = FocusNode();
@@ -77,8 +88,10 @@ class _AvalicacaoState extends State<_Avalicacao> {
     initializeDateFormatting("pt_BR", null);
     _index = 0;
     _txtCorpo = "";
+    _nomeImagem = _imagens[_nota - 1];
+    _image = Image.asset(_nomeImagem);
     this._getAvaliacoes();
-    super.initState();
+    //super.initState();
   }
 
   @override
@@ -90,8 +103,8 @@ class _AvalicacaoState extends State<_Avalicacao> {
   void _getAvaliacoes() async {
     setState(() {
       _dialogState = DialogState.LOADING;
-      this._dialogTxtTitulo = "Aguarde...";     
-      _dialogTxtLoading =  "Estamos localizando seus últimos atendimentos";            
+      this._dialogTxtTitulo = "Aguarde...";
+      _dialogTxtLoading = "Estamos localizando seus últimos atendimentos";
     });
     AvaliacaoModel avaliacaoModel =
         await avaliacaoBloc.fetchAvaliacoes(this.pacienteId).catchError((e) {
@@ -115,8 +128,24 @@ class _AvalicacaoState extends State<_Avalicacao> {
         } else {
           this._dialogState = DialogState.ERROR;
           this._dialogTxtTitulo = "Desculpe!";
-          this._dialogTxtMensagem = "Não existem atendimentos à serem avaliados.";
+          this._dialogTxtMensagem =
+              "Não existem atendimentos à serem avaliados.";
         }
+      });
+    });
+  }
+
+  void _mudarAvaliacao(int nota, double height) {
+    setState(() {
+      _isSelected = _height == (height * .5);
+      _height = 0;
+      _nota = nota;
+      _nomeImagem = _imagens[_nota - 1];
+    });
+    Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        _height = (height * .5);
+        _image = Image.asset(_nomeImagem);
       });
     });
   }
@@ -124,9 +153,8 @@ class _AvalicacaoState extends State<_Avalicacao> {
   void _postAvaliacao(int nota) async {
     setState(() {
       _dialogState = DialogState.LOADING;
-      this._dialogTxtTitulo = "Aguarde!";      
-      _dialogTxtLoading =  "Estamos registrando sua avaliação.";      
-      
+      this._dialogTxtTitulo = "Aguarde!";
+      _dialogTxtLoading = "Estamos registrando sua avaliação.";
     });
 
     MensagemModel mensagemModel = await avaliacaoBloc.pushAvaliacao(
@@ -134,10 +162,10 @@ class _AvalicacaoState extends State<_Avalicacao> {
         this._avaliacoes[_index].tipoAvaliacao,
         this._avaliacoes[_index].dataAtendimento,
         nota.toString(),
-        _texto.text,
+        this._texto.text,
         "",
         this._avaliacoes[_index].numero);
-    var mensagem = mensagemModel.getMensagem();
+    //var mensagem = mensagemModel.getMensagem();
     setState(() {
       if (_index < this._avaliacoes.length - 1) {
         _index = _index + 1;
@@ -152,168 +180,221 @@ class _AvalicacaoState extends State<_Avalicacao> {
   }
 
   Widget _getCorpoAvalicacao() {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height * 0.20;
     return Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height < 600
-                ? MediaQuery.of(context).viewInsets.bottom * .5
-                : 0),
-        child: _avaliacoes.length == 0 ?
-        Container():
-        Container(
-            margin: EdgeInsets.only(top: 20),
-            child: ListView(padding: EdgeInsets.zero, children: <Widget>[              
-              Text(this.paciente.substring(0, paciente.indexOf(" ")) +
-                      ". \nQual a sua avalição para o " +
-                      this
-                          ._avaliacoes[_index]
-                          .descricao
-                          .toString()
-                          .toLowerCase() +
-                      " da " +
-                      this._avaliacoes[_index].nomeUnidade +                      
-                      (this._avaliacoes[_index].especialidade != ""
-                          ? " em consulta com " +
-                              this._avaliacoes[_index].especialidade
-                          : "") +                      
-                      
-                      "?",
-                  style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN),
-                  textAlign: TextAlign.left),
-                  Text("\nAtendimento: "+ diaSemana.format(DateTime.parse(
-                          this._avaliacoes[_index].dataAtendimento)) +
-                      ", " +
-                      diaMesAno.format(DateTime.parse(
-                          this._avaliacoes[_index].dataAtendimento)) +
-                      " às " +
-                      hora.format(DateTime.parse(
-                          this._avaliacoes[_index].dataAtendimento))+".",
-                  style: AppTextStyle().getEstiloTexto(TipoTexto.LOADING),
-                  textAlign: TextAlign.left),
-              SizedBox(height: 10),
-              TextField(
-                  controller: _texto,
-                  focusNode: _focusTexto,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) {
-                    _focusTexto.unfocus();
-                  },
-                  maxLength: 140,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    counterText: '',
-                    labelText:
-                        "Se preferir, digite aqui o seu elogio ou reclamação.",
-                    labelStyle:
-                        AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
-                    border: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    filled: true,
-                    fillColor: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),
-                  ),
-                  style: AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
-                  keyboardType: TextInputType.multiline)
-            ])));
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height < 600
+              ? MediaQuery.of(context).viewInsets.bottom * .5
+              : MediaQuery.of(context).viewInsets.bottom * .4),
+      child: _avaliacoes.length == 0
+          ? Container()
+          : Container(
+              margin: EdgeInsets.only(top: 20),
+              child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+                Text(
+                    this.paciente.substring(0, paciente.indexOf(" ")) +
+                        ", avalie o " +
+                        this
+                            ._avaliacoes[_index]
+                            .descricao
+                            .toString()
+                            .toLowerCase() +
+                        " da " +
+                        this._avaliacoes[_index].nomeUnidade +
+                        (this._avaliacoes[_index].especialidade != ""
+                            ? " com " + this._avaliacoes[_index].especialidade
+                            : "") +
+                        "(" +
+                        diaSemana.format(DateTime.parse(
+                            this._avaliacoes[_index].dataAtendimento)) +
+                        ", " +
+                        diaMesAno.format(DateTime.parse(
+                            this._avaliacoes[_index].dataAtendimento)) +
+                        " às " +
+                        hora.format(DateTime.parse(
+                            this._avaliacoes[_index].dataAtendimento)) +
+                        ")",
+                    style: AppTextStyle().getEstiloTexto(TipoTexto.DROPDOWN),
+                    textAlign: TextAlign.left),
+                SizedBox(height: 10),
+                Container(
+                    height: height * .5,
+                    width: width,
+                    //padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          Container(
+                              width: width * .19,
+                              //padding: EdgeInsets.only(top: 1),
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: FlatButton(
+                                          onPressed: () =>
+                                              {_mudarAvaliacao(1, height)},
+                                          child: Image.asset(_imagens[0],
+                                              height: height))),
+                                  Text(
+                                    "Péssimo",
+                                    style: _nomeImagem == _imagens[0]
+                                        ? AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.SELECTED)
+                                        : AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.RODAPE),
+                                  )
+                                ],
+                              )),
+                          Container(
+                              width: width * .19,
+                              //padding: EdgeInsets.only(top: 1),
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: FlatButton(
+                                          onPressed: () =>
+                                              {_mudarAvaliacao(2, height)},
+                                          child: Image.asset(_imagens[1],
+                                              height: height))),
+                                  Text(
+                                    "Ruim",
+                                    style: _nomeImagem == _imagens[1]
+                                        ? AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.SELECTED)
+                                        : AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.RODAPE),
+                                  )
+                                ],
+                              )),
+                          Container(
+                              width: width * .19,
+                              //padding: EdgeInsets.only(top: 1),
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: FlatButton(
+                                          onPressed: () =>
+                                              {_mudarAvaliacao(3, height)},
+                                          child: Image.asset(_imagens[2],
+                                              height: height))),
+                                  Text(
+                                    "Regular",
+                                    style: _nomeImagem == _imagens[2]
+                                        ? AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.SELECTED)
+                                        : AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.RODAPE),
+                                  )
+                                ],
+                              )),
+                          Container(
+                              width: width * .19,
+                              //padding: EdgeInsets.only(top: 1),
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: FlatButton(
+                                          onPressed: () =>
+                                              {_mudarAvaliacao(4, height)},
+                                          child: Image.asset(_imagens[3],
+                                              height: height))),
+                                  Text(
+                                    "Bom",
+                                    style: _nomeImagem == _imagens[3]
+                                        ? AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.SELECTED)
+                                        : AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.RODAPE),
+                                  )
+                                ],
+                              )),
+                          Container(
+                              width: width * .19,
+                              //padding: EdgeInsets.only(top: 1),
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: FlatButton(
+                                          onPressed: () =>
+                                              {_mudarAvaliacao(5, height)},
+                                          child: Image.asset(_imagens[4],
+                                              height: height))),
+                                  Text(
+                                    "Ótimo",
+                                    style: _nomeImagem == _imagens[4]
+                                        ? AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.SELECTED)
+                                        : AppTextStyle()
+                                            .getEstiloTexto(TipoTexto.RODAPE),
+                                  )
+                                ],
+                              )),
+                        ])),
+                SizedBox(height: 20),
+                TextField(
+                    controller: _texto,
+                    focusNode: _focusTexto,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) {
+                      _focusTexto.unfocus();
+                    },
+                    maxLength: 140,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      counterText: '',
+                      labelText: "Deixe aqui seu comentário.",
+                      labelStyle:
+                          AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
+                      border: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      filled: true,
+                      fillColor:
+                          Color.fromRGBO(41, 84, 142, 1).withOpacity(0.35),
+                    ),
+                    style: AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
+                    keyboardType: TextInputType.multiline),
+                SizedBox(height: 10),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 250),
+                  curve: Curves.easeIn,
+                  height: _height != null ? _height : height * .5,
+                  width: width,
+                  child: _nota != null ? this._image : Container(),
+                )
+              ])),
+    );
   }
 
   Widget _getRodapeAvalicacao() {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height * 0.06;
-    //return Container();
     return Expanded(
-        child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
-      Container(
-          width: width * .20,
-          //padding: EdgeInsets.only(top: 1),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: FlatButton(
-                      onPressed: () => {_postAvaliacao(1)},
-                      child:
-                          Image.asset("img/ic_pessimo.png", height: height))),
-              Text(
-                "Péssimo",
-                style: AppTextStyle().getEstiloTexto(TipoTexto.RODAPE),
-              )
-            ],
-          )),
-      Container(
-          width: width * .20,
-          //padding: EdgeInsets.only(top: 1),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: FlatButton(
-                      onPressed: () => {_postAvaliacao(2)},
-                      child: Image.asset("img/ic_ruim.png", height: height))),
-              Text(
-                "Ruim",
-                style: AppTextStyle().getEstiloTexto(TipoTexto.RODAPE),
-              )
-            ],
-          )),
-      Container(
-          width: width * .20,
-          //padding: EdgeInsets.only(top: 1),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: FlatButton(
-                      onPressed: () => {_postAvaliacao(3)},
-                      child:
-                          Image.asset("img/ic_regular.png", height: height))),
-              Text(
-                "Regular",
-                style: AppTextStyle().getEstiloTexto(TipoTexto.RODAPE),
-              )
-            ],
-          )),
-      Container(
-          width: width * .20,
-          //padding: EdgeInsets.only(top: 1),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: FlatButton(
-                      onPressed: () => {_postAvaliacao(4)},
-                      child: Image.asset("img/ic_bom.png", height: height))),
-              Text(
-                "Bom",
-                style: AppTextStyle().getEstiloTexto(TipoTexto.RODAPE),
-              )
-            ],
-          )),
-      Container(
-          width: width * .20,
-          //padding: EdgeInsets.only(top: 1),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: FlatButton(
-                      onPressed: () => {_postAvaliacao(5)},
-                      child: Image.asset("img/ic_otimo.png", height: height))),
-              Text(
-                "Ótimo",
-                style: AppTextStyle().getEstiloTexto(TipoTexto.RODAPE),
-              )
-            ],
-          )),
-    ]));
+        child: FlatButton(
+      onPressed: () {
+        _postAvaliacao(this._nota);
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Text(
+        "Confirmar Avaliação",
+        style: AppTextStyle().getEstiloTexto(TipoTexto.BTNOK),
+      ),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/encontrodasAguas.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = this._txtCorpo;
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
     principal.dialogState = this._dialogState;
     principal.widgetCorpo = _getCorpoAvalicacao();
     principal.widgetRodape = _getRodapeAvalicacao();
-    principal.rodapeColor =  Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
-        //Colors.transparent; 
+    principal.rodapeColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.85);
+    //Colors.transparent;
     principal.alturaVariada = 0.6;
     principal.dialogState = this._dialogState;
     principal.dialogColor = Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45);
@@ -323,12 +404,13 @@ class _AvalicacaoState extends State<_Avalicacao> {
             child:
                 Modulos(pacienteId: this.pacienteId, paciente: this.paciente)));
     principal.dialogTxtBtnOK = _dialogState == DialogState.ERROR ? "" : "Ok";
-    principal.dialogSlideRightBtnOK =
-        SlideRightRoute(builder: (_) => Principal(child: Modulos(paciente: this.paciente, pacienteId: this.pacienteId )));
-    principal.dialogTxtLoading = this._dialogTxtLoading;        
+    principal.dialogSlideRightBtnOK = SlideRightRoute(
+        builder: (_) => Principal(
+            child:
+                Modulos(paciente: this.paciente, pacienteId: this.pacienteId)));
+    principal.dialogTxtLoading = this._dialogTxtLoading;
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
-
     return principal.setPrincipal();
   }
 }

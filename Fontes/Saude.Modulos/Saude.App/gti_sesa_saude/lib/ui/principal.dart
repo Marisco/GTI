@@ -94,8 +94,7 @@ class _PrincipalState extends State<Principal> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             onHorizontalDragStart: (_) {
-              this.dialogState = DialogState.DISMISSED;
-              Navigator.push(context, this.dialogSlideLeftBtnCancel);
+              //
             },
             child: Scaffold(
               resizeToAvoidBottomPadding: false,
@@ -103,13 +102,14 @@ class _PrincipalState extends State<Principal> {
                   height: height,
                   decoration: BoxDecoration(
                     image:
-                        DecorationImage(image: AssetImage("img/unidade.png"), fit: BoxFit.cover),
+                        DecorationImage(image: imagemFundo, fit: BoxFit.cover),
                   ),
                   child: this.dialogState == DialogState.DISMISSED
                       ? Column(children: <Widget>[
                           Cabecalho(
                             txtCabecalho: this.txtCabecalho,
                             setaLVisible: this.idPacienteId != null,
+                            dialogSlideLeftBtnCancel: this.dialogSlideLeftBtnCancel,
                           ),
                           Corpo(
                             txtCorpo: this.txtCorpo,

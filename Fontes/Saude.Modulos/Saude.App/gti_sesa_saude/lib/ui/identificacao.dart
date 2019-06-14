@@ -9,6 +9,7 @@ import 'package:gti_sesa_saude/blocs/paciente.bloc.dart';
 import 'package:gti_sesa_saude/src/formatacao.dart';
 import 'package:gti_sesa_saude/ui/modulo.dart';
 import 'package:gti_sesa_saude/ui/principal.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Identificacao extends StatelessWidget {
   @override
@@ -34,18 +35,20 @@ class _IdentificacaoState extends State<_Identificacao> {
   var _paciente = [];
   var _maxLength;
   DateTime selectedDate = DateTime.now();
-  String _dsDocumento;
+  String _dsDocumento = "CNS";
   String _dialogTxtMensagem;
   String _dialogTxtTitulo;
   DialogState _dialogState;
+  bool _isSwitched = true;
+  bool _existePreferencia = true;
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR", null);
-    _tpDocumentoChange(0);    
-    this._dialogState = DialogState.DISMISSED;        
+    _tpDocumentoChange(0);
+    this._dialogState = DialogState.DISMISSED;
     _dialogTxtTitulo = "";
-    _dialogTxtMensagem = "";    
+    _dialogTxtMensagem = "";
     super.initState();
   }
 
@@ -59,18 +62,28 @@ class _IdentificacaoState extends State<_Identificacao> {
 
   void _tpDocumentoChange(int value) {
     setState(() {
-      _documento.text = "";
-      _tpDocumento = value;
-      _maxLength = _tpDocumento == 0 ? 14 : 18;
-      switch (_tpDocumento) {
-        case 0:
-          _dsDocumento = "CPF:";
-          break;
-        case 1:
-          _dsDocumento = "CNS:";
-          break;
+      if (_existePreferencia && _isSwitched) {
+        carregarPreferencias().then((doc) {
+          _documento.text = doc;
+        });
+      } else {
+        getTipoDocumento(value);
+        _documento.text = "";
       }
     });
+  }
+
+  void getTipoDocumento(int value) {
+    _tpDocumento = value;
+    _maxLength = _tpDocumento == 0 ? 14 : 18;
+    switch (_tpDocumento) {
+      case 0:
+        _dsDocumento = "CPF";
+        break;
+      case 1:
+        _dsDocumento = "CNS";
+        break;
+    }
   }
 
   void _getPaciente() async {
@@ -94,23 +107,56 @@ class _IdentificacaoState extends State<_Identificacao> {
       setState(() {
         _paciente = [pacienteModel.getPaciente()];
         if (_paciente.isNotEmpty && _paciente[0] != null) {
+          if (_isSwitched) {
+            salvarPreferencias();
+          } else {
+            excluirPreferencias();
+          }
+
           paciente = _paciente[0].nome;
           pacienteId = _paciente[0].numero.toString();
           this._dialogState = DialogState.COMPLETED;
           this._dialogTxtTitulo = " Olá " + this.paciente + "!";
           this._dialogTxtMensagem =
               "Deseja se conectar ao Sistema de Saúde da Prefeitura de Serra-ES? \nClique NÃO se você não é esta pessoa!";
-        } else {  
-          this._dialogState = DialogState.DISMISSED;        
+        } else {
+          this._dialogState = DialogState.DISMISSED;
           Navigator.push(
               context,
               SlideRightRoute(
-                  builder: (_) => Principal(child: Cadastro(
-                      documento: this._documento.text,
-                      dataNascimento: this._dataNascimento.text))));
+                  builder: (_) => Principal(
+                      child: Cadastro(
+                          documento: this._documento.text,
+                          dataNascimento: this._dataNascimento.text))));
         }
       });
     });
+  }
+
+  Future<bool> salvarPreferencias() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setInt("tipoDocumento", _tpDocumento);
+    return await preferences.setString(_dsDocumento, _documento.text);
+  }
+
+  Future<bool> excluirPreferencias() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.clear();
+  }
+
+  Future<String> carregarPreferencias() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _tpDocumento = preferences.getInt("tipoDocumento");
+    });
+
+    _existePreferencia = _tpDocumento != null;
+
+    getTipoDocumento(!_existePreferencia ? 0 : _tpDocumento);
+
+    return _tpDocumento == 0
+        ? preferences.getString("CPF")
+        : preferences.getString("CNS");
   }
 
   Widget _getCorpoIdentificacao() {
@@ -123,40 +169,40 @@ class _IdentificacaoState extends State<_Identificacao> {
             margin: EdgeInsets.only(top: 20),
             child: ListView(padding: EdgeInsets.zero, children: <Widget>[
               Row(children: <Widget>[
-                Expanded(
-                    flex: 0,
-                    child: Text('Documento:',
-                        style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO))),
+                Text('Documento:',
+                    style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO)),
                 Radio(
                   value: 0,
                   groupValue: _tpDocumento,
                   onChanged: _tpDocumentoChange,
                   activeColor: Color.fromRGBO(41, 84, 142, 1),
                 ),
-                Expanded(
-                    child: Text('Cpf',
-                        style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO))),
+                Text('Cpf',
+                    style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO)),
+                SizedBox(width: 10),
                 Radio(
                   value: 1,
                   groupValue: _tpDocumento,
                   onChanged: _tpDocumentoChange,
                   activeColor: Color.fromRGBO(41, 84, 142, 1),
                 ),
-                Text('Cartão Sus',
-                    style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO)),
+                Expanded(
+                    flex: 0,
+                    child: Text('Cartão Sus',
+                        style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO))),
               ]),
               TextField(
                   controller: _documento,
-                  textInputAction: TextInputAction.next,                  
-                  onChanged: (_){
-                    if(_documento.text.length == _maxLength){
+                  textInputAction: TextInputAction.next,
+                  onChanged: (_) {
+                    if (_documento.text.length == _maxLength) {
                       FocusScope.of(context).requestFocus(focusDataNascimento);
                     }
                   },
                   maxLength: _maxLength,
                   decoration: InputDecoration(
                     counterText: '',
-                    labelText: "Digite o nº do " + _dsDocumento,
+                    labelText: "Digite o nº do " + _dsDocumento + ":",
                     labelStyle:
                         AppTextStyle().getEstiloTexto(TipoTexto.PLACEHOLDER),
                     border: InputBorder.none,
@@ -175,8 +221,8 @@ class _IdentificacaoState extends State<_Identificacao> {
                   controller: _dataNascimento,
                   focusNode: focusDataNascimento,
                   textInputAction: TextInputAction.done,
-                   onChanged: (_){
-                    if(_dataNascimento.text.length == 10){
+                  onChanged: (_) {
+                    if (_dataNascimento.text.length == 10) {
                       focusDataNascimento.unfocus();
                     }
                   },
@@ -196,7 +242,23 @@ class _IdentificacaoState extends State<_Identificacao> {
                   inputFormatters: <TextInputFormatter>[
                     WhitelistingTextInputFormatter.digitsOnly,
                     FormatarData()
-                  ])
+                  ]),
+              Row(children: <Widget>[
+                Expanded(
+                    flex: 0,
+                    child: Text("Guardar meu " + _dsDocumento + ":",
+                        style: AppTextStyle().getEstiloTexto(TipoTexto.RADIO))),
+                Expanded(flex: 1, child: SizedBox()),
+                Switch(
+                  value: _isSwitched,
+                  activeColor: Color.fromRGBO(41, 84, 142, 1),
+                  onChanged: (value) {
+                    setState(() {
+                      _isSwitched = value;
+                    });
+                  },
+                ),
+              ])
             ])));
   }
 
@@ -220,7 +282,7 @@ class _IdentificacaoState extends State<_Identificacao> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/reisMagos.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = this._dialogState == DialogState.DISMISSED
         ? "Olá! Seja bem vindo ao Aplicativo Saúde-Serra."
@@ -247,7 +309,7 @@ class _IdentificacaoState extends State<_Identificacao> {
               pacienteId: this.pacienteId,
             )));
     principal.dialogTxtLoading =
-        "Localizando " + this._dsDocumento + "\n" + this._documento.text;
+        "Localizando " + this._dsDocumento + ":\n" + this._documento.text;
     principal.dialogTxtMensagem = this._dialogTxtMensagem;
     principal.dialogTxtTitulo = this._dialogTxtTitulo;
 

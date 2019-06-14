@@ -230,21 +230,7 @@ class _ConfirmacaoState extends State<_Confirmacao> {
                     this._consultas[0].medico +
                     ".\nEspecialidade: " +
                     this._consultas[0].especialidade),
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Humanist',
-                fontSize: 20,
-                // shadows: <Shadow>[
-                //   Shadow(
-                //       offset: Offset(2.0, 2.0),
-                //       blurRadius: 3.0,
-                //       color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
-                //   Shadow(
-                //       offset: Offset(2.0, 2.0),
-                //       blurRadius: 8.0,
-                //       color: Color.fromRGBO(41, 84, 142, 1).withOpacity(0.45)),
-                // ]
-                ),
+            style: AppTextStyle().getEstiloTexto(TipoTexto.CABECALHO),
             textAlign: TextAlign.left),
       )
     ]);
@@ -274,7 +260,7 @@ class _ConfirmacaoState extends State<_Confirmacao> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/parqueCidade.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? this.paciente.substring(0, this.paciente.indexOf(" ")) +

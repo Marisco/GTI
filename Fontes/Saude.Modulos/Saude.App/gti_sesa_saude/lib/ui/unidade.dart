@@ -52,6 +52,7 @@ class _UnidadeState extends State<_Unidade> {
   SlideRightRoute _slideRightRoute;
   String _selUnidade;
   var _unidades = [];
+  AssetImage _imagemFundo;
 
   _UnidadeState(
       {@required this.paciente,
@@ -65,6 +66,7 @@ class _UnidadeState extends State<_Unidade> {
 
   @override
   void initState() {
+    _imagemFundo = AssetImage("img/manguinhos.png");
     this._getUnidades();
     switch (this.moduloId) {
       case "1":
@@ -202,7 +204,7 @@ class _UnidadeState extends State<_Unidade> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = _imagemFundo;
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED
         ? "\n\nSelecione a unidade de saúde"

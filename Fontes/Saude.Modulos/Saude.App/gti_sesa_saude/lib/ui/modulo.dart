@@ -92,13 +92,15 @@ class _ModulosState extends State<_Modulos> {
 
   Card makeCard(BuildContext context, int index) {
     return Card(
-      elevation: 8.0,
-      margin: new EdgeInsets.symmetric(horizontal: 0, vertical: 6.0),
+      color: Colors.transparent,      
+      elevation: 0.0,
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6.0),
       child: Container(
+        //color: Colors.red,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-          Color.fromRGBO(113, 138, 200, 1).withOpacity(0.85),
-          Color.fromRGBO(43, 144, 183, 1)
+          Color.fromRGBO(113, 138, 200, 1).withOpacity(0.65),
+          Color.fromRGBO(43, 144, 183, 1).withOpacity(0.65)
         ])),
         child: makeListTile(context, index),
       ),
@@ -166,16 +168,17 @@ class _ModulosState extends State<_Modulos> {
   }
 
   Widget makeListTile(BuildContext context, int index) {
-    return ListTile(
+    return ListTile(            
         onTap: () {
           Navigator.push(context, getRotaModulo(dadosModulos[index].numero));
         },
         contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         leading: Container(
             padding: EdgeInsets.only(right: 15.0),
-            decoration: new BoxDecoration(
-                border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.white24))),
+            decoration: BoxDecoration(
+              //color: Colors.red,
+                border: Border(
+                    right: BorderSide(width: 1.0, color: Colors.white24))),
             child: Image.asset(getImagemModulo(dadosModulos[index].numero),
                 height: MediaQuery.of(context).size.height * 0.08)),
         title: Text(
@@ -212,7 +215,7 @@ class _ModulosState extends State<_Modulos> {
   Widget build(BuildContext context) {
     var principal = Principal.of(context);
     principal.idPacienteId = this.pacienteId;
-    principal.imagemFundo = AssetImage("img/background.png");
+    principal.imagemFundo = AssetImage("img/igrejaMatriz.png");
     principal.txtCabecalho = "";
     principal.txtCorpo = _dialogState == DialogState.DISMISSED ? "" : "";
     principal.txtBarraInferior = "Desenvolvido por GTI-SESA";
